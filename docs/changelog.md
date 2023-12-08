@@ -1,320 +1,250 @@
 ---
 description: |
-  Learn what has changed in the latest Typst releases and move your documents
-  forward.
+  了解最新 Typst 版本的变化并将您的文档推进。
 ---
 
-# Changelog
-## Version 0.10.0 (December 4, 2023) { #v0.10.0 }
-- Bibliography management
-  - Added support for citation collapsing (e.g. `[[1]-[3]]` instead of
-    `[[1], [2], [3]]`) if requested by a CSL style
-  - Fixed bug where an additional space would appear after a group of citations
-  - Fixed link show rules for links in the bibliography
-  - Fixed show-set rules on citations
-  - Fixed bibliography-related crashes that happened on some systems
-  - Corrected name of the GB/T 7714 family of styles from 7114 to 7714
-  - Fixed missing title in some bibliography styles
-  - Fixed printing of volumes in some styles
-  - Fixed delimiter order for contributors in some styles (e.g. APA)
-  - Fixed behavior of alphanumeric style
-  - Fixed multiple bugs with GB/T 7714 style
-  - Fixed escaping in Hayagriva values
-  - Fixed crashes with empty dates in Hayagriva files
-  - Fixed bug with spacing around math blocks
-  - Fixed title case formatting after verbatim text and apostrophes
-  - Page ranges in `.bib` files can now be arbitrary strings
-  - Multi-line values in `.bib` files are now parsed correctly
-  - Entry keys in `.bib` files now allow more characters
-  - Fixed error message for empty dates in `.bib` files
-  - Added support for years of lengths other than 4 without leading zeros in
-    `.bib` files
-  - More LaTeX commands (e.g. for quotes) are now respected in `.bib` files
+# 更新日志
 
-- Visualization
-  - Added support for [patterns]($pattern) as fills and strokes
-  - The `alpha` parameter of the [`components`]($color.components) function on
-    colors is now a named parameter (**Breaking change**)
-  - Added support for the [Oklch]($color.oklch) color space
-  - Improved conversions between colors in different color spaces
-  - Removed restrictions on [Oklab]($color.oklab) chroma component
-  - Fixed [clipping]($block.clip) on blocks and boxes without a stroke
-  - Fixed bug with [gradients]($gradient) on math
-  - Fixed bug with gradient rotation on text
-  - Fixed bug with gradient colors in PDF
-  - Fixed relative base of Oklab chroma ratios
-  - Fixed Oklab color negation
+注：本页面由 ChatGPT 辅助翻译，可能会有错漏。
 
-- Text and Layout
-  - CJK text can now be emphasized with the `*` and `_` syntax even when there
-    are no spaces
-  - Added basic i18n for Greek and Estonian
-  - Improved default [figure caption separator]($figure.caption.separator) for
-    Chinese, French, and Russian
-  - Changed default [figure supplement]($figure.supplement) for Russian to
-    short form
-  - Fixed [CJK-Latin-spacing]($text.cjk-latin-spacing) before line breaks
-    and in [`locate`]($locate) calls
-  - Fixed line breaking at the end of links
+## 版本 0.10.0（2023年12月4日）{#v0.10.0}
+- 参考文献管理
+  - 添加了对引用合并的支持（例如 `[[1]-[3]]` 而不是 `[[1]，[2]，[3]]`），如果由 CSL 样式请求
+  - 修复了一组引用之后会出现额外空格的错误
+  - 修复了参考文献中链接的显示规则
+  - 修复了对引用的显示设置规则
+  - 修复了在某些系统上发生的与参考文献相关的崩溃
+  - 更正了 GB/T 7714 系列样式的名称，从 7114 更正为 7714
+  - 修复了某些参考文献样式中缺少标题的问题
+  - 修复了某些样式中卷的打印问题
+  - 修复了某些样式中贡献者分隔符的顺序问题（例如 APA）
+  - 修复了字母数字样式的行为
+  - 修复了 GB/T 7714 样式的多个错误
+  - 修复了 Hayagriva 值中的转义问题
+  - 修复了 Hayagriva 文件中空日期导致的崩溃
+  - 修复了数学块周围的间距问题
+  - 修复了在 verbatim 文本和撇号之后的标题大小写格式问题
+  - `.bib` 文件中的页面范围现在可以是任意字符串
+  - `.bib` 文件中的多行值现在被正确解析
+  - `.bib` 文件中的条目键现在允许更多字符
+  - 修复了对空日期在 `.bib` 文件中的错误消息
+  - 添加了对 `.bib` 文件中无前导零的长度年份的支持
+  - `.bib` 文件中现在尊重更多 LaTeX 命令（例如引号）
 
-- Math
-  - Added [`mid`]($math.mid) function for scaling a delimiter up to the height
-    of the surrounding [`lr`]($math.lr) group
-  - The [`op`]($math.op) function can now take any content, not just strings
-  - Improved documentation for [math alignment]($category/math/#alignment)
-  - Fixed swallowing of trailing comma when a symbol is used in a function-like
-    way (e.g. `pi(a,b,)`)
+- 可视化
+  - 添加了对 [图案]($pattern) 作为填充和描边的支持
+  - [`color.components`]($color.components) 函数的颜色参数中的 `alpha` 现在是一个命名参数（**重大变更**）
+  - 添加了对 [Oklch]($color.oklch) 颜色空间的支持
+  - 改进了不同颜色空间之间的颜色转换
+  - 删除了对 [Oklab]($color.oklab) 色度分量的限制
+  - 修复了在没有描边的块和框上的 [裁剪]($block.clip) 问题
+  - 修复了数学上的 [渐变]($gradient) 问题
+  - 修复了文本中渐变旋转的问题
+  - 修复了 PDF 中渐变颜色的问题
+  - 修复了相对基准的 Oklab 色度比
+  - 修复了 Oklab 颜色否定
 
-- Scripting
-  - Any non-identifier dictionary key is now interpreted as an expression: For
-    instance, `{((key): value)}` will create a dictionary with a dynamic key
-  - The [`stroke`]($stroke) type now has a constructor that converts a value to
-    a stroke or creates one from its parts
-  - Added constructor for [`arguments`]($arguments) type
-  - Added [`calc.div-euclid`]($calc.div-euclid) and
-    [`calc.rem-euclid`]($calc.rem-euclid) functions
-  - Fixed equality of [`arguments`]($arguments)
-  - Fixed [`repr`]($repr) of [`cmyk`]($color.cmyk) colors
-  - Fixed crashes with provided elements like figure captions, outline entries,
-    and footnote entries
+- 文本和布局
+  - CJK 文本现在即使没有空格也可以使用 `*` 和 `_` 语法强调
+  - 为希腊语和爱沙尼亚语添加了基本的国际化支持
+  - 改进了中文、法文和俄文的默认 [图题分隔符]($figure.caption.separator)
+  - 将俄文的默认 [图题补充]($figure.supplement) 更改为短形式
+  - 修复了在 [CJK-Latin-spacing]($text.cjk-latin-spacing) 和 [`locate`]($locate) 调用中的行尾断行
+  - 修复了链接末尾的断行问题
 
-- Tooling and Diagnostics
-  - Show rules that match on their own output now produce an appropriate error
-    message instead of a crash (this is a first step, in the future they will
-    just work)
-  - Too highly or infinitely nested layouts now produce error messages instead
-    of crashes
-  - Added hints for invalid identifiers
-  - Added hint when trying to use a manually constructed footnote or outline
-    entry
-  - Added missing details to autocompletions for types
-  - Improved error message when passing a named argument where a positional one
-    is expected
-  - Jump from click now works on raw blocks
+- 数学
+  - 添加了 [`mid`]($math.mid) 函数，用于将定界符缩放到周围 [`lr`]($math.lr) 组的高度
+  - [`op`]($math.op) 函数现在可以接受任何内容，而不仅仅是字符串
+  - 改进了 [数学对齐]($category/math/#alignment) 的文档
+  - 当符号以类似函数的方式使用时（例如 `pi(a,b,)`），不再吞咽尾随的逗号
 
-- Export
-  - PDF compilation output is now again fully byte-by-byte reproducible if the
-    document's [`date`]($document.date) is set manually
-  - Fixed color export in SVG
-  - Fixed PDF metadata encoding of multiple [authors]($document.author)
+- 脚本
+  - 现在，任何非标识符的字典键都被解释为表达式：例如 `{((key): value)}` 将创建一个带有动态键的字典
+  - [`stroke`]($stroke) 类型现在有一个构造函数，可以将值转换为描边或根据其部分创建描边
+  - 为 [`arguments`]($arguments) 类型添加了构造函数
+  - 添加了 [`calc.div-euclid`]($calc.div-euclid) 和 [`calc.rem-euclid`]($calc.rem-euclid) 函数
+  - 修复了 [`arguments`]($arguments) 的相等性
+  - 修复了 [`color.cmyk`]($color.cmyk) 颜色的 [`repr`]($repr)
 
-- Command line interface
-  - Fixed a major bug where `typst watch` would confuse files and fail to pick
-    up updates
-  - Fetching of the release metadata in `typst update` now respects proxies
-  - Fixed bug with `--open` flag on Windows when the path contains a space
-  - The `TYPST_FONT_PATHS` environment variable can now contain multiple paths
-    (separated by `;` on Windows and `:` elsewhere)
-  - Updated embedded New Computer Modern fonts to version 4.7
-  - The watching process doesn't stop anymore when the main file contains
-    invalid UTF-8
+- 工具和诊断
+  - 现在，匹配其自身输出的显示规则将生成适当的错误消息，而不是崩溃（这是第一步，在将来它们将正常工作）
+  - 现在，过于嵌套或无限嵌套的布局将生成错误消息，而不是崩溃
+  - 为无效标识符添加了提示
+  - 尝试使用手动构建的脚注或大纲条目时添加了提示
+  - 对类型的自动完成添加了缺失的详细信息
+  - 在传递命名参数而期望位置参数时，改进了错误消息
+  - 现在，在原始块上单击可以跳转
 
-- Miscellaneous Improvements
-  - Parallelized image encoding in PDF export
-  - Improved the internal representation of content for improved performance
-  - Optimized introspection (query, counter, etc.) performance
-  - The [document title]($document.title) can now be arbitrary content instead
-    of just a string
-  - The [`number-align`]($enum.number-align) parameter on numbered lists now
-    also accepts vertical alignments
-  - Fixed selectors on [quote]($quote) elements
-  - Fixed parsing of `[#return]` expression in markup
-  - Fixed bug where inline equations were displayed in equation outlines
-  - Fixed potential CRLF issue in [`raw`]($raw) blocks
-  - Fixed a bug where Chinese numbering couldn't exceed the number 255
+- 导出
+  - 如果手动设置了文档的 [`date`]($document.date)，则 PDF 编译输出现在再次是完全逐字可复制的
+  - 修复了 SVG 中的颜色导出
+  - 修复了多个 [作者]($document.author) 的 PDF 元数据编码
 
-- Development
-  - Merged `typst` and `typst-library` and extracted `typst-pdf`, `typst-svg`,
-    and `typst-render` into separate crates
-  - The Nix flake now includes the git revision when running `typst --version`
+- 命令行界面
+  - 修复了 `typst watch` 会混淆文件并未能捕捉更新的重大错误
+  - `typst update` 中的发布元数据获取现在尊重代理
+  - 修复了在路径中包含空格时 Windows 上 `--open` 标志的错误
+  - `TYPST_FONT_PATHS` 环境变量现在可以包含多个路径（在 Windows 上用 `;` 分隔，在其他地方用 `:` 分隔）
+  - 将嵌入的 New Computer Modern 字体更新到版本 4.7
+  - 当主文件包含无效 UTF-8 时，监视进程不再停止
+
+- 杂项改进
+  - 并行化 PDF 导出中的图像编码
+  - 改进了用于提高性能的内容的内部表示
+  - 优化了内省（查询、计数等）性能
+  - [文档标题]($document.title) 现在可以是任意内容，而不仅仅是字符串
+  - 编号列表上的 [`number-align`]($enum.number-align) 参数现在也接受垂直对齐
+  - 修复了 [引用]($quote) 元素上的选择器
+  - 修复了在标记中解析 `[#return]` 表达式的问题
+  - 修复了内联方程显示在方程大纲中的问题
+  - 修复了 [`raw`]($raw) 块中的潜在 CRLF 问题
+  - 修复了中文编号无法超过数字 255 的错误
+
+- 开发
+  - 合并了 `typst` 和 `typst-library`，并将 `typst-pdf`、`typst-svg` 和 `typst-render` 提取到独立的 crate 中
+  - Nix flake 现在在运行 `typst --version` 时包含 git 修订版本
 
 <contributors from="v0.9.0" to="v0.10.0" />
 
-## Version 0.9.0 (October 31, 2023) { #v0.9.0 }
-- Bibliography management
-  - New bibliography engine based on [CSL](https://citationstyles.org/)
-    (Citation Style Language). Ships with about 100 commonly used citation
-    styles and can load custom `.csl` files.
-  - Added new [`form`]($cite.form) argument to the `cite` function to produce
-    different forms of citations (e.g. for producing a citation suitable for
-    inclusion in prose)
-  - The [`cite`]($cite) function now takes only a single label/key instead of
-    allowing multiple. Adjacent citations are merged and formatted according to
-    the citation style's rules automatically. This works both with the reference
-    syntax and explicit calls to the `cite` function. (**Breaking change**)
-  - The `cite` function now takes a [label]($label) instead of a string
-    (**Breaking change**)
-  - Added [`full`]($bibliography.full) argument to bibliography function to
-    print the full bibliography even if not all works were cited
-  - Bibliography entries can now contain Typst equations (wrapped in `[$..$]`
-    just like in markup), this works both for `.yml` and `.bib` bibliographies
-  - The hayagriva YAML format was improved. See its
-    [changelog](https://github.com/typst/hayagriva/blob/main/CHANGELOG.md) for
-    more details. (**Breaking change**)
-  - A few bugs with `.bib` file parsing were fixed
-  - Removed `brackets` argument of `cite` function in favor of `form`
+## 版本 0.9.0（2023年10月31日）{ #v0.9.0 }
+- 参考文献管理
+  - 基于 [CSL](https://citationstyles.org/)（引文样式语言）的新参考文献引擎。
+    集成了约100种常用引文样式，并可加载自定义的 `.csl` 文件。
+  - 在 `cite` 函数中添加了新的 [`form`]($cite.form) 参数，以生成不同形式的引文
+    （例如，用于嵌入散文的引文形式）。
+  - [`cite`]($cite) 函数现在仅接受单个标签/键，不再支持多个。
+    相邻的引文会根据引文样式的规则自动合并和格式化。
+    这在引用语法和对 `cite` 函数的显式调用中都有效。（**重大变更**）
+  - `cite` 函数现在接受 [label]($label) 而不是字符串（**重大变更**）
+  - 在参考文献函数中添加了 [`full`]($bibliography.full) 参数，
+    以便即使没有引用所有作品也能打印完整的参考文献列表
+  - 现在，参考文献条目可以包含 Typst 方程（用 `[$..$]` 包裹，与标记语言中一样），
+    这适用于 `.yml` 和 `.bib` 参考文献
+  - 改进了 hayagriva YAML 格式。详见其
+    [变更日志](https://github.com/typst/hayagriva/blob/main/CHANGELOG.md)获取更多详细信息。（**重大变更**）
+  - 修复了 `.bib` 文件解析的一些错误
+  - 在 `cite` 函数中删除了 `brackets` 参数，改用 `form`
 
-- Visualization
-  - Gradients and colors (thanks to [@Dherse](https://github.com/Dherse))
-    - Added support for [gradients]($gradient) on shapes and text
-    - Supports linear, radial, and conic gradients
-    - Added support for defining colors in more color spaces, including
-      [Oklab]($color.oklab), [Linear RGB(A)]($color.linear-rgb),
-      [HSL]($color.hsl), and [HSV]($color.hsv)
-    - Added [`saturate`]($color.saturate), [`desaturate`]($color.desaturate),
-      and [`rotate`]($color.rotate) functions on colors
-    - Added [`color.map`]($color/#predefined-color-maps) module with predefined
-      color maps that can be used with gradients
-    - Rename `kind` function on colors to [`space`]($color.space)
-    - Removed `to-rgba`, `to-cmyk`, and `to-luma` functions in favor of a new
-      [`components`]($color.components) function
-  - Improved rendering of [rectangles]($rect) with corner radius and varying
-    stroke widths
-  - Added support for properly clipping [boxes]($box.clip) and
-    [blocks]($block.clip) with a border radius
-  - Added `background` parameter to [`overline`]($overline),
-    [`underline`]($underline), and [`strike`]($strike) functions
-  - Fixed inaccurate color embedding in PDFs
-  - Fixed ICC profile handling for images embedded in PDFs
+- 可视化
+  - 渐变和颜色（感谢 [@Dherse](https://github.com/Dherse)）
+    - 在形状和文本上添加了对 [渐变]($gradient) 的支持
+    - 支持线性、径向和锥形渐变
+    - 支持在更多颜色空间中定义颜色，包括
+      [Oklab]($color.oklab)、[线性 RGB(A)]($color.linear-rgb)、
+      [HSL]($color.hsl) 和 [HSV]($color.hsv)
+    - 在颜色上添加了 [`saturate`]($color.saturate)、[`desaturate`]($color.desaturate) 和
+      [`rotate`]($color.rotate) 函数
+    - 添加了包含预定义颜色映射的 [`color.map`]($color/#predefined-color-maps) 模块，可用于渐变
+    - 将颜色上的 `kind` 函数更名为 [`space`]($color.space)
+    - 删除了 `to-rgba`、`to-cmyk` 和 `to-luma` 函数，改用新的 [`components`]($color.components) 函数
+  - 改进了带有圆角和变宽描边的 [矩形]($rect) 的渲染
+  - 添加了对带有边框半径的 [框]($box.clip) 和 [块]($block.clip) 的正确剪切的支持
+  - 在 [`overline`]($overline)、[`underline`]($underline) 和 [`strike`]($strike) 函数中添加了 `background` 参数
+  - 修复了 PDF 中颜色嵌入的不准确问题
+  - 修复了嵌入在 PDF 中的图像的 ICC 文件处理
 
-- Text and Layout
-  - Added support for automatically adding proper
-    [spacing]($text.cjk-latin-spacing) between CJK and Latin text (enabled by
-    default)
-  - Added support for automatic adjustment of more CJK punctuation
-  - Added [`quote`]($quote) element for inserting inline and block quotes with
-    optional attributions
-  - Added [`raw.line`]($raw.line) element for customizing the display of
-    individual lines of raw text, e.g. to add line numbers while keeping proper
-    syntax highlighting
-  - Added support for per-side [inset]($table.inset) customization to table
-    function
-  - Added Hungarian and Romanian translations
-  - Added support for Czech hyphenation
-  - Added support for setting custom [smart quotes]($smartquote)
-  - The default [figure separator]($figure.caption.separator) now reacts to the
-    currently set language and region
-  - Improved line breaking of links / URLs (especially helpful for
-    bibliographies with many URLs)
-  - Improved handling of consecutive hyphens in justification algorithm
-  - Fixed interaction of justification and hanging indent
-  - Fixed a bug with line breaking of short lines without spaces when
-    justification is enabled
-  - Fixed font fallback for hyphen generated by hyphenation
-  - Fixed handling of word joiner and other no-break characters during
-    hyphenation
-  - Fixed crash when hyphenating after an empty line
-  - Fixed line breaking of composite emoji like 🏳️‍🌈
-  - Fixed missing text in some SVGs
-  - Fixed font fallback in SVGs
-  - Fixed behaviour of [`to`]($pagebreak.to) argument on `pagebreak` function
-  - Fixed `{set align(..)}` for equations
-  - Fixed spacing around [placed]($place) elements
-  - Fixed coalescing of [`above`]($block.above) and [`below`]($block.below)
-    spacing if given in em units and the font sizes differ
-  - Fixed handling of `extent` parameter of [`underline`]($underline),
-    [`overline`]($overline), and [`strike`]($strike) functions
-  - Fixed crash for [floating placed elements]($place.float) with no specified
-    vertical alignment
-  - Partially fixed a bug with citations in footnotes
+- 文本和布局
+  - 添加了自动在 CJK 和拉丁文本之间添加适当的
+    [间距]($text.cjk-latin-spacing) 的支持（默认启用）
+  - 添加了对更多 CJK 标点的自动调整支持
+  - 添加了 [`quote`]($quote) 元素，用于插入行内和块引用，可选择性地附带归属信息
+  - 添加了 [`raw.line`]($raw.line) 元素，用于定制单行原始文本的显示，
+    例如，添加行号同时保持适当的语法高亮
+  - 在表格函数中添加了对每一侧的 [插图]($table.inset) 定制的支持
+  - 添加了匈牙利语和罗马尼亚语的翻译
+  - 添加了捷克语断词的支持
+  - 添加了设置自定义 [智能引号]($smartquote) 的支持
+  - 默认的 [图例分隔符]($figure.caption.separator) 现在会根据当前设置的语言和区域做出反应
+  - 改进了链接/URL的断行（对于具有许多URL的参考文献特别有用）
+  - 改进了两个连字符在对齐算法中的处理
+  - 修复了两个对齐和悬挂缩进的交互问题
+  - 修复了启用对齐时短行没有空格时的断行问题
+  - 修复了由连字符生成的连字符在字体回退中的问题
+  - 在断字期间修复了字接合器和其他不换行字符的处理
+  - 在空行后断字时修复了崩溃的问题
+  - 修复了类似 🏳️‍🌈 的复合表情符号的断行问题
+  - 修复了一些SVG中缺失的文本
+  - 修复了SVG中的字体回退问题
+  - 修复了 [`to`]($pagebreak.to) 函数对 `pagebreak` 函数的参数的行为
+  - 修复了方程中的 `{set align(..)}` 行为
+  - 修复了 [placed]($place) 元素周围的间距
+  - 修复了 [`above`]($block.above) 和 [`below`]($block.below) 间距的合并问题，如果以em单位给出且字体大小不同
+  - 修复了 [`underline`]($underline)、[`overline`]($overline) 和 [`strike`]($strike) 函数中 `extent` 参数的处理
+  - 修复了 [float]($place.float) 元素没有指定垂直对齐时的崩溃
+  - 部分修复了脚注中引文的错误
 
-- Math
-  - Added `gap` argument for [`vec`]($math.vec.gap), [`mat`]($math.mat.gap), and
-    [`cases`]($math.cases.gap) function
-  - Added `size` argument for [`abs`]($math.abs), [`norm`]($math.norm),
-    [`floor`]($math.floor), [`ceil`]($math.ceil), and [`round`]($math.round)
-    functions
-  - Added [`reverse`]($math.cases.reverse) parameter to cases function
-  - Added support for multinomial coefficients to [`binom`]($math.binom)
-    function
-  - Removed `rotation` argument on [`cancel`]($math.cancel) function in favor of
-    a new and more flexible `angle` argument (**Breaking change**)
-  - Added `wide` constant, which inserts twice the spacing of `quad`
-  - Added `csch` and `sech` [operators]($math.op)
-  - `↼`, `⇀`, `↔`, and `⟷` can now be used as [accents]($math.accent)
-  - Added `integral.dash`, `integral.dash.double`, and `integral.slash`
-    [symbols]($category/symbols/sym)
-  - Added support for specifying negative indices for
-    [augmentation]($math.mat.augment) lines to position the line from the back
-  - Fixed default color of matrix [augmentation]($math.mat.augment) lines
-  - Fixed attachment of primes to inline expressions
-  - Math content now respects the text [baseline]($text.baseline) setting
+- 数学
+  - 为 [`vec`]($math.vec.gap)、[`mat`]($math.mat.gap) 和 [`cases`]($math.cases.gap) 函数添加了 `gap` 参数
+  - 为 [`abs`]($math.abs)、[`norm`]($math.norm)、[`floor`]($math.floor)、
+    [`ceil`]($math.ceil) 和 [`round`]($math.round) 函数添加了 `size` 参数
+  - 在 cases 函数中添加了 [`reverse`]($math.cases.reverse) 参数
+  - 为 [`binom`]($math.binom) 函数添加了对多项式系数的支持
+  - 在 [`cancel`]($math.cancel) 函数中删除了 `rotation` 参数，改用新的更灵活的 `angle` 参数（**重大变更**）
+  - 添加了 `wide` 常量，它插入两倍于 `quad` 的间距
+  - 添加了 `csch` 和 `sech` [运算符]($math.op)
+  - `↼`、`⇀`、`↔` 和 `⟷` 现在可用作 [重音]($math.accent)
+  - 添加了 `integral.dash`、`integral.dash.double` 和 `integral.slash`
+    [符号]($category/symbols/sym)
+  - 添加了为 [增广]($math.mat.augment) 行指定负索引的支持，以从后面定位行
+  - 修复了矩阵 [增广]($math.mat.augment) 行的默认颜色
+  - 修复了附加到行内表达式的素数的问题
+  - 数学内容现在遵循文本 [基线]($text.baseline) 设置
 
-- Performance
-  - Fixed a bug related to show rules in templates which would effectively
-    disable incremental compilation in affected documents
-  - Micro-optimized code in several hot paths, which brings substantial
-    performance gains, in particular in incremental compilations
-  - Improved incremental parsing, which affects the whole incremental
-    compilation pipeline
-  - Added support for incremental parsing in the CLI
-  - Added support for incremental SVG encoding during PDF export, which greatly
-    improves export performance for documents with many SVG
+- 性能
+  - 修复了与模板中显示规则相关的错误，这将有效地禁用受影响文档中的增量编译
+  - 在几个热点路径上进行了微优化，带来了相当大的性能提升，尤其是在增量编译中
+  - 改进了增量解析，影响整个增量编译流程
+  - 在 CLI 中添加了对增量解析的支持
+  - 在 PDF 导出期间添加了对增量 SVG 编码的支持，这大大提高了对包含许多SVG的文档的导出性能
 
-- Tooling and Diagnostics
-  - Improved autocompletion for variables that are in-scope
-  - Added autocompletion for package imports
-  - Added autocompletion for [labels]($label)
-  - Added tooltip that shows which variables a function captures (when hovering
-    over the equals sign or arrow of the function)
-  - Diagnostics are now deduplicated
-  - Improved diagnostics when trying to apply unary `+` or `-` to types that
-    only support binary `+` and `-`
-  - Error messages now state which label or citation key isn't present in the
-    document or its bibliography
-  - Fixed a bug where function argument parsing errors were shadowed by
-    function execution errors (e.g. when trying to call
-    [`array.sorted`]($array.sorted) and passing the key function as a positional
-    argument instead of a named one).
+- 工具和诊断
+  - 改进了在作用域内的变量的自动补全
+  - 添加了对包导入的自动补全
+  - 添加了对 [labels]($label) 的自动补全
+  - 添加了显示函数捕获的变量的工具提示（在悬停在函数的等号或箭头上时）
+  - 诊断现在被去重
+  - 在尝试将仅支持二进制 `+` 和 `-` 的类型应用到一元 `+` 或 `-` 时改进了诊断
+  - 错误消息现在会说明文档或其参考文献中缺少哪个标签或引文键
+  - 修复了函数参数解析错误被函数执行错误遮蔽的错误（例如，尝试调用 [`array.sorted`]($array.sorted) 时，
+    将键函数作为位置参数而不是命名参数传递）
 
-- Export
-  - Added support for configuring the document's creation
-    [`date`]($document.date). If the `date` is set to `{auto}` (the default),
-    the PDF's creation date will be set to the current date and time.
-  - Added support for configuring document [`keywords`]($document.keywords)
-  - Generated PDFs now contain PDF document IDs
-  - The PDF creator tool metadata now includes the Typst version
+- 导出
+  - 添加了配置文档创建 [`date`]($document.date) 的支持。
+    如果 `date` 设置为 `{auto}`（默认），PDF 的创建日期将设置为当前日期和时间。
+  - 添加了配置文档 [`keywords`]($document.keywords) 的支持
+  - 生成的 PDF 现在包含 PDF 文档 ID
+  - PDF 创建工具元数据现在包括 Typst 版本
 
-- Web app
-  - Added version picker to pin a project to an older compiler version
-    (with support for Typst 0.6.0+)
-  - Fixed desyncs between editor and compiler and improved overall stability
-  - The app now continues to highlight the document when typing while the
-    document is being compiled
+- Web 应用
+  - 添加了版本选择器，以将项目固定到较旧的编译器版本（支持 Typst 0.6.0+）
+  - 修复了编辑器和编译器之间的不同步，并提高了整体稳定性
+  - 在文档编译时，应用程序现在会继续突出显示文档，即使在键入时
 
-- Command line interface
-  - Added support for discovering fonts through fontconfig
-  - Now clears the screen instead of resetting the terminal
-  - Now automatically picks correct file extension for selected output format
-  - Now only regenerates images for changed pages when using `typst watch` with
-    PNG or SVG export
+- 命令行界面
+  - 添加了通过 fontconfig 发现字体的支持
+  - 现在在清屏而不是重置终端时清除屏幕
+  - 在选择输出格式时现在会自动选择正确的文件扩展名
+  - 使用 `typst watch` 时，只在更改的页面中重新生成 PNG 或 SVG 图像
 
-- Miscellaneous Improvements
-  - Added [`version`]($version) type and `sys.version` constant specifying the
-    current compiler version. Can be used to gracefully support multiple
-    versions.
-  - The U+2212 MINUS SIGN is now used when displaying a numeric value, in the
-    [`repr`]($repr) of any numeric value and to replace a normal hyphen in text
-    mode when before a digit. This improves, in particular, how negative integer
-    values are displayed in math mode.
-  - Added support for specifying a default value instead of failing for
-    `remove` function in [array]($array.remove) and
-    [dictionary]($dictionary.remove)
-  - Simplified page setup guide examples
-  - Switched the documentation from using the word "hashtag" to the word "hash"
-    where appropriate
-  - Added support for [`array.zip`]($array.zip) without any further arguments
-  - Fixed crash when a plugin tried to read out of bounds memory
-  - Fixed crashes when handling infinite [lengths]($length)
-  - Fixed introspection (mostly bibliography) bugs due to weak page break close
-    to the end of the document
+- 杂项改进
+  - 添加了 [`version`]($version) 类型和 `sys.version` 常量，指定当前编译器版本。可用于优雅地支持多个版本。
+  - 在显示数字值时，现在使用 U+2212 减号符号，以及在文本模式下在数字前的普通连字符的位置。
+    这在特别是改善了负整数值在数学模式中的显示。
+  - 添加了在 [array]($array.remove) 和 [dictionary]($dictionary.remove) 的 `remove` 函数中
+    指定默认值而不是失败的支持
+  - 简化了页面设置指南示例
+  - 在适当的地方，将文档从使用 "hashtag" 改为使用 "hash"
+  - 添加了无需其他参数即可使用的 [`array.zip`]($array.zip)
+  - 修复了插件尝试读取超出界限内存时的崩溃
+  - 修复了处理无限 [长度]($length) 时的崩溃
+  - 由于文档接近结尾的弱分页，修复了内省（主要是参考文献）错误
 
-- Development
-  - Extracted `typst::ide` into separate `typst_ide` crate
-  - Removed a few remaining `'static` bounds on `&dyn World`
-  - Removed unnecessary dependency, which reduces the binary size
-  - Fixed compilation of `typst` by itself (without `typst-library`)
-  - Fixed warnings with Nix flake when using `lib.getExe`
+- 开发
+  - 将 `typst::ide` 提取到独立的 `typst_ide` crate 中
+  - 移除了对 `&dyn World` 上的一些残余 `'static` 限制
+  - 移除了不必要的依赖，减小了二进制文件大小
+  - 修复了仅编译 `typst` 本身（没有 `typst-library`）时的问题
+  - 修复了使用 `lib.getExe` 时在 Nix flake 中的警告
 
 <contributors from="v0.8.0" to="v0.9.0" />
 
