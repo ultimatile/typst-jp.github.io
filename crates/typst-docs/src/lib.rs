@@ -79,12 +79,14 @@ pub fn provide(resolver: &dyn Resolver) -> Vec<PageModel> {
     vec![
         markdown_page(resolver, "/docs/", "overview.md").with_route("/docs/"),
         tutorial_pages(resolver),
+        markdown_page(resolver, "/docs/", "chinese.md"),
         reference_pages(resolver),
         guide_pages(resolver),
         packages_page(resolver),
         markdown_page(resolver, "/docs/", "changelog.md"),
         markdown_page(resolver, "/docs/", "roadmap.md"),
         markdown_page(resolver, "/docs/", "community.md"),
+        markdown_page(resolver, "/docs/", "glossary.md"),
     ]
 }
 
@@ -178,8 +180,8 @@ fn packages_page(resolver: &dyn Resolver) -> PageModel {
         .unwrap();
     PageModel {
         route: "/docs/packages/".into(),
-        title: "Packages".into(),
-        description: "Packages for Typst.".into(),
+        title: "第三方包".into(),
+        description: "Typst 的第三方包".into(),
         part: None,
         outline: vec![],
         body: BodyModel::Packages(Html::markdown(resolver, md, Some(1))),
@@ -289,7 +291,21 @@ fn category_page(resolver: &dyn Resolver, category: Category) -> PageModel {
         items.sort_by_cached_key(|item| item.name.clone());
     }
 
-    let name = category.title();
+    // let name = category.title();
+    let title_name = category.title();
+    let name = match title_name {
+      "text" => "文本",
+      "math" => "数学",
+      "layout" => "布局",
+      "visualize" => "可视化",
+      "meta" => "元信息",
+      "symbols" => "符号",
+      "foundations" => "基础",
+      "calculate" => "计算",
+      "construct" => "构造",
+      "data-loading" => "数据加载",
+      _ => &title_name,
+  };
     let details = Html::markdown(resolver, category.docs(), Some(1));
     let mut outline = vec![OutlineItem::from_name("Summary")];
     outline.extend(details.outline());
@@ -302,7 +318,7 @@ fn category_page(resolver: &dyn Resolver, category: Category) -> PageModel {
         route,
         title: name.into(),
         description: eco_format!(
-            "Documentation for functions related to {name} in Typst."
+            "Typst 中与 {name} 有关联的函数族的文档"
         ),
         part: None,
         outline,
@@ -329,7 +345,7 @@ fn func_page(
     PageModel {
         route: eco_format!("{parent}{}/", urlify(name)),
         title: func.title().unwrap().into(),
-        description: eco_format!("Documentation for the `{name}` function."),
+        description: eco_format!("`{name}` 函数的文档"),
         part: None,
         outline: func_outline(&model, ""),
         body: BodyModel::Func(model),
@@ -553,7 +569,7 @@ fn group_page(
     let model = PageModel {
         route: eco_format!("{parent}{}", group.name),
         title: group.title.clone(),
-        description: eco_format!("Documentation for the {} functions.", group.name),
+        description: eco_format!("{} 函数族的文档.", group.name),
         part: None,
         outline,
         body: BodyModel::Group(GroupModel {
@@ -581,7 +597,7 @@ fn type_page(resolver: &dyn Resolver, parent: &str, ty: &Type) -> PageModel {
     PageModel {
         route: eco_format!("{parent}{}/", urlify(ty.short_name())),
         title: ty.title().into(),
-        description: eco_format!("Documentation for the {} type.", ty.title()),
+        description: eco_format!("{} 类型的文档", ty.title()),
         part: None,
         outline: type_outline(&model),
         body: BodyModel::Type(model),
@@ -628,7 +644,7 @@ fn symbols_page(resolver: &dyn Resolver, parent: &str, group: &GroupData) -> Pag
     PageModel {
         route: eco_format!("{parent}{}/", group.name),
         title: group.title.clone(),
-        description: eco_format!("Documentation for the `{}` module.", group.name),
+        description: eco_format!("`{}` 模块的文档", group.name),
         part: None,
         outline: vec![],
         body: BodyModel::Symbols(model),
@@ -697,15 +713,35 @@ fn yaml<T: DeserializeOwned>(path: &str) -> T {
 
 /// Turn a title into an URL fragment.
 pub fn urlify(title: &str) -> EcoString {
-    title
-        .chars()
-        .map(|c| c.to_ascii_lowercase())
-        .map(|c| match c {
-            'a'..='z' | '0'..='9' => c,
-            _ => '-',
-        })
-        .collect()
+  match title {
+      "教程" => "tutorial".into(),
+      "使用 Typst 写作" => "writing-in-typst".into(),
+      "格式" => "formatting".into(),
+      "高级样式" => "advanced-styling".into(),
+      "制作模板" => "making-a-template".into(),
+      "中文用户指南" => "chinese".into(),
+      "参考" => "reference".into(),
+      "语法" => "syntax".into(),
+      "样式" => "styling".into(),
+      "脚本" => "scripting".into(),
+      "指南" => "guides".into(),
+      "LaTeX 用户指南" => "guide-for-latex-users".into(),
+      "页面设置指南" => "page-setup".into(),
+      "更新日志" => "changelog".into(),
+      "路线图" => "roadmap".into(),
+      "社区" => "community".into(),
+      "术语表" => "glossary".into(),
+      _ => title
+          .chars()
+          .map(|c| c.to_ascii_lowercase())
+          .map(|c| match c {
+              'a'..='z' | '0'..='9' => c,
+              _ => '-',
+          })
+          .collect(),
+  }
 }
+
 
 /// Extract the first line of documentation.
 fn oneliner(docs: &str) -> &str {
@@ -775,11 +811,30 @@ impl GroupData {
 
 #[cfg(test)]
 mod tests {
+    use std::io::Write;
+    use typst::visualize::Color;
+    use md5;
+
     use super::*;
 
     #[test]
     fn test_docs() {
-        provide(&TestResolver);
+        // remove all files in ../../assets/docs
+        let _ = std::fs::remove_dir_all("../../assets/docs");
+        // copy all files from ../../assets/files to ../../assets/docs
+        std::fs::create_dir("../../assets/docs").unwrap();
+        for entry in std::fs::read_dir("../../assets/files").unwrap() {
+            let entry = entry.unwrap();
+            let path = entry.path();
+            let name = String::from(path.file_name().unwrap().to_str().unwrap());
+            std::fs::copy(path, format!("../../assets/docs/{}", name)).unwrap();
+        }
+        // convert all pages to html and generate example images to ../../assets/docs
+        let pages = provide(&TestResolver);
+        // convert pages to JSON and save to ../../assets/docs.json
+        let json = serde_json::to_string_pretty(&pages).unwrap();
+        let mut file = std::fs::File::create("../../assets/docs.json").unwrap();
+        file.write_all(json.as_bytes()).unwrap();
     }
 
     struct TestResolver;
@@ -789,12 +844,30 @@ mod tests {
             None
         }
 
-        fn example(&self, _: u128, _: Option<Html>, _: &[Frame]) -> Html {
-            Html::new(String::new())
+        fn example(&self, _: u128, source: Option<Html>, frames: &[Frame]) -> Html {
+            // convert frames to a png
+            let ppi = 2.0;
+            // the first frame is the main frame
+            let pixmap = typst_render::render(frames.first().unwrap(), ppi, Color::WHITE);
+            // Get a random filename by md5
+            match source {
+                Some(source) => {
+                  let filename = format!("{:x}.png", md5::compute(source.as_str()));
+                  let path = Path::new("../../assets/docs").join(filename.clone());
+                  let _ = pixmap.save_png(path).map_err(|_| "failed to write PNG file");
+                  Html::new(format!(
+                      r#"<div class="previewed-code"><pre>{}</pre><div class="preview"><img src="/assets/docs/{}" alt="Preview" width="480" height="190"/></div></div>"#,
+                      source.as_str(), filename
+                  ))
+
+                },
+                _ => Html::new(String::new())
+            }
         }
 
-        fn image(&self, _: &str, _: &[u8]) -> String {
-            String::new()
+        fn image(&self, filename: &str, _: &[u8]) -> String {
+            // return /assets/docs/<filename>
+            format!("/assets/docs/{}", filename)
         }
 
         fn commits(&self, _: &str, _: &str) -> Vec<Commit> {
