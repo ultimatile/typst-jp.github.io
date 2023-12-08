@@ -14,3 +14,4 @@ description: |
 | show rule  | show 规则                | 出现于 [样式]($styling) 部分               |
 | markup     | 标记 / 标记模式          | Typst 的默认模式，可以直接编排文本         |
 | script     | 脚本 / 脚本模式          | Typst 的脚本模式，可以通过一个井号（#）进入|
+| figure     | 图表                     | 带有描述的图表，注意其和图片（image）的区别|

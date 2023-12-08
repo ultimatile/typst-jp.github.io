@@ -333,7 +333,7 @@ paragraphs right here!
 
 为了将一个样式应用到整个文档，Show 规则会把后续的所有内容都作为参数，传递给冒号后面定义的函数。`.with` 是函数对象的一个方法，它可以预设一些其他的默认参数（类似于柯里化），在传递给 Show 规则之前进行一些设置更改。
 
-译者注：`#show: conf.with(title: [标题])` 等价于 Lambda 表达式形式的 `#show: it => conf.with(title: [标题], it)`
+译者注：`#show: conf.with(title: [标题])` 等价于 Lambda 表达式形式的 `#show: it => conf(title: [标题], it)`
 </div>
 
 在 Web App 中，你可以选择一些预先定义好的模板，甚至可以通过模板向导创建自己的模板。
