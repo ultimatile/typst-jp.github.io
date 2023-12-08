@@ -16,7 +16,7 @@ body:
     title: 可视化
     details: |-
       <p>绘图和数据可视化。</p>
-      <p>如果您想创建更高级的绘图或图表，请同时查看 <a href="https://github.com/johannes-wolf/cetz">CetZ</a> 包以及更多针对您用例的专业化<a href="/docs/packages/">包</a>。</p>
+      <p>如果您想创建更高级的绘图或图表，请同时查看 <a href="https://github.com/johannes-wolf/cetz">CetZ</a> 包以及更多针对您用例的专业化 <a href="/docs/packages/">第三方包</a>。</p>
     items:
     - name: circle
       route: /docs/reference/visualize/circle/

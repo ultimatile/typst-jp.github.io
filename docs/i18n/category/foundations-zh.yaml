@@ -16,7 +16,7 @@ body:
     title: 基础
     details: |-
       <p>基础类型和函数。</p>
-      <p>在这里，您将找到有关基本数据类型（如<a href="/docs/reference/foundations/int/">整数</a>和<a href="/docs/reference/foundations/str/">字符串</a>）以及核心计算功能的详细信息。</p>
+      <p>在这里，您将找到有关基本数据类型（如 <a href="/docs/reference/foundations/int/">整数</a> 和 <a href="/docs/reference/foundations/str/">字符串</a>）以及核心计算功能的详细信息。</p>
     items:
     - name: arguments
       route: /docs/reference/foundations/arguments/

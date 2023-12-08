@@ -18,7 +18,7 @@ body:
     name: symbols
     title: 符号
     details: |-
-      <p>这两个模块为符号和表情符号命名，使它们易于在普通键盘上插入。或者，您也可以直接在文本和公式中输入Unicode符号。除下面列出的符号外，数学模式还定义了 <code>dif</code> 和 <code>Dif</code>。这不是普通的符号值，因为它们还影响间距和字体样式。</p>
+      <p>这两个模块为符号和表情符号命名，使它们易于在普通键盘上插入。或者，您也可以直接在文本和公式中输入 Unicode 符号。除下面列出的符号外，数学模式还定义了 <code>dif</code> 和 <code>Dif</code>。这不是普通的符号值，因为它们还影响间距和字体样式。</p>
     items:
     - name: sym
       route: /docs/reference/symbols/sym/
