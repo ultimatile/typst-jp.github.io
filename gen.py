@@ -15,13 +15,14 @@ yaml.add_representer(str, str_presenter)
 
 
 def translate_with_yaml(page):
-    if page['body']['kind'] in ['func', 'type', 'group']:
-        assert page['route'].startswith('/docs/reference/')
-        if page['body']['kind'] == 'group':
-            path = page['route'][len('/docs/reference/'):].split('/')
+    if page['body']['kind'] in ['func', 'type', 'group', 'category']:
+        route = page['route'][:-1] if page['route'].endswith('/') else page['route']
+        assert route.startswith('/docs/reference/')
+        if page['body']['kind'] == 'category':
+            path = ['category'] + route[len('/docs/reference/'):].split('/')
         else:
-            path = page['route'][len('/docs/reference/'):].split('/')[:-1]
-        assert len(path) == 2
+            path = route[len('/docs/reference/'):].split('/')
+        assert len(path) == 2, str(path) + ' ' + route
         # if docs/i18n/{path[0]} not exists, create it
         if not os.path.exists('docs/i18n/' + path[0]):
             os.mkdir('docs/i18n/' + path[0])

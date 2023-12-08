@@ -23,12 +23,6 @@ jobs:
       - run: python3 -m pip install jinja2 PyYAML
       - run: cargo test --package typst-docs --lib -- tests::test_docs --exact --nocapture
       - run: python3 ./gen.py
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist-without-markdown
-          path: |
-            dist
       # deploy ./dist to https://github.com/typst-doc-cn/typst-doc-cn.github.io
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
