@@ -1,6 +1,6 @@
 route: /docs/reference/visualize/
-title: Visualize
-description: Typst 中与 Visualize 有关联的函数族的文档
+title: 可视化
+description: Typst 中与可视化有关联的函数族的文档
 part: null
 outline:
 - id: summary
@@ -13,60 +13,58 @@ body:
   kind: category
   content:
     name: visualize
-    title: Visualize
+    title: 可视化
     details: |-
-      <p>Drawing and data visualization.</p>
-      <p>If you want to create more advanced drawings or plots, also have a look at
-      the <a href="https://github.com/johannes-wolf/cetz">CetZ</a> package as well as more
-      specialized <a href="/docs/packages/">packages</a> for your use case.</p>
+      <p>绘图和数据可视化。</p>
+      <p>如果您想创建更高级的绘图或图表，请同时查看 <a href="https://github.com/johannes-wolf/cetz">CetZ</a> 包以及更多针对您用例的专业化<a href="/docs/packages/">包</a>。</p>
     items:
     - name: circle
       route: /docs/reference/visualize/circle/
-      oneliner: A circle with optional content.
+      oneliner: 一个带有可选参数的圆。
       code: true
     - name: color
       route: /docs/reference/visualize/color/
-      oneliner: A color in a specific color space.
+      oneliner: 特定颜色空间中的颜色。
       code: true
     - name: ellipse
       route: /docs/reference/visualize/ellipse/
-      oneliner: An ellipse with optional content.
+      oneliner: 一个带有可选参数的椭圆。
       code: true
     - name: gradient
       route: /docs/reference/visualize/gradient/
-      oneliner: A color gradient.
+      oneliner: 渐变颜色。
       code: true
     - name: image
       route: /docs/reference/visualize/image/
-      oneliner: A raster or vector graphic.
+      oneliner: 光栅或矢量图形。
       code: true
     - name: line
       route: /docs/reference/visualize/line/
-      oneliner: A line from one point to another.
+      oneliner: 从一个点到另一个点的线。
       code: true
     - name: path
       route: /docs/reference/visualize/path/
-      oneliner: A path through a list of points, connected by Bezier curves.
+      oneliner: 通过一系列点绘制的路径，由贝塞尔曲线连接。
       code: true
     - name: pattern
       route: /docs/reference/visualize/pattern/
-      oneliner: A repeating pattern fill.
+      oneliner: 重复图案填充。
       code: true
     - name: polygon
       route: /docs/reference/visualize/polygon/
-      oneliner: A closed polygon.
+      oneliner: 封闭的多边形。
       code: true
     - name: rect
       route: /docs/reference/visualize/rect/
-      oneliner: A rectangle with optional content.
+      oneliner: 一个带有可选内容的矩形。
       code: true
     - name: square
       route: /docs/reference/visualize/square/
-      oneliner: A square with optional content.
+      oneliner: 一个带有可选内容的正方形。
       code: true
     - name: stroke
       route: /docs/reference/visualize/stroke/
-      oneliner: Defines how to draw a line.
+      oneliner: 定义如何绘制线条。
       code: true
     shorthands: null
 children:

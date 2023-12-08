@@ -1,6 +1,6 @@
 route: /docs/reference/data-loading/
-title: Data Loading
-description: Typst 中与 Data Loading 有关联的函数族的文档
+title: 数据加载
+description: Typst 中与数据加载有关联的函数族的文档
 part: null
 outline:
 - id: summary
@@ -13,38 +13,38 @@ body:
   kind: category
   content:
     name: data-loading
-    title: Data Loading
+    title: 数据加载
     details: |-
       <p>从外部文件加载数据。</p>
       <p>这些函数可以帮助您加载和嵌入数据，例如从实验结果中获取数据。</p>
     items:
     - name: cbor
       route: /docs/reference/data-loading/cbor/
-      oneliner: Reads structured data from a CBOR file.
+      oneliner: 从 CBOR 文件读取结构化数据。
       code: true
     - name: csv
       route: /docs/reference/data-loading/csv/
-      oneliner: Reads structured data from a CSV file.
+      oneliner: 从 CSV 文件读取结构化数据。
       code: true
     - name: json
       route: /docs/reference/data-loading/json/
-      oneliner: Reads structured data from a JSON file.
+      oneliner: 从 JSON 文件读取结构化数据。
       code: true
     - name: read
       route: /docs/reference/data-loading/read/
-      oneliner: Reads plain text or data from a file.
+      oneliner: 从文件读取纯文本或数据。
       code: true
     - name: toml
       route: /docs/reference/data-loading/toml/
-      oneliner: Reads structured data from a TOML file.
+      oneliner: 从 TOML 文件读取结构化数据。
       code: true
     - name: xml
       route: /docs/reference/data-loading/xml/
-      oneliner: Reads structured data from an XML file.
+      oneliner: 从 XML 文件读取结构化数据。
       code: true
     - name: yaml
       route: /docs/reference/data-loading/yaml/
-      oneliner: Reads structured data from a YAML file.
+      oneliner: 从 YAML 文件读取结构化数据。
       code: true
     shorthands: null
 children:

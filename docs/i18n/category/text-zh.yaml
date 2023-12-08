@@ -1,6 +1,6 @@
 route: /docs/reference/text/
-title: Text
-description: Typst 中与 Text 有关联的函数族的文档
+title: 文本
+description: Typst 中与文本有关联的函数族的文档
 part: null
 outline:
 - id: summary
@@ -13,66 +13,66 @@ body:
   kind: category
   content:
     name: text
-    title: Text
+    title: 文本
     details: |-
-      <p>Text styling.</p>
-      <p>The <a href="/docs/reference/text/text/">text function</a> is of particular interest.</p>
+      <p>文本样式。</p>
+      <p>其中 <a href="/docs/reference/text/text/">文本函数</a> 尤其有趣。</p>
     items:
     - name: highlight
       route: /docs/reference/text/highlight/
-      oneliner: Highlights text with a background color.
+      oneliner: 高亮显示文本。
       code: true
     - name: linebreak
       route: /docs/reference/text/linebreak/
-      oneliner: Inserts a line break.
+      oneliner: 插入换行符。
       code: true
     - name: lorem
       route: /docs/reference/text/lorem/
-      oneliner: Creates blind text.
+      oneliner: 创建假文。
       code: true
     - name: lower
       route: /docs/reference/text/lower/
-      oneliner: Converts a string or content to lowercase.
+      oneliner: 将字符串或内容转换为小写。
       code: true
     - name: overline
       route: /docs/reference/text/overline/
-      oneliner: Adds a line over text.
+      oneliner: 在文本上方添加一条线。
       code: true
     - name: raw
       route: /docs/reference/text/raw/
-      oneliner: Raw text with optional syntax highlighting.
+      oneliner: 具有可选语法突出显示的原始文本。
       code: true
     - name: smallcaps
       route: /docs/reference/text/smallcaps/
-      oneliner: Displays text in small capitals.
+      oneliner: 以小大写字母显示文本。
       code: true
     - name: smartquote
       route: /docs/reference/text/smartquote/
-      oneliner: A language-aware quote that reacts to its context.
+      oneliner: 对其上下文做出反应的语言感知引号。
       code: true
     - name: strike
       route: /docs/reference/text/strike/
-      oneliner: Strikes through text.
+      oneliner: 在文本中画一条线。
       code: true
     - name: sub
       route: /docs/reference/text/sub/
-      oneliner: Renders text in subscript.
+      oneliner: 以下标形式呈现文本。
       code: true
     - name: super
       route: /docs/reference/text/super/
-      oneliner: Renders text in superscript.
+      oneliner: 以上标形式呈现文本。
       code: true
     - name: text
       route: /docs/reference/text/text/
-      oneliner: Customizes the look and layout of text in a variety of ways.
+      oneliner: 以各种方式自定义文本的外观和布局。
       code: true
     - name: underline
       route: /docs/reference/text/underline/
-      oneliner: Underlines text.
+      oneliner: 给文本加下划线。
       code: true
     - name: upper
       route: /docs/reference/text/upper/
-      oneliner: Converts a string or content to uppercase.
+      oneliner: 将字符串或内容转换为大写。
       code: true
     shorthands: null
 children:

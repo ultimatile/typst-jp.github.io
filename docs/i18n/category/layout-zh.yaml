@@ -1,6 +1,6 @@
 route: /docs/reference/layout/
-title: Layout
-description: Typst 中与 Layout 有关联的函数族的文档
+title: 布局
+description: Typst 中与布局有关联的函数族的文档
 part: null
 outline:
 - id: summary
@@ -13,119 +13,118 @@ body:
   kind: category
   content:
     name: layout
-    title: Layout
+    title: 布局
     details: |-
-      <p>Arranging elements on the page in different ways.</p>
-      <p>By combining layout functions, you can create complex and automatic layouts.</p>
+      <p>以不同方式在页面上排列元素。</p>
+      <p>通过组合布局函数，您可以创建复杂且自动的布局。</p>
     items:
     - name: align
       route: /docs/reference/layout/align/
-      oneliner: Aligns content horizontally and vertically.
+      oneliner: 在水平和垂直方向上对齐内容。
       code: true
     - name: alignment
       route: /docs/reference/layout/alignment/
-      oneliner: Where to [align]($align) something along an axis.
+      oneliner: 在沿轴线的何处[对齐]($align)某物。
       code: true
     - name: angle
       route: /docs/reference/layout/angle/
-      oneliner: An angle describing a rotation.
+      oneliner: 描述旋转的角度。
       code: true
     - name: block
       route: /docs/reference/layout/block/
-      oneliner: A block-level container.
+      oneliner: 一个块级容器。
       code: true
     - name: box
       route: /docs/reference/layout/box/
-      oneliner: An inline-level container that sizes content.
+      oneliner: 一个内联级容器，可调整内容的大小。
       code: true
     - name: colbreak
       route: /docs/reference/layout/colbreak/
-      oneliner: Forces a column break.
+      oneliner: 强制列中断。
       code: true
     - name: columns
       route: /docs/reference/layout/columns/
-      oneliner: Separates a region into multiple equally sized columns.
+      oneliner: 将区域分割为多个大小相等的列。
       code: true
     - name: direction
       route: /docs/reference/layout/direction/
-      oneliner: The four directions into which content can be laid out.
+      oneliner: 内容可以布局的四个方向。
       code: true
     - name: fraction
       route: /docs/reference/layout/fraction/
-      oneliner: Defines how the the remaining space in a layout is distributed.
+      oneliner: 定义布局中剩余空间的分布方式。
       code: true
     - name: grid
       route: /docs/reference/layout/grid/
-      oneliner: Arranges content in a grid.
+      oneliner: 将内容排列成网格。
       code: true
     - name: h
       route: /docs/reference/layout/h/
-      oneliner: Inserts horizontal spacing into a paragraph.
+      oneliner: 在段落中插入水平间距。
       code: true
     - name: hide
       route: /docs/reference/layout/hide/
-      oneliner: Hides content without affecting layout.
+      oneliner: 隐藏内容而不影响布局。
       code: true
     - name: layout
       route: /docs/reference/layout/layout/
-      oneliner: Provides access to the current outer container's (or page's, if none)
-        size
+      oneliner: 提供对当前外部容器（如果没有，则是页面的）大小的访问。
       code: true
     - name: length
       route: /docs/reference/layout/length/
-      oneliner: A size or distance, possibly expressed with contextual units.
+      oneliner: 一个大小或距离，可能使用上下文单位表示。
       code: true
     - name: measure
       route: /docs/reference/layout/measure/
-      oneliner: Measures the layouted size of content.
+      oneliner: 测量内容的布局大小。
       code: true
     - name: move
       route: /docs/reference/layout/move/
-      oneliner: Moves content without affecting layout.
+      oneliner: 移动内容而不影响布局。
       code: true
     - name: pad
       route: /docs/reference/layout/pad/
-      oneliner: Adds spacing around content.
+      oneliner: 在内容周围添加间距。
       code: true
     - name: page
       route: /docs/reference/layout/page/
-      oneliner: Layouts its child onto one or multiple pages.
+      oneliner: 将其子元素布局到一个或多个页面上。
       code: true
     - name: pagebreak
       route: /docs/reference/layout/pagebreak/
-      oneliner: A manual page break.
+      oneliner: 手动分页。
       code: true
     - name: place
       route: /docs/reference/layout/place/
-      oneliner: Places content at an absolute position.
+      oneliner: 在绝对位置放置内容。
       code: true
     - name: ratio
       route: /docs/reference/layout/ratio/
-      oneliner: A ratio of a whole.
+      oneliner: 整体的比率。
       code: true
     - name: relative
       route: /docs/reference/layout/relative/
-      oneliner: A length in relation to some known length.
+      oneliner: 相对于某个已知长度的长度。
       code: true
     - name: repeat
       route: /docs/reference/layout/repeat/
-      oneliner: Repeats content to the available space.
+      oneliner: 将内容重复到可用空间。
       code: true
     - name: rotate
       route: /docs/reference/layout/rotate/
-      oneliner: Rotates content without affecting layout.
+      oneliner: 旋转内容而不影响布局。
       code: true
     - name: scale
       route: /docs/reference/layout/scale/
-      oneliner: Scales content without affecting layout.
+      oneliner: 缩放内容而不影响布局。
       code: true
     - name: stack
       route: /docs/reference/layout/stack/
-      oneliner: Arranges content and spacing horizontally or vertically.
+      oneliner: 水平或垂直地排列内容和间距。
       code: true
     - name: v
       route: /docs/reference/layout/v/
-      oneliner: Inserts vertical spacing into a flow of blocks.
+      oneliner: 在块流中插入垂直间距。
       code: true
     shorthands: null
 children:

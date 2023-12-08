@@ -1,6 +1,6 @@
 route: /docs/reference/foundations/
-title: Foundations
-description: Typst 中与 Foundations 有关联的函数族的文档
+title: 基础
+description: Typst 中与基础有关联的函数族的文档
 part: Library
 outline:
 - id: summary
@@ -13,31 +13,30 @@ body:
   kind: category
   content:
     name: foundations
-    title: Foundations
+    title: 基础
     details: |-
-      <p>Foundational types and functions.</p>
-      <p>Here, you'll find documentation for basic data types like <a href="/docs/reference/foundations/int/">integers</a>
-      and <a href="/docs/reference/foundations/str/">strings</a> as well as details about core computational functions.</p>
+      <p>基础类型和函数。</p>
+      <p>在这里，您将找到有关基本数据类型（如<a href="/docs/reference/foundations/int/">整数</a>和<a href="/docs/reference/foundations/str/">字符串</a>）以及核心计算功能的详细信息。</p>
     items:
     - name: arguments
       route: /docs/reference/foundations/arguments/
-      oneliner: Captured arguments to a function.
+      oneliner: 捕获到函数的参数。
       code: true
     - name: array
       route: /docs/reference/foundations/array/
-      oneliner: A sequence of values.
+      oneliner: 一系列值。
       code: true
     - name: assert
       route: /docs/reference/foundations/assert/
-      oneliner: Ensures that a condition is fulfilled.
+      oneliner: 确保条件得到满足。
       code: true
     - name: bool
       route: /docs/reference/foundations/bool/
-      oneliner: A type with two states.
+      oneliner: 具有两种状态的类型。
       code: true
     - name: bytes
       route: /docs/reference/foundations/bytes/
-      oneliner: A sequence of bytes.
+      oneliner: 字节序列。
       code: true
     - name: calc
       route: /docs/reference/foundations/calc
@@ -45,71 +44,71 @@ body:
       code: false
     - name: content
       route: /docs/reference/foundations/content/
-      oneliner: A piece of document content.
+      oneliner: 文档内容的一部分。
       code: true
     - name: datetime
       route: /docs/reference/foundations/datetime/
-      oneliner: Represents a date, a time, or a combination of both.
+      oneliner: 表示日期、时间或两者的组合。
       code: true
     - name: dictionary
       route: /docs/reference/foundations/dictionary/
-      oneliner: A map from string keys to values.
+      oneliner: 从字符串键到值的映射。
       code: true
     - name: duration
       route: /docs/reference/foundations/duration/
-      oneliner: Represents a positive or negative span of time.
+      oneliner: 表示正或负的时间跨度。
       code: true
     - name: eval
       route: /docs/reference/foundations/eval/
-      oneliner: Evaluates a string as Typst code.
+      oneliner: 将字符串作为 Typst 代码进行评估。
       code: true
     - name: float
       route: /docs/reference/foundations/float/
-      oneliner: A floating-point number.
+      oneliner: 浮点数。
       code: true
     - name: function
       route: /docs/reference/foundations/function/
-      oneliner: A mapping from argument values to a return value.
+      oneliner: 从参数值到返回值的映射。
       code: true
     - name: int
       route: /docs/reference/foundations/int/
-      oneliner: A whole number.
+      oneliner: 整数。
       code: true
     - name: label
       route: /docs/reference/foundations/label/
-      oneliner: A label for an element.
+      oneliner: 元素的标签。
       code: true
     - name: module
       route: /docs/reference/foundations/module/
-      oneliner: An evaluated module, either built-in or resulting from a file.
+      oneliner: 已评估的模块，可以是内置的或来自文件的结果。
       code: true
     - name: panic
       route: /docs/reference/foundations/panic/
-      oneliner: Fails with an error.
+      oneliner: 失败并显示错误。
       code: true
     - name: plugin
       route: /docs/reference/foundations/plugin/
-      oneliner: A WebAssembly plugin.
+      oneliner: WebAssembly 插件。
       code: true
     - name: regex
       route: /docs/reference/foundations/regex/
-      oneliner: A regular expression.
+      oneliner: 正则表达式。
       code: true
     - name: repr
       route: /docs/reference/foundations/repr/
-      oneliner: Returns the string representation of a value.
+      oneliner: 返回值的字符串表示。
       code: true
     - name: selector
       route: /docs/reference/foundations/selector/
-      oneliner: A filter for selecting elements within the document.
+      oneliner: 用于选择文档中的元素的过滤器。
       code: true
     - name: str
       route: /docs/reference/foundations/str/
-      oneliner: A sequence of Unicode codepoints.
+      oneliner: Unicode 代码点序列。
       code: true
     - name: style
       route: /docs/reference/foundations/style/
-      oneliner: Provides access to active styles.
+      oneliner: 提供对活动样式的访问。
       code: true
     - name: sys
       route: /docs/reference/foundations/sys
@@ -117,11 +116,11 @@ body:
       code: false
     - name: type
       route: /docs/reference/foundations/type/
-      oneliner: Describes a kind of value.
+      oneliner: 描述一种值的类型。
       code: true
     - name: version
       route: /docs/reference/foundations/version/
-      oneliner: A version with an arbitrary number of components.
+      oneliner: 具有任意数量组件的版本。
       code: true
     shorthands: null
 children:

@@ -1,6 +1,6 @@
 route: /docs/reference/symbols/
-title: Symbols
-description: Typst 中与 Symbols 有关联的函数族的文档
+title: 符号
+description: Typst 中与符号有关联的函数族的文档
 part: null
 outline:
 - id: summary
@@ -16,27 +16,21 @@ body:
   kind: category
   content:
     name: symbols
-    title: Symbols
+    title: 符号
     details: |-
-      <p>These two modules give names to symbols and emoji to make them easy to
-      insert with a normal keyboard. Alternatively, you can also always directly
-      enter Unicode symbols into your text and formulas. In addition to the
-      symbols listed below, math mode defines <code>dif</code> and <code>Dif</code>. These are not
-      normal symbol values because they also affect spacing and font style.</p>
+      <p>这两个模块为符号和表情符号命名，使它们易于在普通键盘上插入。或者，您也可以直接在文本和公式中输入Unicode符号。除下面列出的符号外，数学模式还定义了 <code>dif</code> 和 <code>Dif</code>。这不是普通的符号值，因为它们还影响间距和字体样式。</p>
     items:
     - name: sym
       route: /docs/reference/symbols/sym/
-      oneliner: These two modules give names to symbols and emoji to make them easy
-        to
+      oneliner: 这两个模块为符号和表情符号命名，使它们易于
       code: true
     - name: emoji
       route: /docs/reference/symbols/emoji/
-      oneliner: These two modules give names to symbols and emoji to make them easy
-        to
+      oneliner: 这两个模块为符号和表情符号命名，使它们易于
       code: true
     - name: symbol
       route: /docs/reference/symbols/symbol/
-      oneliner: A Unicode symbol.
+      oneliner: 一个Unicode符号。
       code: true
     shorthands:
       markup:
