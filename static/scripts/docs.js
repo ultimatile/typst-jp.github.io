@@ -634,7 +634,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const t = document.querySelector("#page-overview > ul");
     t && setUpOnPageNavigation(t),
     setUpCollapsingSidebar(document.querySelector("nav.folding"))
-    alertClose(document.querySelector("button.close"));;
+    alertClose(document.querySelector("button.close"));
     for (const n of document.querySelectorAll("div.tooltip-context"))
         setUpTooltip(n);
     const e = document.querySelector(".page-end-buttons a.previous")
