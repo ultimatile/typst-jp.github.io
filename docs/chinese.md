@@ -51,9 +51,9 @@ Typst 是可用于出版的可编程标记语言，拥有变量、函数与包�
 1. 在 [VS Code](https://code.visualstudio.com/) 中打开任意工作目录。
 2. 在 VS Code 中安装 [Typst LSP](https://marketplace.visualstudio.com/items?itemName=nvarner.typst-lsp) 和 [Typst Preview](https://marketplace.visualstudio.com/items?itemName=mgt19937.typst-preview) 插件。前者负责语法高亮和错误检查，后者负责预览。
     - 也推荐下载 [Typst Companion](https://marketplace.visualstudio.com/items?itemName=CalebFiggers.typst-companion) 插件，其提供了例如 `Ctrl + B` 进行加粗等便捷的快捷键。
-    - 你还可以下载我开发的 [Typst Sync](https://marketplace.visualstudio.com/items?itemName=OrangeX4.vscode-typst-sync) 和 [Typst Sympy Calculator](https://marketplace.visualstudio.com/items?itemName=OrangeX4.vscode-typst-sympy-calculator) 插件，前者提供了本地包的云同步功能，后者提供了基于 Typst 语法的科学计算器功能。
+    - 还可以下载 [Typst Sync](https://marketplace.visualstudio.com/items?itemName=OrangeX4.vscode-typst-sync) 和 [Typst Sympy Calculator](https://marketplace.visualstudio.com/items?itemName=OrangeX4.vscode-typst-sympy-calculator) 插件，前者提供了本地包的云同步功能，后者提供了基于 Typst 语法的科学计算器功能。
 3. 新建一个 `test.typ` 文件，写入内容 `# Hello World`。
-4. 按下 `Shift + Ctrl + P`，然后输入命令 `Typst Preview: Preview current file`，即可同步增量渲染与预览，还提供了光标双向定位功能。
+4. 按下 `Ctrl + K V`，即可同步增量渲染与预览，还提供了光标双向定位功能。
 
 
 ### 如何为中英文设置不同的字体？
@@ -80,6 +80,7 @@ Hello World 你好世界
 Hello World 你好世界
 ```
 
+
 ### 为什么我设置的字体没有生效？
 
 如果中文字体不符合 typst 要求，那么它不会选择你声明的字体，例如字体的变体数量不够，参考更详细的 [issue](https://github.com/typst/typst/issues/725)。
@@ -88,6 +89,11 @@ Hello World 你好世界
 2. `typst fonts --font-path path/to/your-fonts` 指定字体目录。
 3. `typst fonts --variants` 查看字体变体。
 4. 检查中文字体是否已经完全安装。
+
+
+### 为什么连续标点会挤压在一起？
+
+如果字体与 `text(lang: .., region: ..)` 不匹配，可能会导致连续标点的挤压。例如字体不是中国大陆的，标点压缩会出错；反之亦然。
 
 
 ### 如何添加中文斜体？
