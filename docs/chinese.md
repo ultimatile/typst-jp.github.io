@@ -294,6 +294,6 @@ A quick _brown_
 
 **幻灯片**：
 
-- [diapo](https://github.com/lvignoli/diapo) - 一种极简和简约的演示模板
-- [polylux](https://github.com/andreasKroepelin/polylux) - 在 Typst 中创建演示幻灯片
-- [pinit](https://github.com/OrangeX4/typst-pinit) - 用于更好地在 Typst 中编写 Slides 的相对定位工具包
+- [touying](https://github.com/touying-typ/touying) - 拥有强大功能和丰富模板的幻灯片包，包括详细的[中文文档](https://touying-typ.github.io/touying/zh/docs/intro/)
+- [polylux](https://github.com/andreasKroepelin/polylux) - 在 Typst 中创建演示幻灯片包
+- [pinit](https://github.com/OrangeX4/typst-pinit) - 并非幻灯片包，而是一个好用的相对定位工具包
