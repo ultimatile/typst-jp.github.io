@@ -22,7 +22,6 @@ Typst 是可用于出版的可编程标记语言，拥有变量、函数与包�
 参考 [Discord](https://discord.com/channels/1054443721975922748/1176062736514429008) 的记录，可知目前仍存在：
 
 - 行内代码或行内数学公式与中文之间的自动空格 [#2702](https://github.com/typst/typst/issues/2702) [#2703](https://github.com/typst/typst/issues/2703)。
-- 变体字体、伪粗体、斜体等字体支持 [#725](https://github.com/typst/typst/issues/725)。
 - 不能简单地实现首段缩进 [#311](https://github.com/typst/typst/issues/311)。
 - 暂时无法忽略 CJK 字符之间的单个换行符自动转换成的空格 [#792](https://github.com/typst/typst/issues/792)。
 - 有时候段落开始的 CJK 标点符号没有被调整 [#2348](https://github.com/typst/typst/issues/2348)。
@@ -95,7 +94,9 @@ Hello World 你好世界
 如果字体与 `text(lang: .., region: ..)` 不匹配，可能会导致连续标点的挤压。例如字体不是中国大陆的，标点压缩会出错；反之亦然。
 
 
-### 如何添加中文斜体？
+### 如何添加中文粗体和斜体？
+
+可以使用 [cuti](https://github.com/csimide/cuti) 包。
 
 中文斜体一般使用楷体替代，你可以 [通过 show-set 规则实现](https://github.com/typst/typst/issues/725)：
 
@@ -194,14 +195,17 @@ A quick _brown_
 ```example
 #set par(first-line-indent: 2em)
 
-#let fake_par = {
-  v(-1em)
-  box()
-}
+#let fake-par = style(styles => {
+  let b = par[#box()]
+  let t = measure(b + b, styles);
+
+  b
+  v(-t.height)
+})
 
 #show heading: it => {
   it
-  fake_par
+  fake-par
 }
 
 = 一级标题
@@ -219,7 +223,7 @@ A quick _brown_
 层峦耸翠，上出重霄；飞阁流丹，下临无地。鹤汀凫渚，穷岛屿之萦回；桂殿兰宫，即冈峦之体势。
 ```
 
-这样做的优点是可以自动首行缩进，缺点是其中的 `v(-1em)` 会造成标题和首行段落的间距出现问题。
+PS: 例子来源于 [Myriad-Dreamin](https://github.com/Myriad-Dreamin)
 
 
 ### 如何让行内数学公式显示为行间数学公式的大小？
@@ -245,7 +249,7 @@ A quick _brown_
   }
 }
 
-行内数学公式（展示模式） $display(integral x dif x)$
+行内数学公式（展示模式） $integral x dif x$
 ```
 
 
