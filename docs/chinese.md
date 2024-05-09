@@ -269,6 +269,81 @@ PS: 例子来源于 [Myriad-Dreamin](https://github.com/Myriad-Dreamin)
 
 类 Markdown 表格：可以使用 [tablem](https://github.com/OrangeX4/typst-tablem) 包。
 
+### 如何更换不同的参考文献格式？
+
+Typst (>=0.10.0) 可以使用 csl 文件指定参考文献格式，见 [`bibliography` 的文档](https://typst.app/docs/reference/model/bibliography/#parameters-style)。
+
+Typst 内置了中文常用的 GB/T-7714-2015 格式，其他 GB/T-7714-2015 变体可以查看 [GB/T 7714—2015 相关的 CSL 样式](https://github.com/redleafnew/Chinese-STD-GB-T-7714-related-csl)。
+
+### 为什么指定参考文献 csl 后，报错 `failed to load CSL style`？
+
+**报错1：** ``(duplicate field `layout`)``
+
+Typst 暂不支持 CSL-M 标准，可以注释掉多余的 `<layout>` **临时**解决。
+
+在 csl 文件里搜索 `bibliography`，这里通常有多个 `<layout>` ，一般建议注释掉 `<layout locale="en">` 这一段 `<layout>` 。例子如下
+
+```xml
+<bibliography entry-spacing="0" et-al-min="4" et-al-use-first="3" second-field-align="flush">
+  <!--
+  <layout locale="en">
+    <text variable="citation-number" prefix="[" suffix="]"/>
+    <text macro="entry-layout"/>
+  </layout>
+  -->
+  <layout>
+    <text variable="citation-number" prefix="[" suffix="]"/>
+    <text macro="entry-layout"/>
+  </layout>
+</bibliography>
+```
+
+（示例来自 http://www.zotero.org/styles/china-national-standard-gb-t-7714-2015-numeric ，原作者见此文件，依 CC-BY-SA 3.0 协议使用）
+
+这样修改之后，csl 根据文献语言自动使用“等”或“et al.”的功能会失效，请见下一条 Q&A 的问题1。
+
+**报错2：** ``(unknown variant `institution`, expected one of `name`, `et-al`, `label`, `substitute`)`` 
+
+在 csl 文件里注释掉不支持的部分。
+
+### 为什么参考文献格式与预期不符？
+
+**问题1：** 希望在中文文献使用 `等`、在西文文献使用 `et al.`，但 Typst 均显示为 `等`（或均显示为 `et al.`）。
+
+Typst 暂不支持 CSL-M 标准，因此暂时无法通过修改 csl 文件实现中文西文自动使用不同的文字（[typst/typst#2793](https://github.com/typst/typst/issues/2793), [typst/citationberg#5](https://github.com/typst/citationberg/issues/5), [typst/hayagriva#126](https://github.com/typst/hayagriva/pull/126)）。
+
+如果参考文献均为同一种语言，可以为参考文献部分设定语言，如：
+
+```example
+#set text(lang: "zh")
+一些内容 @tbs1 。
+
+#heading(level: 1, numbering: none)[参考文献]
+#{
+  set text(lang: "en")
+  bibliography(
+    "many-authors.bib",
+    style: "gb-7714-2015-numeric",
+    title: none
+  )
+}
+```
+
+如果需要实现中文西文自动使用不同的文字，可以使用正则替换魔法，请见 [nju-lug/modern-nju-thesis#3](https://github.com/nju-lug/modern-nju-thesis/issues/3)。
+
+**问题2：** (numeric 格式) 连续引用多条文献时，应当折叠为 `[1-4]` ，但是 Typst 折叠为 `[1,4]` 。
+
+hayagriva 已知 bug [typst/hayagriva#154](https://github.com/typst/hayagriva/issues/154)。
+
+可以通过将 csl 文件里的 `after-collapse-delimiter=","` 改成 `after-collapse-delimiter="-"` 临时解决。请注意，这样做并不符合 CSL 规范，修改后的文件不应当用于 Zotero 等文献管理软件。待 hayagriva 修复此 bug 后，需要改回。
+
+**问题3：** 引文条目中 `. ` 部分丢失。
+
+在 csl 中修改生成引文条目的 `macro`，向缺少 `. ` 的部分添加 `<group delimiter=". ">`。
+
+**问题4：** 参考文献不显示 bib 中的 `note` 。
+
+目前暂不支持（[typst/hayagriva#91](https://github.com/typst/hayagriva/issues/91)）。
 
 ## 一些 Typst 中文资源列表 { #resources }
 
@@ -288,6 +363,7 @@ PS: 例子来源于 [Myriad-Dreamin](https://github.com/Myriad-Dreamin)
 - [HIT-Thesis-Typst](https://github.com/chosertech/HIT-Thesis-Typst): 适用于哈尔滨工业大学学位论文的 Typst 模板
 - [nju-thesis-typst](https://github.com/nju-lug/nju-thesis-typst): 南京大学学位论文 Typst 模板，使用 Typst 包管理、闭包等现代编程语言特性开发，一个更方便编辑和拓展的模板
 - [nuist-thesis-typst](https://github.com/Dustella/nuist-thesis-typst): 南京信息工程大学本科生毕业论文/设计 Typst 模板，分叉自 nju-thesis-typst
+- [SEU-Typst-Template](https://github.com/csimide/SEU-Typst-Template): 东南大学本科毕业设计与学位论文模板
 
 **中文简历**：
 
