@@ -28,18 +28,10 @@ def translate_with_yaml(page):
             os.mkdir('docs/i18n/' + path[0])
         # without quotes and with indent
         en_path = 'docs/i18n/' + path[0] + '/' + path[1] + '-en.yaml'
-        zh_path = 'docs/i18n/' + path[0] + '/' + path[1] + '-zh.yaml'
         ja_path = 'docs/i18n/' + path[0] + '/' + path[1] + '-ja.yaml'
         with open(en_path, 'w', encoding='utf-8') as f:
             yaml.dump(page, f, allow_unicode=True, default_flow_style=False,
                       indent=2, sort_keys=False, encoding='utf-8')
-        if not os.path.exists(zh_path):
-            with open(zh_path, 'w', encoding='utf-8') as f:
-                yaml.dump(page, f, allow_unicode=True, default_flow_style=False,
-                          indent=2, sort_keys=False, encoding='utf-8')
-        if os.path.exists(zh_path):
-            with open(zh_path, 'r', encoding='utf-8') as f:
-                page = yaml.load(f, Loader=yaml.FullLoader)
         if not os.path.exists(ja_path):
             with open(ja_path, 'w', encoding='utf-8') as f:
                 yaml.dump(page, f, allow_unicode=True, default_flow_style=False,
