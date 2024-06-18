@@ -4,8 +4,8 @@
 
 このリポジトリは[中国語版](https://github.com/typst-doc-cn/typst-doc-cn.github.io)からフォークして作成され、2024年6月時点での最新版である [Typst v0.11.1](https://typst.app/docs/changelog/#v0.11.1) の公式ドキュメントを元に日本語訳を行います。
 
-Web 版は次の URL から閲覧できます。
-- Web 版: https://typst-jp.github.io/docs/
+実際に作動している Web 版は、以下の URL から閲覧できます。
+> https://typst-jp.github.io/docs/
 
 ## 翻訳に参加するには
 
@@ -22,7 +22,6 @@ Web 版は次の URL から閲覧できます。
     1. 不明な用語については、用語集または他のページの翻訳も参照すること。必要に応じて、Discord サーバ (後述) や Issue で相談すること。
     1. Typst のコード記述例の中に出てくる英文は、日本語に翻訳する必要はありません。
 1. 翻訳作業が終わったら、Pull Request を送信してください。
-1. 必要に応じて、文書の最後に翻訳者の名前を残すこともできます。
 
 ご質問などがある場合は、[「くみはんクラブ」のDiscordサーバー](https://discord.gg/9xF7k4aAuH)に参加してご連絡ください。
 
@@ -30,7 +29,7 @@ Web 版は次の URL から閲覧できます。
 
 ## 技術的な詳細
 
-[中国語版](https://github.com/typst-doc-cn/typst-doc-cn.github.io?tab=readme-ov-file#%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82)参照
+[中国語版](https://github.com/typst-doc-cn/typst-doc-cn.github.io?tab=readme-ov-file#%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82)を参照してください。
 
 ## ローカル環境でドキュメントを生成する
 
