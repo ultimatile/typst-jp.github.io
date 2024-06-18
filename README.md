@@ -10,10 +10,10 @@
 ## 翻訳に参加するには
 
 1. この GitHub リポジトリをフォークします。
-1. ドキュメントの実体は、以下の2種類のファイルから構成されています。
-    - Typst の言語リファレンスの実体は、`./docs/i18n/**` 内の Yaml ファイルです。これらを日本語に訳す時は、ファイル名の末尾が `-ja.yaml` となるようにしてください。
-    例えば、https://typst.app/docs/reference/model/ を翻訳する際は、`./docs/i18n/category/model-en.yaml` を `./docs/i18n/category/model-ja.yaml` に**コピーして翻訳してください**。**既存の Yaml ファイルを直接書き換えて翻訳してはいけません**。
-    - Typst のチュートリアルや入門ガイドなど、言語リファレンス以外のページの実体は `./docs` 内の Markdown ファイルです。**既存の Markdown ファイルを直接書き換えて翻訳してください**。
+1. ドキュメントの実体は、Markdown および Yaml の2種類のファイルから構成されています。それぞれ、下記の注意書きに従って翻訳作業をお願いします。
+    1. `./docs/i18n/**/` 内の Yaml ファイル群は、Typst の言語リファレンスの本体です。その中に含まれている、**既存の `*-ja.yaml` ファイルを直接書き換えて翻訳してください**。**`*-en.yaml` や `*-zh.yaml` は翻訳しないでください**。
+        - 例: https://typst.app/docs/reference/model/ を翻訳する際は、`./docs/i18n/category/model-ja.yaml` を編集してください。`model-en.yaml` や `model-zh.yaml` は放置してください。
+    2. `./docs` 内の Markdown ファイル群は、Typst のチュートリアルや入門ガイドなど、言語リファレンス以外のページの本体です。**既存の Markdown ファイルを直接書き換えて翻訳してください**。
 1. 「サードパーティ パッケージ」のページの翻訳を追加する場合は、`./static/assets/index2ja.json` も編集する必要があります。
 1. 翻訳の際は、以下のガイドラインを遵守するようにしてください。
     1. [v0.11.1 時点での公式ドキュメント](https://github.com/typst/typst/tree/v0.11.1/docs)から翻訳すること。
