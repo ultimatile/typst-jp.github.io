@@ -712,11 +712,11 @@ fn yaml<T: DeserializeOwned>(path: &str) -> T {
 /// Turn a title into an URL fragment.
 pub fn urlify(title: &str) -> EcoString {
     match title {
-        "教程" => "tutorial".into(),
-        "使用 Typst 写作" => "writing-in-typst".into(),
-        "格式" => "formatting".into(),
-        "高级样式" => "advanced-styling".into(),
-        "制作模板" => "making-a-template".into(),
+        "チュートリアル" => "tutorial".into(),
+        "Typstで執筆するには" => "writing-in-typst".into(),
+        "書式を設定する" => "formatting".into(),
+        "高度なスタイリング" => "advanced-styling".into(),
+        "テンプレートを作成する" => "making-a-template".into(),
         "中文用户指南" => "chinese".into(),
         "参考" => "reference".into(),
         "语法" => "syntax".into(),
