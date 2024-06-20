@@ -14,6 +14,7 @@
     1. `./docs/i18n/**/` 内の Yaml ファイル群は、Typst の言語リファレンスの本体です。その中に含まれている、**既存の `*-ja.yaml` ファイルを直接書き換えて翻訳してください**。**`*-en.yaml` や `*-zh.yaml` は翻訳しないでください**。
         - 例: https://typst.app/docs/reference/model/ を翻訳する際は、`./docs/i18n/category/model-ja.yaml` を編集してください。`model-en.yaml` や `model-zh.yaml` は放置してください。
     2. `./docs` 内の Markdown ファイル群は、Typst のチュートリアルや入門ガイドなど、言語リファレンス以外のページの本体です。**既存の Markdown ファイルを直接書き換えて翻訳してください**。
+    それに加えて、`./crates/typst-docs/src/lib.rs` ファイルの [`urlify` 関数](https://github.com/search?q=repo%3Atypst-jp/typst-jp.github.io%20urlify&type=code) を編集して、中国語版の記事タイトルを日本語版のものに書き換えてください。このプロセスを抜かすと、Web ページの URL が正しく生成されません。
 1. 「サードパーティ パッケージ」のページの翻訳を追加する場合は、`./static/assets/index2ja.json` も編集する必要があります。
 1. 翻訳の際は、以下のガイドラインを遵守するようにしてください。
     1. [v0.11.1 時点での公式ドキュメント](https://github.com/typst/typst/tree/v0.11.1/docs)から翻訳すること。
