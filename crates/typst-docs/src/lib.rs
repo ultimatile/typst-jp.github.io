@@ -294,18 +294,18 @@ fn category_page(resolver: &dyn Resolver, category: Category) -> PageModel {
     // let name = category.title();
     let title_name = category.title();
     let name = match title_name {
-      "text" => "文本",
-      "math" => "数学",
-      "layout" => "布局",
-      "visualize" => "可视化",
-      "meta" => "元信息",
-      "symbols" => "符号",
-      "foundations" => "基础",
-      "calculate" => "计算",
-      "construct" => "构造",
-      "data-loading" => "数据加载",
-      _ => &title_name,
-  };
+        "text" => "文本",
+        "math" => "数学",
+        "layout" => "布局",
+        "visualize" => "可视化",
+        "meta" => "元信息",
+        "symbols" => "符号",
+        "foundations" => "基础",
+        "calculate" => "计算",
+        "construct" => "构造",
+        "data-loading" => "数据加载",
+        _ => &title_name,
+    };
     let details = Html::markdown(resolver, category.docs(), Some(1));
     let mut outline = vec![OutlineItem::from_name("Summary")];
     outline.extend(details.outline());
@@ -317,9 +317,7 @@ fn category_page(resolver: &dyn Resolver, category: Category) -> PageModel {
     PageModel {
         route,
         title: name.into(),
-        description: eco_format!(
-            "Typst 中与 {name} 有关联的函数族的文档"
-        ),
+        description: eco_format!("Typst 中与 {name} 有关联的函数族的文档"),
         part: None,
         outline,
         body: BodyModel::Category(CategoryModel {
@@ -713,35 +711,34 @@ fn yaml<T: DeserializeOwned>(path: &str) -> T {
 
 /// Turn a title into an URL fragment.
 pub fn urlify(title: &str) -> EcoString {
-  match title {
-      "教程" => "tutorial".into(),
-      "使用 Typst 写作" => "writing-in-typst".into(),
-      "格式" => "formatting".into(),
-      "高级样式" => "advanced-styling".into(),
-      "制作模板" => "making-a-template".into(),
-      "中文用户指南" => "chinese".into(),
-      "参考" => "reference".into(),
-      "语法" => "syntax".into(),
-      "样式" => "styling".into(),
-      "脚本" => "scripting".into(),
-      "指南" => "guides".into(),
-      "LaTeX 用户指南" => "guide-for-latex-users".into(),
-      "页面设置指南" => "page-setup".into(),
-      "更新日志" => "changelog".into(),
-      "路线图" => "roadmap".into(),
-      "社区" => "community".into(),
-      "术语表" => "glossary".into(),
-      _ => title
-          .chars()
-          .map(|c| c.to_ascii_lowercase())
-          .map(|c| match c {
-              'a'..='z' | '0'..='9' => c,
-              _ => '-',
-          })
-          .collect(),
-  }
+    match title {
+        "チュートリアル" => "tutorial".into(),
+        "Typstで執筆するには" => "writing-in-typst".into(),
+        "書式を設定する" => "formatting".into(),
+        "高度なスタイリング" => "advanced-styling".into(),
+        "テンプレートを作成する" => "making-a-template".into(),
+        "中文用户指南" => "chinese".into(),
+        "参考" => "reference".into(),
+        "语法" => "syntax".into(),
+        "样式" => "styling".into(),
+        "脚本" => "scripting".into(),
+        "指南" => "guides".into(),
+        "LaTeX 用户指南" => "guide-for-latex-users".into(),
+        "页面设置指南" => "page-setup".into(),
+        "更新日志" => "changelog".into(),
+        "路线图" => "roadmap".into(),
+        "社区" => "community".into(),
+        "术语表" => "glossary".into(),
+        _ => title
+            .chars()
+            .map(|c| c.to_ascii_lowercase())
+            .map(|c| match c {
+                'a'..='z' | '0'..='9' => c,
+                _ => '-',
+            })
+            .collect(),
+    }
 }
-
 
 /// Extract the first line of documentation.
 fn oneliner(docs: &str) -> &str {
@@ -811,9 +808,9 @@ impl GroupData {
 
 #[cfg(test)]
 mod tests {
+    use md5;
     use std::io::Write;
     use typst::visualize::Color;
-    use md5;
 
     use super::*;
 
@@ -852,16 +849,16 @@ mod tests {
             // Get a random filename by md5
             match source {
                 Some(source) => {
-                  let filename = format!("{:x}.png", md5::compute(source.as_str()));
-                  let path = Path::new("../../assets/docs").join(filename.clone());
-                  let _ = pixmap.save_png(path).map_err(|_| "failed to write PNG file");
-                  Html::new(format!(
-                      r#"<div class="previewed-code"><pre>{}</pre><div class="preview"><img src="/assets/docs/{}" alt="Preview" width="480" height="190"/></div></div>"#,
-                      source.as_str(), filename
-                  ))
-
-                },
-                _ => Html::new(String::new())
+                    let filename = format!("{:x}.png", md5::compute(source.as_str()));
+                    let path = Path::new("../../assets/docs").join(filename.clone());
+                    let _ = pixmap.save_png(path).map_err(|_| "failed to write PNG file");
+                    Html::new(format!(
+                        r#"<div class="previewed-code"><pre>{}</pre><div class="preview"><img src="/assets/docs/{}" alt="Preview" width="480" height="190"/></div></div>"#,
+                        source.as_str(),
+                        filename
+                    ))
+                }
+                _ => Html::new(String::new()),
             }
         }
 
