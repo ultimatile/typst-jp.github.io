@@ -12,15 +12,15 @@ Typstの軽量なマークアップ構文は、文書を簡単かつ自動的に
 
 ## モード　{#modes}
 
-Typstには3種類の構文モードがあります:マークアップモード、数学モード、そしてコードモードです。
-Typst文書では、マークアップモードがデフォルトであり、数学モードでは数式を書くことができ、コードモードではTypstのスクリプト機能を利用することができます。
+Typstには3種類の構文モードがあります:マークアップモード、数式モード、そしてコードモードです。
+Typst文書では、マークアップモードがデフォルトであり、数式モードでは数式を書くことができ、コードモードではTypstのスクリプト機能を利用することができます。
 
 以下の表を参照し、いつでも特定のモードに切り替えることができます。
 
 | 新たなモード | 構文                         | 例                              |
 | ------------ | ---------------------------- | ------------------------------- |
 | コード       | コードの前に`#`を付ける      | `[Number: #(1 + 2)]`            |
-| 数学         | 式を`[$..$]`で囲む           | `[$-x$ is the opposite of $x$]` |
+| 数式         | 式を`[$..$]`で囲む           | `[$-x$ is the opposite of $x$]` |
 | マークアップ | マークアップを`[[..]]`で囲む | `{let name = [*Typst!*]}`       |
 
 
@@ -45,7 +45,7 @@ Typstは、最も一般的な文書要素に対する組み込みのマークア
 | 箇条書きリスト   | `[- item]`               | [`list`]($list)                      |
 | 番号付きリスト   | `[+ item]`               | [`enum`]($enum)                      |
 | 用語リスト       | `[/ Term: description]`  | [`terms`]($terms)                    |
-| 数学             | `[$x^2$]`                | [Math]($category/math)               |
+| 数式             | `[$x^2$]`                | [Math]($category/math)               |
 | 改行             | `[\]`                    | [`linebreak`]($linebreak)            |
 | スマートクオート | `['single' or "double"]` | [`smartquote`]($smartquote)          |
 | 短縮記号         | `[~, ---]`               | [Symbols]($category/symbols/sym)     |
@@ -53,10 +53,10 @@ Typstは、最も一般的な文書要素に対する組み込みのマークア
 | 文字エスケープ   | `[Tweet at us \#ad]`     | [Below](#escapes)                    |
 | コメント         | `[/* block */, // line]` | [Below](#comments)                   |
 
-## 数学モード { #math }
+## 数式モード { #math }
 
-数学モードは、数式を組版するために使用される特別なマークアップモードです。
-数式を `[$]` の文字で囲むことによって、数学モードに入ることができます。
+数式モードは、数式を組版するために使用される特別なマークアップモードです。
+数式を `[$]` の文字で囲むことによって、数式モードに入ることができます。
 これはマークアップモードとコードモードの両方で機能します。
 数式が少なくとも一つのスペースで始まり終わる場合、その数式は独自のブロックに組版されます（例:`[$ x^2 $]`）。
 インライン数式は、スペースを省略することで作成できます（例:`[$x^2$]`）。
@@ -76,7 +76,7 @@ Typstは、最も一般的な文書要素に対する組み込みのマークア
 | 暗黙の乗算              | `[$x y$]`               | [Math]($category/math)               |
 | 短縮記号                | `[$->, !=$]`            | [Symbols]($category/symbols/sym)     |
 | 数式内のテキスト/文字列 | `[$a "is natural"$]`    | [Math]($category/math)               |
-| 数学関数呼び出し        | `[$floor(x)$]`          | [Math]($category/math)               |
+| 数式関数呼び出し        | `[$floor(x)$]`          | [Math]($category/math)               |
 | コード構文              | `[$#rect(width: 1cm)$]` | [Scripting]($scripting/#expressions) |
 | 文字エスケープ          | `[$x\^2$]`              | [Below](#escapes)                    |
 | コメント                | `[$/* comment */$]`     | [Below](#comments)                   |
@@ -88,38 +88,52 @@ Typstは、最も一般的な文書要素に対する組み込みのマークア
 以下に、コードモードで利用可能なすべての構文の一覧表を示します:
 
 
-| 名称                 | 例                          | 参照                              |
-| -------------------- | ----------------------------- | ------------------------------------- |
-| 变量访问             | `{x}`                         | [Scripting]($scripting/#blocks)       |
-| 字面常量             | `{1pt, "hey"}`                | [Scripting]($scripting/#expressions)  |
-| 代码块               | `{{ let x = 1; x + 2 }}`      | [Scripting]($scripting/#blocks)       |
-| 文档内容块           | `{[*Hello*]}`                 | [Scripting]($scripting/#blocks)       |
-| 括号表达式           | `{(1 + 2)}`                   | [Scripting]($scripting/#blocks)       |
-| 数组                 | `{(1, 2, 3)}`                 | [Array]($array)                       |
-| 字典                 | `{(a: "hi", b: 2)}`           | [Dictionary]($dictionary)             |
-| 一元运算符           | `{-x}`                        | [Scripting]($scripting/#operators)    |
-| 二元运算符           | `{x + y}`                     | [Scripting]($scripting/#operators)    |
-| 赋值                 | `{x = 1}`                     | [Scripting]($scripting/#operators)    |
-| 字段访问             | `{x.y}`                       | [Scripting]($scripting/#fields)       |
-| 方法调用             | `{x.flatten()}`               | [Scripting]($scripting/#methods)      |
-| 函数调用             | `{min(x, y)}`                 | [Function]($function)                 |
-| 匿名函数             | `{(x, y) => x + y}`           | [Function]($function)                 |
-| let 绑定             | `{let x = 1}`                 | [Scripting]($scripting/#bindings)     |
-| 命名函数             | `{let f(x) = 2 * x}`          | [Function]($function)                 |
-| set 规则             | `{set text(14pt)}`            | [Styling]($styling/#set-rules)        |
-| set-if 规则          | `{set text(..) if .. }`       | [Styling]($styling/#set-rules)        |
-| show-set 规则        | `{show par: set block(..)}`   | [Styling]($styling/#show-rules)       |
-| 函数式 show 规则     | `{show raw: it => {..}}`      | [Styling]($styling/#show-rules)       |
-| show-everything 规则 | `{show: columns.with(2)}`     | [Styling]($styling/#show-rules)       |
-| 条件表语句           | `{if x == 1 {..} else {..}}`  | [Scripting]($scripting/#conditionals) |
-| for 循环             | `{for x in (1, 2, 3) {..}}`   | [Scripting]($scripting/#loops)        |
-| while 循环           | `{while x < 10 {..}}`         | [Scripting]($scripting/#loops)        |
-| 循环流程控制         | `{break, continue}`           | [Scripting]($scripting/#loops)        |
-| 函数返回             | `{return x}`                  | [Function]($function)                 |
-| include 模块         | `{include "bar.typ"}`         | [Scripting]($scripting/#modules)      |
-| import 模块          | `{import "bar.typ"}`          | [Scripting]($scripting/#modules)      |
-| 从模块内 import 条目 | `{import "bar.typ": a, b, c}` | [Scripting]($scripting/#modules)      |
-| 注释                 | `[/* block */, // line]`      | [Below](#comments)                    |
+| 名称                       | 例                            | 参照                                  |
+| -------------------------- | ----------------------------- | ------------------------------------- |
+| None                       | `{none}`                      | [`none`]                              |
+| 自動                       | `{auto}`                      | [`auto`]                              |
+| ブール値                   | `{false}`, `{true}`           | [`bool`]                              |
+| 整数                       | `{10}`, `{0xff}`              | [`int`]                               |
+| 浮動小数点数               | `{3.14}`, `{1e5}`             | [`float`]                             |
+| 長さ                       | `{2pt}`, `{3mm}`, `{1em}`, .. | [`length`]                            |
+| 角度                       | `{90deg}`, `{1rad}`           | [`angle`]                             |
+| 比率                       | `{2fr}`                       | [`fraction`]                          |
+| 割合                       | `{50%}`                       | [`ratio`]                             |
+| 文字列                     | `{"hello"}`                   | [`str`]                               |
+| ラベル                     | `{<intro>}`                   | [`label`]                             |
+| 数式                       | `[$x^2$]`                     | [Math]($category/math)                |
+| rawテキスト                | ``[`print(1)`]``              | [`raw`]                               |
+| 変数アクセス               | `{x}`                         | [Scripting]($scripting/#blocks)       |
+| コードブロック             | `{{ let x = 1; x + 2 }}`      | [Scripting]($scripting/#blocks)       |
+| コンテンツブロック         | `{[*Hello*]}`                 | [Scripting]($scripting/#blocks)       |
+| 括弧付き式                 | `{(1 + 2)}`                   | [Scripting]($scripting/#blocks)       |
+| 配列                       | `{(1, 2, 3)}`                 | [Array]($array)                       |
+| 辞書                       | `{(a: "hi", b: 2)}`           | [Dictionary]($dictionary)             |
+| 単項演算子                 | `{-x}`                        | [Scripting]($scripting/#operators)    |
+| 二項演算子                 | `{x + y}`                     | [Scripting]($scripting/#operators)    |
+| 代入                       | `{x = 1}`                     | [Scripting]($scripting/#operators)    |
+| フィールドアクセス         | `{x.y}`                       | [Scripting]($scripting/#fields)       |
+| メソッド呼び出し           | `{x.flatten()}`               | [Scripting]($scripting/#methods)      |
+| 関数呼び出し               | `{min(x, y)}`                 | [Function]($function)                 |
+| 引数展開                   | `{min(..nums)}`               | [Arguments]($arguments)               |
+| 無名関数                   | `{(x, y) => x + y}`           | [Function]($function)                 |
+| letバインディング          | `{let x = 1}`                 | [Scripting]($scripting/#bindings)     |
+| 名前付き関数               | `{let f(x) = 2 * x}`          | [Function]($function)                 |
+| setルール                  | `{set text(14pt)}`            | [Styling]($styling/#set-rules)        |
+| set-ifルール               | `{set text(..) if .. }`       | [Styling]($styling/#set-rules)        |
+| show-setルール             | `{show par: set block(..)}`   | [Styling]($styling/#show-rules)       |
+| 関数付きshowルール         | `{show raw: it => {..}}`      | [Styling]($styling/#show-rules)       |
+| show-everythingルール      | `{show: columns.with(2)}`     | [Styling]($styling/#show-rules)       |
+| コンテキスト式             | `{context text.lang}`         | [Context]($context)                   |
+| 条件式                     | `{if x == 1 {..} else {..}}`  | [Scripting]($scripting/#conditionals) |
+| forループ                  | `{for x in (1, 2, 3) {..}}`   | [Scripting]($scripting/#loops)        |
+| whileループ                | `{while x < 10 {..}}`         | [Scripting]($scripting/#loops)        |
+| ループ制御フロー           | `{break, continue}`           | [Scripting]($scripting/#loops)        |
+| 関数からのリターン         | `{return x}`                  | [Function]($function)                 |
+| モジュールをインクルード   | `{include "bar.typ"}`         | [Scripting]($scripting/#modules)      |
+| モジュールをインポート     | `{import "bar.typ"}`          | [Scripting]($scripting/#modules)      |
+| モジュールからのインポート | `{import "bar.typ": a, b, c}` | [Scripting]($scripting/#modules)      |
+| コメント                   | `{/* block */}`, `{// line}`  | [Below](#comments)                    |
 
 ## 注释 { #comments }
 
