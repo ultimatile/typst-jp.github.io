@@ -48,46 +48,47 @@ Typstは、最も一般的な文書要素に対する組み込みのマークア
 | 数学             | `[$x^2$]`                | [Math]($category/math)               |
 | 改行             | `[\]`                    | [`linebreak`]($linebreak)            |
 | スマートクオート | `['single' or "double"]` | [`smartquote`]($smartquote)          |
-| 記号の速記       | `[~, ---]`               | [Symbols]($category/symbols/sym)     |
-| コード表現       | `[#rect(width: 1cm)]`    | [Scripting]($scripting/#expressions) |
+| 短縮記号         | `[~, ---]`               | [Symbols]($category/symbols/sym)     |
+| コード構文       | `[#rect(width: 1cm)]`    | [Scripting]($scripting/#expressions) |
 | 文字エスケープ   | `[Tweet at us \#ad]`     | [Below](#escapes)                    |
 | コメント         | `[/* block */, // line]` | [Below](#comments)                   |
 
-## 数学模式 { #math }
+## 数学モード { #math }
 
-数学模式是一种特殊的语法标记模式，专门用来输入数学公式。
-通过 `[$]` 字符包裹一个数学公式，
-如果这个公式头尾都至少一个空格（例如`[$ x^2 $]`），这个公式将会形成一个文档块，单独占用一行，
-如果头尾没有空格（例如`[$x^2$]`），这个公式将会排版在行内，
-下面是针对数学模式的语法概述：
+数学モードは、数式を組版するために使用される特別なマークアップモードです。
+数式を `[$]` の文字で囲むことによって、数学モードに入ることができます。
+これはマークアップモードとコードモードの両方で機能します。
+数式が少なくとも一つのスペースで始まり終わる場合、その数式は独自のブロックに組版されます（例:`[$ x^2 $]`）。
+インライン数式は、スペースを省略することで作成できます（例:`[$x^2$]`）。
+以下に、数式モードに特有の構文の概要を示します：
 
-| 名称             | 示例                    | 详情链接                             |
-| ---------------- | ----------------------- | ------------------------------------ |
-| 行内数学公式     | `[$x^2$]`               | [Math]($category/math)               |
-| 块级数学公式     | `[$ x^2 $]`             | [Math]($category/math)               |
-| 底部附缀         | `[$x_1$]`               | [`attach`]($category/math/attach)    |
-| 顶部附缀         | `[$x^2$]`               | [`attach`]($category/math/attach)    |
-| 分数             | `[$1 + (a+b)/5$]`       | [`frac`]($math.frac)                 |
-| 行中断           | `[$x \ y$]`             | [`linebreak`]($linebreak)            |
-| 对齐点           | `[$x &= 2 \ &= 3$]`     | [Math]($category/math)               |
-| 变量访问         | `[$#x$, $pi$]`          | [Math]($category/math)               |
-| 字段访问         | `[$arrow.r.long$]`      | [Scripting]($scripting/#fields)      |
-| 隐式乘积         | `[$x y$]`               | [Math]($category/math)               |
-| 快捷符号         | `[$->, !=$]`            | [Symbols]($category/symbols/sym)     |
-| 数学公式内字符串 | `[$a "is natural"$]`    | [Math]($category/math)               |
-| 数学函数调用     | `[$floor(x)$]`          | [Math]($category/math)               |
-| 代码表达式       | `[$#rect(width: 1cm)$]` | [Scripting]($scripting/#expressions) |
-| 转义字符         | `[$x\^2$]`              | [Below](#escapes)                    |
-| 注释             | `[$/* comment */$]`     | [Below](#comments)                   |
+| 名称                    | 例                      | 参照                                 |
+| ----------------------- | ----------------------- | ------------------------------------ |
+| インライン数式          | `[$x^2$]`               | [Math]($category/math)               |
+| ブロック数式            | `[$ x^2 $]`             | [Math]($category/math)               |
+| 下付き添え字            | `[$x_1$]`               | [`attach`]($category/math/attach)    |
+| 上付き添え字            | `[$x^2$]`               | [`attach`]($category/math/attach)    |
+| 分数                    | `[$1 + (a+b)/5$]`       | [`frac`]($math.frac)                 |
+| 改行                    | `[$x \ y$]`             | [`linebreak`]($linebreak)            |
+| 揃え位置                | `[$x &= 2 \ &= 3$]`     | [Math]($category/math)               |
+| 変数アクセス            | `[$#x$, $pi$]`          | [Math]($category/math)               |
+| フィールドアクセス      | `[$arrow.r.long$]`      | [Scripting]($scripting/#fields)      |
+| 暗黙の乗算              | `[$x y$]`               | [Math]($category/math)               |
+| 短縮記号                | `[$->, !=$]`            | [Symbols]($category/symbols/sym)     |
+| 数式内のテキスト/文字列 | `[$a "is natural"$]`    | [Math]($category/math)               |
+| 数学関数呼び出し        | `[$floor(x)$]`          | [Math]($category/math)               |
+| コード構文              | `[$#rect(width: 1cm)$]` | [Scripting]($scripting/#expressions) |
+| 文字エスケープ          | `[$x\^2$]`              | [Below](#escapes)                    |
+| コメント                | `[$/* comment */$]`     | [Below](#comments)                   |
 
-## 代码模式 { #code }
+## コードモード { #code }
 
-在代码块和表达式中，新的表达式不再前缀 `#` 字符。
-许多代码语法元素是表达式特有的，
-下面列出了代码模式下所有可用的语法：
+コードブロックや式の中では、新しい式は先頭に`#`を付けずに始めることができます。
+多くの構文要素は式に特有のものです。
+以下に、コードモードで利用可能なすべての構文の一覧表を示します:
 
 
-| 名称                 | 示例                          | 详情链接                              |
+| 名称                 | 例                          | 参照                              |
 | -------------------- | ----------------------------- | ------------------------------------- |
 | 变量访问             | `{x}`                         | [Scripting]($scripting/#blocks)       |
 | 字面常量             | `{1pt, "hey"}`                | [Scripting]($scripting/#expressions)  |
