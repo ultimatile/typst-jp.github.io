@@ -728,7 +728,7 @@ pub fn urlify(title: &str) -> EcoString {
         "更新日志" => "changelog".into(),
         "路线图" => "roadmap".into(),
         "社区" => "community".into(),
-        "术语表" => "glossary".into(),
+        "用語集" => "glossary".into(),
         _ => title
             .chars()
             .map(|c| c.to_ascii_lowercase())
