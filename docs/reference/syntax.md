@@ -135,7 +135,7 @@ Typstは、最も一般的な文書要素に対する組み込みのマークア
 | モジュールからのインポート | `{import "bar.typ": a, b, c}` | [Scripting]($scripting/#modules)      |
 | コメント                   | `{/* block */}`, `{// line}`  | [Below](#comments)                    |
 
-## 注释 { #comments }
+## コメント { #comments }
 
 コメントはTypstによって無視され、出力には含まれません。
 これは古いバージョンを除外したり、注釈を追加したりするのに便利です。
