@@ -11,7 +11,7 @@ description: |
 | Typst         | Typst           | Typst                  | 翻訳対象のプロジェクト名、訳しません         |
 | typesetting   | 組版             | 排版                    | Typstの主要機能                        |
 | documentation | ドキュメント      | 文档                    |                                      |
-| content       |                 | 内容 / 内容块            |                                      |
+| content       | コンテンツ        | 内容 / 内容块            | 型の一種で、マークアップによって表される |
 | set rule      | setルール        |     set 规则            | [样式]($styling)に出てきます            |
 | show rule     | showルール       |    show 规则            | [样式]($styling)に出てきます           |
 | markup        | マークアップ      |   标记 / 标记模式        | Typstのデフォルトモード                 |
