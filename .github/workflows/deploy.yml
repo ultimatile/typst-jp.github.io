@@ -1,7 +1,7 @@
 # Based on ripgrep's release action:
 # https://github.com/BurntSushi/ripgrep/blob/master/.github/workflows/release.yml
 
-name: Deploy Documentation
+name: CI/CD for Documentation
 on: [push, pull_request]
 permissions:
   contents: write
