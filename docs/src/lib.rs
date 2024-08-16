@@ -80,12 +80,14 @@ pub fn provide(resolver: &dyn Resolver) -> Vec<PageModel> {
     vec![
         md_page(resolver, base, load!("overview.md")).with_route(base),
         tutorial_pages(resolver),
+        md_page(resolver, base, load!("japanese.md")),
         reference_pages(resolver),
         guide_pages(resolver),
         packages_page(resolver),
         md_page(resolver, base, load!("changelog.md")),
         md_page(resolver, base, load!("roadmap.md")),
         md_page(resolver, base, load!("community.md")),
+        md_page(resolver, base, load!("glossary.md")),
     ]
 }
 
@@ -291,7 +293,20 @@ fn category_page(resolver: &dyn Resolver, category: Category) -> PageModel {
         items.sort_by_cached_key(|item| item.name.clone());
     }
 
-    let name = category.title();
+    let title_name = category.title();
+    let name = match title_name {
+        "text" => "文本",
+        "math" => "数学",
+        "layout" => "布局",
+        "visualize" => "可视化",
+        "meta" => "元信息",
+        "symbols" => "符号",
+        "foundations" => "基础",
+        "calculate" => "计算",
+        "construct" => "构造",
+        "data-loading" => "数据加载",
+        _ => &title_name,
+    };
     let details = Html::markdown(resolver, category.docs(), Some(1));
     let mut outline = vec![OutlineItem::from_name("Summary")];
     outline.extend(details.outline());
@@ -691,14 +706,34 @@ fn get_module<'a>(parent: &'a Module, name: &str) -> StrResult<&'a Module> {
 
 /// Turn a title into an URL fragment.
 pub fn urlify(title: &str) -> EcoString {
-    title
-        .chars()
-        .map(|c| c.to_ascii_lowercase())
-        .map(|c| match c {
-            'a'..='z' | '0'..='9' => c,
-            _ => '-',
-        })
-        .collect()
+    match title {
+        "チュートリアル" => "tutorial".into(),
+        "Typstで執筆するには" => "writing-in-typst".into(),
+        "書式を設定する" => "formatting".into(),
+        "高度なスタイリング" => "advanced-styling".into(),
+        "テンプレートを作成する" => "making-a-template".into(),
+        "日本語ユーザーガイド" => "japanese".into(),
+        "リファレンス" => "reference".into(),
+        "構文" => "syntax".into(),
+        "样式" => "styling".into(),
+        "脚本" => "scripting".into(),
+        "コンテキスト" => "context".into(),
+        "指南" => "guides".into(),
+        "LaTeX 用户指南" => "guide-for-latex-users".into(),
+        "页面设置指南" => "page-setup".into(),
+        "更新日志" => "changelog".into(),
+        "路线图" => "roadmap".into(),
+        "社区" => "community".into(),
+        "用語集" => "glossary".into(),
+        _ => title
+            .chars()
+            .map(|c| c.to_ascii_lowercase())
+            .map(|c| match c {
+                'a'..='z' | '0'..='9' => c,
+                _ => '-',
+            })
+            .collect(),
+    }
 }
 
 /// Extract the first line of documentation.
@@ -770,10 +805,30 @@ impl GroupData {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use md5;
+    use std::io::Write;
+    use std::path::Path;
+    use typst::model::Document;
+    use typst::visualize::Color;
 
     #[test]
     fn test_docs() {
-        provide(&TestResolver);
+        // remove all files in ../assets/docs
+        let _ = std::fs::remove_dir_all("../assets/docs");
+        // copy all files from ../assets/files to ../assets/docs
+        std::fs::create_dir("../assets/docs").unwrap();
+        for entry in std::fs::read_dir("../assets/files").unwrap() {
+            let entry = entry.unwrap();
+            let path = entry.path();
+            let name = String::from(path.file_name().unwrap().to_str().unwrap());
+            std::fs::copy(path, format!("../assets/docs/{}", name)).unwrap();
+        }
+        // convert all pages to html and generate example images to ../assets/docs
+        let pages = provide(&TestResolver);
+        // convert pages to JSON and save to ../assets/docs.json
+        let json = serde_json::to_string_pretty(&pages).unwrap();
+        let mut file = std::fs::File::create("../assets/docs.json").unwrap();
+        file.write_all(json.as_bytes()).unwrap();
     }
 
     struct TestResolver;
@@ -783,12 +838,32 @@ mod tests {
             None
         }
 
-        fn example(&self, _: u128, _: Option<Html>, _: &Document) -> Html {
-            Html::new(String::new())
+        fn example(&self, _: u128, source: Option<Html>, document: &Document) -> Html {
+            let page = document.pages.first().unwrap();
+            let frame = &page.frame;
+            // convert frames to a png
+            let ppi = 2.0;
+            // the first frame is the main frame
+            let pixmap = typst_render::render(frame, ppi, Color::WHITE);
+            // Get a random filename by md5
+            match source {
+                Some(source) => {
+                    let filename = format!("{:x}.png", md5::compute(source.as_str()));
+                    let path = Path::new("../assets/docs").join(filename.clone());
+                    let _ = pixmap.save_png(path).map_err(|_| "failed to write PNG file");
+                    Html::new(format!(
+                        r#"<div class="previewed-code"><pre>{}</pre><div class="preview"><img src="/assets/docs/{}" alt="Preview" width="480" height="190"/></div></div>"#,
+                        source.as_str(),
+                        filename
+                    ))
+                }
+                _ => Html::new(String::new()),
+            }
         }
 
-        fn image(&self, _: &str, _: &[u8]) -> String {
-            String::new()
+        fn image(&self, filename: &str, _: &[u8]) -> String {
+            // return /assets/docs/<filename>
+            format!("/assets/docs/{}", filename)
         }
 
         fn commits(&self, _: &str, _: &str) -> Vec<Commit> {
@@ -796,7 +871,7 @@ mod tests {
         }
 
         fn base(&self) -> &str {
-            "/"
+            "/docs/"
         }
     }
 }
