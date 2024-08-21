@@ -73,7 +73,8 @@ pub(crate) fn layout_inline(
         let lines = linebreak(&engine, &p, region.x - p.hang);
 
         // Stack the lines into one frame per region.
-        finalize(&mut engine, &p, &lines, region, expand)
+        let shrink = ParElem::shrink_in(styles);
+        finalize(&mut engine, &p, &lines, region, expand, shrink)
     }
 
     let fragment = cached(
@@ -100,6 +101,13 @@ type Range = std::ops::Range<usize>;
 // paragraph's full text.
 const SPACING_REPLACE: char = ' '; // Space
 const OBJ_REPLACE: char = '\u{FFFC}'; // Object Replacement Character
+
+// Unicode BiDi control characters.
+const LTR_EMBEDDING: char = '\u{202A}';
+const RTL_EMBEDDING: char = '\u{202B}';
+const POP_EMBEDDING: char = '\u{202C}';
+const LTR_ISOLATE: char = '\u{2066}';
+const POP_ISOLATE: char = '\u{2069}';
 
 /// A paragraph representation in which children are already layouted and text
 /// is already preshaped.
@@ -189,7 +197,7 @@ enum Segment<'a> {
     /// Horizontal spacing between other segments.
     Spacing(Spacing),
     /// A mathematical equation.
-    Equation(&'a Packed<EquationElem>, Vec<MathParItem>),
+    Equation(Vec<MathParItem>),
     /// A box with arbitrary content.
     Box(&'a Packed<BoxElem>, bool),
     /// Metadata.
@@ -205,9 +213,12 @@ impl Segment<'_> {
             Self::Box(_, frac) => {
                 (if frac { SPACING_REPLACE } else { OBJ_REPLACE }).len_utf8()
             }
-            Self::Equation(_, ref par_items) => {
-                par_items.iter().map(MathParItem::text).map(char::len_utf8).sum()
-            }
+            Self::Equation(ref par_items) => par_items
+                .iter()
+                .map(MathParItem::text)
+                .chain([LTR_ISOLATE, POP_ISOLATE])
+                .map(char::len_utf8)
+                .sum(),
             Self::Meta => 0,
         }
     }
@@ -226,6 +237,9 @@ enum Item<'a> {
     Frame(Frame),
     /// Metadata.
     Meta(Frame),
+    /// An item that is invisible and needs to be skipped, e.g. a Unicode
+    /// isolate.
+    Skip(char),
 }
 
 impl<'a> Item<'a> {
@@ -252,6 +266,7 @@ impl<'a> Item<'a> {
             Self::Absolute(_) | Self::Fractional(_, _) => SPACING_REPLACE.len_utf8(),
             Self::Frame(_) => OBJ_REPLACE.len_utf8(),
             Self::Meta(_) => 0,
+            Self::Skip(c) => c.len_utf8(),
         }
     }
 
@@ -262,6 +277,7 @@ impl<'a> Item<'a> {
             Self::Absolute(v) => *v,
             Self::Frame(frame) => frame.width(),
             Self::Fractional(_, _) | Self::Meta(_) => Abs::zero(),
+            Self::Skip(_) => Abs::zero(),
         }
     }
 }
@@ -449,10 +465,10 @@ fn collect<'a>(
             let prev = full.len();
             let dir = TextElem::dir_in(styles);
             if dir != outer_dir {
-                // Insert "Explicit Directional Isolate".
+                // Insert "Explicit Directional Embedding".
                 match dir {
-                    Dir::LTR => full.push('\u{2066}'),
-                    Dir::RTL => full.push('\u{2067}'),
+                    Dir::LTR => full.push(LTR_EMBEDDING),
+                    Dir::RTL => full.push(RTL_EMBEDDING),
                     _ => {}
                 }
             }
@@ -464,8 +480,8 @@ fn collect<'a>(
             }
 
             if dir != outer_dir {
-                // Insert "Pop Directional Isolate".
-                full.push('\u{2069}');
+                // Insert "Pop Directional Formatting".
+                full.push(POP_EMBEDDING);
             }
             Segment::Text(full.len() - prev)
         } else if let Some(elem) = child.to_packed::<HElem>() {
@@ -520,8 +536,10 @@ fn collect<'a>(
                 let MathParItem::Frame(frame) = item else { continue };
                 frame.meta(styles, false);
             }
+            full.push(LTR_ISOLATE);
             full.extend(items.iter().map(MathParItem::text));
-            Segment::Equation(elem, items)
+            full.push(POP_ISOLATE);
+            Segment::Equation(items)
         } else if let Some(elem) = child.to_packed::<BoxElem>() {
             let frac = elem.width(styles).is_fractional();
             full.push(if frac { SPACING_REPLACE } else { OBJ_REPLACE });
@@ -592,7 +610,8 @@ fn prepare<'a>(
                     items.push(Item::Fractional(v, None));
                 }
             },
-            Segment::Equation(_, par_items) => {
+            Segment::Equation(par_items) => {
+                items.push(Item::Skip(LTR_ISOLATE));
                 for item in par_items {
                     match item {
                         MathParItem::Space(s) => items.push(Item::Absolute(s)),
@@ -602,6 +621,7 @@ fn prepare<'a>(
                         }
                     }
                 }
+                items.push(Item::Skip(POP_ISOLATE));
             }
             Segment::Box(elem, _) => {
                 if let Sizing::Fr(v) = elem.width(styles) {
@@ -1191,6 +1211,7 @@ fn finalize(
     lines: &[Line],
     region: Size,
     expand: bool,
+    shrink: bool,
 ) -> SourceResult<Fragment> {
     // Determine the paragraph's width: Full width of the region if we
     // should expand or there's fractional spacing, fit-to-width otherwise.
@@ -1207,7 +1228,7 @@ fn finalize(
     // Stack the lines into one frame per region.
     let mut frames: Vec<Frame> = lines
         .iter()
-        .map(|line| commit(engine, p, line, width, region.y))
+        .map(|line| commit(engine, p, line, width, region.y, shrink))
         .collect::<SourceResult<_>>()?;
 
     // Prevent orphans.
@@ -1243,6 +1264,7 @@ fn commit(
     line: &Line,
     width: Abs,
     full: Abs,
+    shrink: bool,
 ) -> SourceResult<Frame> {
     let mut remaining = width - line.width - p.hang;
     let mut offset = Abs::zero();
@@ -1289,12 +1311,12 @@ fn commit(
     let mut justification_ratio = 0.0;
     let mut extra_justification = Abs::zero();
 
-    let shrink = line.shrinkability();
+    let shrinkability = line.shrinkability();
     let stretch = line.stretchability();
-    if remaining < Abs::zero() && shrink > Abs::zero() {
+    if remaining < Abs::zero() && shrinkability > Abs::zero() && shrink {
         // Attempt to reduce the length of the line, using shrinkability.
-        justification_ratio = (remaining / shrink).max(-1.0);
-        remaining = (remaining + shrink).min(Abs::zero());
+        justification_ratio = (remaining / shrinkability).max(-1.0);
+        remaining = (remaining + shrinkability).min(Abs::zero());
     } else if line.justify && fr.is_zero() {
         // Attempt to increase the length of the line, using stretchability.
         if stretch > Abs::zero() {
@@ -1350,6 +1372,7 @@ fn commit(
             Item::Frame(frame) | Item::Meta(frame) => {
                 push(&mut offset, frame.clone());
             }
+            Item::Skip(_) => {}
         }
     }
 
@@ -1415,7 +1438,7 @@ fn reorder<'a>(line: &'a Line<'a>) -> (Vec<&Item<'a>>, bool) {
 /// How much a character should hang into the end margin.
 ///
 /// For more discussion, see:
-/// https://recoveringphysicist.com/21/
+/// <https://recoveringphysicist.com/21/>
 fn overhang(c: char) -> f64 {
     match c {
         // Dashes.

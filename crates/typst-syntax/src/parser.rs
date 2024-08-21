@@ -592,10 +592,23 @@ fn math_args(p: &mut Parser) {
     p.wrap(m, SyntaxKind::Args);
 }
 
+/// Wrap math function arguments in a "Math" SyntaxKind to combine adjacent expressions
+/// or create blank content.
+///
+/// We don't wrap when `exprs == 1`, as there is only one expression, so the grouping
+/// isn't needed, and this would change the type of the expression from potentially
+/// non-content to content.
+///
+/// Note that `exprs` might be 0 if we have whitespace or trivia before a comma i.e.
+/// `mat(; ,)` or `sin(x, , , ,)`. This would create an empty Math element before that
+/// trivia if we called `p.wrap()` -- breaking the expected AST for 2-d arguments -- so
+/// we instead manually wrap to our current marker using `p.wrap_within()`.
 fn maybe_wrap_in_math(p: &mut Parser, arg: Marker, named: Option<Marker>) {
     let exprs = p.post_process(arg).filter(|node| node.is::<ast::Expr>()).count();
     if exprs != 1 {
-        p.wrap(arg, SyntaxKind::Math);
+        // Convert 0 exprs into a blank math element (so empty arguments are allowed).
+        // Convert 2+ exprs into a math element (so they become a joined sequence).
+        p.wrap_within(arg, p.marker(), SyntaxKind::Math);
     }
 
     if let Some(m) = named {
@@ -1748,15 +1761,27 @@ impl<'s> Parser<'s> {
         }
     }
 
+    fn next_non_trivia(lexer: &mut Lexer<'s>) -> SyntaxKind {
+        loop {
+            let next = lexer.next();
+            // Loop is terminatable, because SyntaxKind::Eof is not a trivia.
+            if !next.is_trivia() {
+                break next;
+            }
+        }
+    }
+
     fn lex(&mut self) {
         self.current_start = self.lexer.cursor();
         self.current = self.lexer.next();
+
+        // Special cases to handle newlines in code mode.
         if self.lexer.mode() == LexMode::Code
             && self.lexer.newline()
             && match self.newline_modes.last() {
                 Some(NewlineMode::Continue) => false,
                 Some(NewlineMode::Contextual) => !matches!(
-                    self.lexer.clone().next(),
+                    Self::next_non_trivia(&mut self.lexer.clone()),
                     SyntaxKind::Else | SyntaxKind::Dot
                 ),
                 Some(NewlineMode::Stop) => true,

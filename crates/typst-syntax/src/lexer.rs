@@ -88,8 +88,10 @@ impl Lexer<'_> {
     }
 }
 
-/// Shared.
+/// Shared methods with all [`LexMode`].
 impl Lexer<'_> {
+    /// Proceed to the next token and return its [`SyntaxKind`]. Note the
+    /// token could be a [trivia](SyntaxKind::is_trivia).
     pub fn next(&mut self) -> SyntaxKind {
         if self.mode == LexMode::Raw {
             let Some((kind, end)) = self.raw.pop() else {
@@ -121,6 +123,7 @@ impl Lexer<'_> {
         }
     }
 
+    /// Eat whitespace characters greedily.
     fn whitespace(&mut self, start: usize, c: char) -> SyntaxKind {
         let more = self.s.eat_while(|c| is_space(c, self.mode));
         let newlines = match c {
@@ -272,10 +275,7 @@ impl Lexer<'_> {
         if backticks >= 3 {
             self.blocky_raw(start, end, backticks);
         } else {
-            // Single backtick needs no trimming or extra fancyness.
-            self.s.jump(end - backticks);
-            self.push_raw(SyntaxKind::Text);
-            self.s.jump(end);
+            self.inline_raw(start, end, backticks);
         }
 
         // Closing delimiter.
@@ -297,16 +297,12 @@ impl Lexer<'_> {
             self.push_raw(SyntaxKind::RawLang);
         }
 
-        // Determine inner content between backticks and with trimmed
-        // single spaces (line trimming comes later).
+        // Determine inner content between backticks.
         self.s.eat_if(' ');
-        let mut inner = self.s.to(end - backticks);
-        if inner.trim_end().ends_with('`') {
-            inner = inner.strip_suffix(' ').unwrap_or(inner);
-        }
+        let inner = self.s.to(end - backticks);
 
         // Determine dedent level.
-        let lines = split_newlines(inner);
+        let mut lines = split_newlines(inner);
         let dedent = lines
             .iter()
             .skip(1)
@@ -316,6 +312,15 @@ impl Lexer<'_> {
             .map(|line| line.chars().take_while(|c| c.is_whitespace()).count())
             .min()
             .unwrap_or(0);
+
+        // Trim single space in last line if text ends with a backtick. The last
+        // line is the one directly before the closing backticks and if it is
+        // just whitespace, it will be completely trimmed below.
+        if inner.trim_end().ends_with('`') {
+            if let Some(last) = lines.last_mut() {
+                *last = last.strip_suffix(' ').unwrap_or(last);
+            }
+        }
 
         let is_whitespace = |line: &&str| line.chars().all(char::is_whitespace);
         let starts_whitespace = lines.first().is_some_and(is_whitespace);
@@ -353,6 +358,25 @@ impl Lexer<'_> {
         self.s.jump(end);
     }
 
+    fn inline_raw(&mut self, start: usize, end: usize, backticks: usize) {
+        self.s.jump(start + backticks);
+
+        while self.s.cursor() < end - backticks {
+            if self.s.at(is_newline) {
+                self.push_raw(SyntaxKind::Text);
+                self.s.eat_newline();
+                self.push_raw(SyntaxKind::RawTrimmed);
+                continue;
+            }
+            self.s.eat();
+        }
+        self.push_raw(SyntaxKind::Text);
+
+        self.s.jump(end);
+    }
+
+    /// Push the current cursor that marks the end of a raw segment of
+    /// the given `kind`.
     fn push_raw(&mut self, kind: SyntaxKind) {
         let end = self.s.cursor();
         self.raw.push((kind, end));
@@ -760,7 +784,7 @@ impl ScannerExt for Scanner<'_> {
     }
 }
 
-/// Whether a character will become a Space token in Typst
+/// Whether a character will become a [`SyntaxKind::Space`] token.
 #[inline]
 fn is_space(character: char, mode: LexMode) -> bool {
     match mode {
@@ -818,7 +842,7 @@ pub fn link_prefix(text: &str) -> (&str, bool) {
     (s.before(), brackets.is_empty())
 }
 
-/// Split text at newlines.
+/// Split text at newlines. These newline characters are not kept.
 pub fn split_newlines(text: &str) -> Vec<&str> {
     let mut s = Scanner::new(text);
     let mut lines = Vec::new();
