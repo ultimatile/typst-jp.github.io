@@ -31,6 +31,10 @@ body:
       route: /docs/reference/foundations/assert/
       oneliner: Ensures that a condition is fulfilled.
       code: true
+    - name: auto
+      route: /docs/reference/foundations/auto/
+      oneliner: A value that indicates a smart default.
+      code: true
     - name: bool
       route: /docs/reference/foundations/bool/
       oneliner: A type with two states.
@@ -82,6 +86,10 @@ body:
     - name: module
       route: /docs/reference/foundations/module/
       oneliner: An evaluated module, either built-in or resulting from a file.
+      code: true
+    - name: none
+      route: /docs/reference/foundations/none/
+      oneliner: A value that indicates the absence of any other value.
       code: true
     - name: panic
       route: /docs/reference/foundations/panic/
@@ -1708,6 +1716,31 @@ children:
           settable: false
         returns: []
         scope: []
+  children: []
+- route: /docs/reference/foundations/auto/
+  title: Auto
+  description: Documentation for the Auto type.
+  part: null
+  outline:
+  - id: summary
+    name: Summary
+    children: []
+  body:
+    kind: type
+    content:
+      name: auto
+      title: Auto
+      keywords: []
+      oneliner: A value that indicates a smart default.
+      details: |-
+        <p>A value that indicates a smart default.</p>
+        <p>The auto type has exactly one value: <code><span class="typ-key">auto</span></code>.</p>
+        <p>Parameters that support the <code><span class="typ-key">auto</span></code> value have some smart default or
+        contextual behaviour. A good example is the <a href="/docs/reference/text/text/#parameters-dir">text direction</a>
+        parameter. Setting it to <code><span class="typ-key">auto</span></code> lets Typst automatically determine the
+        direction from the <a href="/docs/reference/text/text/#parameters-lang">text language</a>.</p>
+      constructor: null
+      scope: []
   children: []
 - route: /docs/reference/foundations/bool/
   title: Boolean
@@ -5851,6 +5884,36 @@ children:
       constructor: null
       scope: []
   children: []
+- route: /docs/reference/foundations/none/
+  title: None
+  description: Documentation for the None type.
+  part: null
+  outline:
+  - id: summary
+    name: Summary
+    children: []
+  - id: example
+    name: Example
+    children: []
+  body:
+    kind: type
+    content:
+      name: none
+      title: None
+      keywords: []
+      oneliner: A value that indicates the absence of any other value.
+      details: |-
+        <p>A value that indicates the absence of any other value.</p>
+        <p>The none type has exactly one value: <code><span class="typ-key">none</span></code>.</p>
+        <p>When inserted into the document, it is not visible. This is also the value
+        that is produced by empty code blocks. It can be
+        <a href="/docs/reference/scripting/#blocks">joined</a> with any value, yielding the other value.</p>
+        <h2 id="example">Example</h2>
+        <div class="previewed-code"><pre><code>Not visible: <span class="typ-key">#</span><span class="typ-key">none</span>
+        </code></pre><div class="preview"><img src="/assets/docs/6caa7433f3f477e3c7cfb6d6b041af0d.png" alt="Preview" width="480" height="190"/></div></div>
+      constructor: null
+      scope: []
+  children: []
 - route: /docs/reference/foundations/panic/
   title: Panic
   description: Documentation for the `panic` function.
@@ -7300,7 +7363,8 @@ children:
         self: true
         params:
         - name: pattern
-          details: <p>The pattern to search for.</p>
+          details: <p>The pattern to search for. If <code><span class="typ-key">none</span></code>,
+            trims white spaces.</p>
           example: null
           types:
           - none
@@ -7315,8 +7379,8 @@ children:
           settable: false
         - name: at
           details: |-
-            <p>Can be <code>start</code> or <code>end</code> to only trim the start or end of the string.
-            If omitted, both sides are trimmed.</p>
+            <p>Can be <code>start</code> or <code>end</code> to only trim the start or end of the
+            string. If omitted, both sides are trimmed.</p>
           example: null
           types:
           - alignment

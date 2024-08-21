@@ -1378,8 +1378,8 @@ children:
           component is included.</p>
         example: |-
           <div class="previewed-code"><pre><code><span class="typ-comment">// note that the alpha component is included by default</span>
-          <span class="typ-punct">#</span><span class="typ-punct">(</span><span class="typ-func">rgb</span><span class="typ-punct">(</span><span class="typ-num">40%</span><span class="typ-punct">,</span> <span class="typ-num">60%</span><span class="typ-punct">,</span> <span class="typ-num">80%</span><span class="typ-punct">)</span><span class="typ-punct">.</span><span class="typ-func">components</span><span class="typ-punct">(</span><span class="typ-punct">)</span> <span class="typ-op">==</span> <span class="typ-punct">(</span><span class="typ-num">40%</span><span class="typ-punct">,</span> <span class="typ-num">60%</span><span class="typ-punct">,</span> <span class="typ-num">80%</span><span class="typ-punct">,</span> <span class="typ-num">100%</span><span class="typ-punct">)</span><span class="typ-punct">)</span>
-          </code></pre><div class="preview"><img src="/assets/docs/6256b6a7300a0fc8a2526dd5401230c8.png" alt="Preview" width="480" height="190"/></div></div>
+          <span class="typ-func">#</span><span class="typ-func">rgb</span><span class="typ-punct">(</span><span class="typ-num">40%</span><span class="typ-punct">,</span> <span class="typ-num">60%</span><span class="typ-punct">,</span> <span class="typ-num">80%</span><span class="typ-punct">)</span><span class="typ-punct">.</span><span class="typ-func">components</span><span class="typ-punct">(</span><span class="typ-punct">)</span>
+          </code></pre><div class="preview"><img src="/assets/docs/43a9b4ace8d343e07ec2b841211eace5.png" alt="Preview" width="480" height="190"/></div></div>
         self: true
         params:
         - name: alpha

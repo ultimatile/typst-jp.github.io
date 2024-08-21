@@ -1725,10 +1725,6 @@ children:
           <p>An entry in a footnote list.</p>
           <p>This function is not intended to be called directly. Instead, it is used
           in set and show rules to customize footnote listings.</p>
-          <p><em>Note:</em> Set and show rules for <code>footnote.entry</code> must be defined at the
-          beginning of the document in order to work correctly.
-          See <a href="https://github.com/typst/typst/issues/1348#issuecomment-1566316463">here</a>
-          for more information.</p>
         example: |-
           <div class="previewed-code"><pre><code><span class="typ-key">#</span><span class="typ-key">show</span> footnote<span class="typ-punct">.</span><span class="typ-func">entry</span><span class="typ-punct">:</span> <span class="typ-key">set</span> <span class="typ-func">text</span><span class="typ-punct">(</span>red<span class="typ-punct">)</span>
 
@@ -1736,6 +1732,9 @@ children:
           <span class="typ-func">#</span><span class="typ-func">footnote</span><span class="typ-punct">[</span>It&#39;s down here<span class="typ-punct">]</span>
           has red text!
           </code></pre><div class="preview"><img src="/assets/docs/e07bed06d522a25126bd74abd9d30066.png" alt="Preview" width="480" height="190"/></div></div>
+          <p><em>Note:</em> Set and show rules for <code>footnote.entry</code> must be defined at the
+          beginning of the document in order to work correctly. See <a href="https://github.com/typst/typst/issues/1467#issuecomment-1588799440">here</a> for
+          more information.</p>
         self: false
         params:
         - name: note
@@ -2810,7 +2809,7 @@ children:
           <p>The outline's heading will not be numbered by default, but you can
           force it to be with a show-set rule:
           <code><span class="typ-key">show</span> <span class="typ-func">outline</span><span class="typ-punct">:</span> <span class="typ-key">set</span> <span class="typ-func">heading</span><span class="typ-punct">(</span>numbering<span class="typ-punct">:</span> <span class="typ-str">&quot;1.&quot;</span><span class="typ-punct">)</span></code></p>
-        example: <pre></pre>
+        example: null
         types:
         - none
         - auto
