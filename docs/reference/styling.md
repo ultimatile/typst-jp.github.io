@@ -1,23 +1,21 @@
 ---
-description: All concepts needed to style your document with Typst.
+description: Typst で文書のスタイル設定をするために必要な概念
 ---
 
-# Styling
-Typst includes a flexible styling system that automatically applies styling of
-your choice to your document. With _set rules,_ you can configure basic
-properties of elements. This way, you create most common styles. However, there
-might not be a built-in property for everything you wish to do. For this reason,
-Typst further supports _show rules_ that can completely redefine the appearance
-of elements.
+# スタイル設定
 
-## Set rules
-With set rules, you can customize the appearance of elements. They are written
-as a [function call]($function) to an [element
-function]($function/#element-functions) preceded by the `{set}` keyword (or
-`[#set]` in markup). Only optional parameters of that function can be provided
-to the set rule. Refer to each function's documentation to see which parameters
-are optional. In the example below, we use two set rules to change the
-[font family]($text.font) and [heading numbering]($heading.numbering).
+Typst には柔軟なスタイル設定機能を持ち、出力される文書に対して自動的に任意のスタイル設定を適用します。
+_setルール_ ではエレメントの基本プロパティを設定できます。
+しかし、やりたいことすべてに対応するプロパティがあらかじめ実装されているとは限りません。
+このため、Typst はエレメントの外観を完全に再定義できる _showルール_ もサポートしています。
+
+## setルール { #set-rules }
+
+set ルールを使うと、エレメントの外観をカスタマイズできます。
+これらは、`{set}` キーワード（マークアップでは `[#set]`）を前に置いた [element 関数]($function/#element-functions) への[関数呼び出し]($function)として記述されます。
+set ルールに指定できるのは、その関数のオプションのパラメーターだけです。
+どのパラメーターがオプションであるかは、各関数のドキュメントを参照してください。
+以下の例では、2 つの set ルールを使って、[フォント]($text.font)と[見出し番号]($heading.numbering)を変更しています。
 
 ```example
 #set heading(numbering: "I.")
@@ -30,11 +28,10 @@ With set rules, you can style
 your document.
 ```
 
-A top level set rule stays in effect until the end of the file. When nested
-inside of a block, it is only in effect until the end of that block. With a
-block, you can thus restrict the effect of a rule to a particular segment of
-your document. Below, we use a content block to scope the list styling to one
-particular list.
+set ルールは、そのまま記述するとファイルの最後まで適用されます。
+ブロックの中にネストすると、そのブロックの終わりまで適用されます。
+ブロックを使えば、set ルールの効果を指定した部分に限定できます。
+以下では、content ブロックを用いてスコープすることで、特定のリストのスタイルのみを変更しています。
 
 ```example
 This list is affected: #[
@@ -46,8 +43,8 @@ This one is not:
 - Bullet
 ```
 
-Sometimes, you'll want to apply a set rule conditionally. For this, you can use
-a _set-if_ rule.
+ときには、set ルールを条件付きで設定したい場合もあるでしょう。
+その場合には _set-if_ ルールを使用します。
 
 ```example
 #let task(body, critical: false) = {
@@ -59,13 +56,13 @@ a _set-if_ rule.
 #task(critical: false)[Work deadline]
 ```
 
-## Show rules
-With show rules, you can deeply customize the look of a type of element. The
-most basic form of show rule is a _show-set rule._ Such a rule is written as the
-`{show}` keyword followed by a [selector], a colon and then a set rule. The most
-basic form of selector is an [element function]($function/#element-functions).
-This lets the set rule only apply to the selected element. In the example below,
-headings become dark blue while all other text stays black.
+## showルール { #show-rules }
+
+show ルールを使えば、特定の種類のエレメントの外観を詳細に設定できます。
+show ルールの基本的な記述方法は、show-set ルールです。
+`{show}` キーワードの後に [セレクター]($selector)、コロン、set ルールと続けて記述します。
+セレクターの基本的な記述方法は [element関数]($function/#element-functions) を置くことであり、set ルールは選択されたエレメントにのみ適用されます。
+下の例では、見出しは紺色になり、他のテキストは黒色のままです。
 
 ```example
 #show heading: set text(navy)
@@ -74,15 +71,13 @@ headings become dark blue while all other text stays black.
 But this stays black.
 ```
 
-With show-set rules you can mix and match properties from different functions to
-achieve many different effects. But they still limit you to what is predefined
-in Typst. For maximum flexibility, you can instead write a show rule that
-defines how to format an element from scratch. To write such a show rule,
-replace the set rule after the colon with an arbitrary [function]. This function
-receives the element in question and can return arbitrary content. The available
-[fields]($scripting/#fields) on the element passed to the function again match
-the parameters of the respective element function. Below, we define a show rule
-that formats headings for a fantasy encyclopedia.
+show-set ルールを使えば、さまざまな関数のプロパティを組み合わせることが可能です。
+しかし、組み合わせられるプロパティは Typst であらかじめ定義されているものに限定されます。
+最大限の柔軟性を得るには、エレメントをゼロからフォーマットする方法を定義する show ルールを書くことができます。
+このような show ルールを書くには、コロンの後の set ルールを任意の[関数]($function)に置き換えてください。
+この関数は対象のエレメントを受け取り、任意の内容を返すことができます。
+関数に渡されたエレメントで利用可能な[フィールド]($scripting/#fields)は、それぞれの element 関数のパラメーターと一致します。
+以下は、ファンタジー百科事典の見出しをフォーマットする show ルールを定義する例です。
 
 ```example
 #set heading(numbering: "(I)")
@@ -106,34 +101,29 @@ dragon, the manticore gets
 extra style points.
 ```
 
-Like set rules, show rules are in effect until the end of the current block or
-file.
+set ルールと同様に、show ルールは、現在のブロック内またはファイルの終わりまで有効です。
 
-Instead of a function, the right-hand side of a show rule can also take a
-literal string or content block that should be directly substituted for the
-element. And apart from a function, the left-hand side of a show rule can also
-take a number of other _selectors_ that define what to apply the transformation
-to:
+関数の代わりに、show ルールのコロン右側は、エレメントに直接置換されるべきリテラル文字列またはコンテンツブロックを取ることもできます。
+また show ルールのコロン左側は、以下に示すように、変換を適用する対象を定義する _セレクター_ を受け取ることができます。
 
-- **Everything:** `{show: rest => ..}` \
-  Transform everything after the show rule. This is useful to apply a more
-  complex layout to your whole document without wrapping everything in a giant
-  function call.
+- **すべて：** `{show: rest => ..}` \
+  showルール以降のすべてを変換する。
+  個別の関数呼び出しでラップすることなく、複雑なレイアウトを文書全体に適用するのに便利です。
 
-- **Text:** `{show "Text": ..}` \
-  Style, transform or replace text.
+- **文字列：** `{show "Text": ..}` \
+  設定した文字列に対して、スタイル変更や文字の置き換えを行います。
 
-- **Regex:** `{show regex("\w+"): ..}` \
-  Select and transform text with a regular expression for even more flexibility.
-  See the documentation of the [`regex` type]($regex) for details.
+- **正規表現：** `{show regex("\w+"): ..}` \
+  正規表現にマッチする文字列に対して、スタイル変更や文字の置き換えを行います。
+  正規表現については[regex 関数]($regex)を参照してください。
 
-- **Function with fields:** `{show heading.where(level: 1): ..}` \
-  Transform only elements that have the specified fields. For example, you might
-  want to only change the style of level-1 headings.
+- **関数やフィールド：** `{show heading.where(level: 1): ..}` \
+  指定されたフィールドを持つエレメントのみを変換します。
+  たとえば、レベル 1 の見出しのスタイルだけを変更したい場合などに有効です。
 
-- **Label:** `{show <intro>: ..}` \
-  Select and transform elements that have the specified label. See the
-  documentation of the [`label` type]($label) for more details.
+- **ラベル：** `{show <intro>: ..}` \
+  指定されたラベルを持つエレメントに対して適用する。
+  ラベルについては[labelタイプ]($label)を参照してください。
 
 ```example
 #show "Project": smallcaps

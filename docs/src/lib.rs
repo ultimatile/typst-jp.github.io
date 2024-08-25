@@ -726,7 +726,7 @@ pub fn urlify(title: &str) -> EcoString {
         "日本語ユーザーガイド" => "japanese".into(),
         "リファレンス" => "reference".into(),
         "構文" => "syntax".into(),
-        "样式" => "styling".into(),
+        "スタイル設定" => "styling".into(),
         "スクリプト記述" => "scripting".into(),
         "コンテキスト" => "context".into(),
         "指南" => "guides".into(),
