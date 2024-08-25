@@ -11,10 +11,6 @@ homepage = { workspace = true }
 repository = { workspace = true }
 license = { workspace = true }
 
-[lib]
-doctest = false
-bench = false
-
 [dependencies]
 typst-macros = { workspace = true }
 typst-syntax = { workspace = true }

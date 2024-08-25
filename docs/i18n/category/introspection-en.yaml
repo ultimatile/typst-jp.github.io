@@ -594,8 +594,8 @@ children:
         page number, typically you want the logical page number that may, for
         instance, have been reset after a preface.</p>
         <h2 id="examples">Examples</h2>
-        <p>Determining the current position in the document in combination with
-        <a href="/docs/reference/introspection/locate/" title="`locate`"><code>locate</code></a>:</p>
+        <p>Determining the current position in the document in combination with the
+        <a href="/docs/reference/introspection/location/#definitions-position"><code>position</code></a> method:</p>
         <div class="previewed-code"><pre><code><span class="typ-key">#</span><span class="typ-key">context</span> <span class="typ-punct">[</span>
           I am located at
           <span class="typ-func">#</span><span class="typ-func">here</span><span class="typ-punct">(</span><span class="typ-punct">)</span><span class="typ-punct">.</span><span class="typ-func">position</span><span class="typ-punct">(</span><span class="typ-punct">)</span>
@@ -848,7 +848,8 @@ children:
       details: |-
         <p>Exposes a value to the query system without producing visible content.</p>
         <p>This element can be retrieved with the <a href="/docs/reference/introspection/query/" title="`query`"><code>query</code></a> function and from the
-        command line with <a href="/docs/reference/meta/query/#cli-queries"><code>typst query</code></a>. Its
+        command line with
+        <a href="/docs/reference/introspection/query/#command-line-queries"><code>typst query</code></a>. Its
         purpose is to expose an arbitrary value to the introspection system. To
         identify a metadata value among others, you can attach a <a href="/docs/reference/foundations/label/" title="`label`"><code>label</code></a> to it and
         query for that label.</p>
