@@ -1,0 +1,24 @@
+[tools]
+# python is managed by .python-version
+uv = "0.5.1"
+
+[env]
+_.python.venv = { path = ".venv", create = true }
+
+[settings]
+yes = true
+
+[tasks.generate-docs]
+run = "cargo test --package typst-docs --lib -- tests::test_docs --exact --nocapture"
+
+[tasks.generate-web]
+run = "uv run gen.py"
+
+[tasks.generate]
+run = [
+    "mise run generate-docs",
+    "mise run generate-web"
+]
+
+[tasks.preview]
+run = "uv run -m http.server -d dist"
