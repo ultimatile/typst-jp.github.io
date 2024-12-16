@@ -89,10 +89,10 @@ pub fn provide(resolver: &dyn Resolver) -> Vec<PageModel> {
     vec![
         md_page(resolver, base, load!("overview.md")).with_route(base),
         tutorial_pages(resolver),
-        md_page(resolver, base, load!("japanese.md")),
         reference_pages(resolver),
         guide_pages(resolver),
         changelog_pages(resolver),
+        japanese_pages(resolver),
         md_page(resolver, base, load!("glossary.md")),
     ]
 }
@@ -172,6 +172,7 @@ fn reference_pages(resolver: &dyn Resolver) -> PageModel {
 fn guide_pages(resolver: &dyn Resolver) -> PageModel {
     let mut page = md_page(resolver, resolver.base(), load!("guides/welcome.md"));
     let base = format!("{}guides/", resolver.base());
+    page.title = "ガイド".into();
     page.children = vec![
         md_page(resolver, &base, load!("guides/guide-for-latex-users.md")),
         md_page(resolver, &base, load!("guides/page-setup.md")),
@@ -184,6 +185,7 @@ fn guide_pages(resolver: &dyn Resolver) -> PageModel {
 fn changelog_pages(resolver: &dyn Resolver) -> PageModel {
     let mut page = md_page(resolver, resolver.base(), load!("changelog/welcome.md"));
     let base = format!("{}changelog/", resolver.base());
+    page.title = "変更履歴".into();
     page.children = vec![
         md_page(resolver, &base, load!("changelog/0.12.0.md")),
         md_page(resolver, &base, load!("changelog/0.11.1.md")),
@@ -199,6 +201,18 @@ fn changelog_pages(resolver: &dyn Resolver) -> PageModel {
         md_page(resolver, &base, load!("changelog/0.2.0.md")),
         md_page(resolver, &base, load!("changelog/0.1.0.md")),
         md_page(resolver, &base, load!("changelog/earlier.md")),
+    ];
+    page
+}
+
+/// Build the japanese section.
+fn japanese_pages(resolver: &dyn Resolver) -> PageModel {
+    let mut page = md_page(resolver, resolver.base(), load!("japanese/welcome.md"));
+    let base = format!("{}japanese/", resolver.base());
+    page.children = vec![
+        md_page(resolver, &base, load!("japanese/templates.md")),
+        md_page(resolver, &base, load!("japanese/packages.md")),
+        md_page(resolver, &base, load!("japanese/articles.md")),
     ];
     page
 }
@@ -340,9 +354,22 @@ fn category_page(resolver: &dyn Resolver, category: Category) -> PageModel {
         outline.push(OutlineItem::from_name("Shorthands"));
     }
 
+    let translated_title = match name {
+        "Foundations" => "基礎",
+        "Model" => "モデル",
+        "Text" => "文章",
+        "Math" => "数式",
+        "Symbols" => "記号",
+        "Layout" => "レイアウト",
+        "Visualize" => "視覚化",
+        "Introspection" => "内省",
+        "Data Loading" => "データの読み込み",
+        _ => name,
+    };
+
     PageModel {
         route,
-        title: name.into(),
+        title: translated_title.into(),
         description: eco_format!(
             "Documentation for functions related to {name} in Typst."
         ),
@@ -749,7 +776,6 @@ pub fn urlify(title: &str) -> EcoString {
         "書式を設定する" => "formatting".into(),
         "高度なスタイリング" => "advanced-styling".into(),
         "テンプレートを作成する" => "making-a-template".into(),
-        "日本語ユーザーガイド" => "japanese".into(),
         "リファレンス" => "reference".into(),
         "構文" => "syntax".into(),
         "スタイル設定" => "styling".into(),
@@ -761,6 +787,10 @@ pub fn urlify(title: &str) -> EcoString {
         "更新日志" => "changelog".into(),
         "路线图" => "roadmap".into(),
         "社区" => "community".into(),
+        "日本語組版情報" => "japanese".into(),
+        "日本語テンプレート" => "templates".into(),
+        "日本語向けパッケージ" => "packages".into(),
+        "日本語記事" => "articles".into(),
         "用語集" => "glossary".into(),
         _ => title
             .chars()
