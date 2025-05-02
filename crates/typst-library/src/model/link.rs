@@ -13,12 +13,12 @@ use crate::introspection::Location;
 use crate::layout::Position;
 use crate::text::TextElem;
 
-/// Links to a URL or a location in the document.
+/// URLや文書中の位置へのリンク。
 ///
-/// By default, links do not look any different from normal text. However,
-/// you can easily apply a style of your choice with a show rule.
+/// デフォルトでは、リンクの外見は通常のテキストと変わりません。
+/// しかし、showルールを使うことで、簡単に任意のスタイルを適用できます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #show link: underline
 ///
@@ -30,35 +30,35 @@ use crate::text::TextElem;
 /// ]
 /// ```
 ///
-/// # Hyphenation
-/// If you enable hyphenation or justification, by default, it will not apply to
-/// links to prevent unwanted hyphenation in URLs. You can opt out of this
-/// default via `{show link: set text(hyphenate: true)}`.
+/// # ハイフネーション
+/// ハイフネーションや両端揃えを有効にしていても、意図しないURL中のハイフネーションを防ぐため、
+/// デフォルトではリンクには適用されません。
+/// これを無効化するには、`{show link: set text(hyphenate: true)}`を使用します。
 ///
-/// # Syntax
-/// This function also has dedicated syntax: Text that starts with `http://` or
-/// `https://` is automatically turned into a link.
+/// # 構文
+/// この関数には専用の構文もあります。
+/// `http://`や`https://`で始まるテキストは、自動的にリンクに変換されます。
 #[elem(Show)]
 pub struct LinkElem {
-    /// The destination the link points to.
+    /// リンクの遷移先。
     ///
-    /// - To link to web pages, `dest` should be a valid URL string. If the URL
-    ///   is in the `mailto:` or `tel:` scheme and the `body` parameter is
-    ///   omitted, the email address or phone number will be the link's body,
-    ///   without the scheme.
+    /// - Webページにリンクする場合、`dest`は有効なURL文字列である必要があります。
+    ///   `mailto:`や`tel:`のURLスキームを含むURLが指定され、
+    ///   かつ`body`パラメーターが省略された場合、
+    ///   URLスキームを除いたメールアドレスまたは電話番号がリンクの本文になります。
     ///
-    /// - To link to another part of the document, `dest` can take one of three
-    ///   forms:
-    ///   - A [label] attached to an element. If you also want automatic text
-    ///     for the link based on the element, consider using a
-    ///     [reference]($ref) instead.
+    /// - 文書中の別の部分にリンクする場合、
+    ///     `dest`には次の3つのうちいずれかの形式を用いることができます。
+    ///   - 要素に付与された[label]。
+    ///     要素に基づいて自動的にリンクの本文を生成したい場合は、
+    ///     [reference]($ref)の使用を検討してください。
     ///
-    ///   - A [`location`] (typically retrieved from [`here`], [`locate`] or
-    ///     [`query`]).
+    ///   - [`location`]（通常は[`here`]や[`locate`]、
+    ///     [`query`]から取得される）。
     ///
-    ///   - A dictionary with a `page` key of type [integer]($int) and `x` and
-    ///     `y` coordinates of type [length]. Pages are counted from one, and
-    ///     the coordinates are relative to the page's top left corner.
+    ///   - [integer]($int)型の`page`キーと[length]型の`x`座標、`y`座標を持つ辞書。
+    ///     ページ番号は1から始まり、
+    ///     座標はページの左上隅からの相対位置です。
     ///
     /// ```example
     /// = Introduction <intro>
@@ -75,10 +75,10 @@ pub struct LinkElem {
     )]
     pub dest: LinkTarget,
 
-    /// The content that should become a link.
+    /// リンクとして表示する内容。
     ///
-    /// If `dest` is an URL string, the parameter can be omitted. In this case,
-    /// the URL will be shown as the link.
+    /// `dest`がURL文字列の場合、このパラメーターは省略可能です。
+    /// この場合、URLがリンクとして表示されます。
     #[required]
     #[parse(match &dest {
         LinkTarget::Dest(Destination::Url(url)) => match args.eat()? {
