@@ -1,12 +1,12 @@
 {
   "name": "typst-jp-documentation",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "features": {
+    "ghcr.io/devcontainers-extra/features/mise:1": {}
   },
-  "remoteUser": "typst-jp",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-  "workspaceFolder": "/workspace",
-  "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
-  "postStartCommand": "bun install --frozen-lockfile && cargo test --package typst-docs --lib -- tests::test_docs --exact --nocapture && python3 ./gen.py && python3 -m http.server -d dist"
+  "onCreateCommand": "echo 'eval \"$(mise activate bash)\"' >> ~/.bashrc && mise trust && mise install",
+  "postStartCommand": "mise run generate && mise run dev",
+  "remoteEnv": {
+    "VITE_LISTEN_ALL_ADDRESSES": "true"  // See /website/.env.example
+  }
 }
