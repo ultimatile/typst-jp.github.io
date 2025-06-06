@@ -18,12 +18,14 @@ Typst日本語ドキュメント翻訳プロジェクトにご興味をお持ち
 
 1. このGitHubリポジトリをフォークします。
 2. ドキュメントの実体は、主にMarkdownファイルおよびコンパイラのソースコード内のコメントの2種類から構成されています。それぞれ、下記の注意書きに従って翻訳作業をお願いします。
-    1. `./crates/typst-library/src/`内の`.rs`ファイル群は、Typstのコンパイラのソースコードです。ソースコード内に含まれている、**既存のコメントを直接書き換えて翻訳してください**。
+    - `./crates/typst-library/src/`内の`.rs`ファイル群は、Typstのコンパイラのソースコードです。ソースコード内に含まれている、**既存のコメントを直接書き換えて翻訳してください**。
         - 例1：[Reference > Foundations](https://typst.app/docs/reference/foundations/)を翻訳する際は、`./crates/typst-library/src/foundations/mod.rs`のコメントを編集してください。
         - 例2：[Reference > Foundations > Arguments](https://typst.app/docs/reference/foundations/arguments/)を翻訳する際は、`./crates/typst-library/src/foundations/args.rs`のコメントを編集してください。
-    2. `./docs`内のMarkdownファイル群は、Typstのチュートリアルや入門ガイドなど、言語リファレンス以外のページの本体です。**既存のMarkdownファイルを直接書き換えて翻訳してください**。
-    3. 上記いずれの場合においても、[website/translation-status.json](/website/translation-status.json)の該当箇所を`"translated"`に変更してください。
-3. 翻訳の際の文体や表記は[翻訳ガイドライン](./TRANSLATING_GUIDELINES.md)を参照してください。ドキュメントの最新バージョンへの追従は管理者が一括で行っているため、日本語ドキュメントと公式ドキュメントのバージョンが異なる場合でも、日本語ドキュメントで管理されている原文を優先してください。
+    - `./docs`内のMarkdownファイル群は、Typstのチュートリアルや入門ガイドなど、言語リファレンス以外のページの本体です。**既存のMarkdownファイルを直接書き換えて翻訳してください**。
+    - 上記いずれの場合においても、[website/translation-status.json](/website/translation-status.json)の該当箇所を`"translated"`に変更してください。
+3. 翻訳の際の文体や表記は[翻訳ガイドライン](./TRANSLATING_GUIDELINES.md)を参照してください。
+   - 翻訳ガイドラインに最低限沿っているかを確認する補助ツールとしてtextlintを導入しております。Pull Requestが作成されると、GitHub Actionsにてtextlintによる確認が入ります。textlintの処理が警告無く完了するように翻訳文を[文章校正](#文章校正)してください。
+   - ドキュメントの最新バージョンへの追従は管理者が一括で行っているため、日本語ドキュメントと公式ドキュメントのバージョンが異なる場合でも、日本語ドキュメントで管理されている原文を優先してください。
 4. 翻訳作業の途中でも、Draft Pull Requestを作成して、翻訳の進捗状況を共有することもできます。
 5. 翻訳作業が終わったら、Pull Requestを作成し、送信してください。
 
@@ -35,7 +37,7 @@ Typst日本語ドキュメント翻訳プロジェクトにご興味をお持ち
 
 [`./website/`のREADME](https://github.com/typst-jp/typst-jp.github.io/blob/main/website/README.md)を参照してください。
 
-### ローカル環境でWebページを生成する
+### ローカル環境でWebページを生成
 
 当プロジェクトの開発ツールおよびコマンドは[mise](https://mise.jdx.dev/)で一元管理しています。導入していない場合は、[Getting Started | mise-en-place](https://mise.jdx.dev/getting-started.html)に従ってインストールしてください。
 
@@ -69,6 +71,13 @@ Webサイトをローカルサーバーでプレビューするには、以下�
 mise run preview
 ```
 
+[翻訳ガイドライン](./TRANSLATING_GUIDELINES.md)に従った体裁になっているかどうかを確認するには、以下のコマンドを実行します。
+
+```sh
+mise run textlint-html  # Rustソースコードを翻訳した場合
+mise run textlint-md    # Markdownファイルを翻訳した場合
+```
+
 #### miseによる開発環境のセットアップ
 
 > [!NOTE]
@@ -94,7 +103,7 @@ mise trust
 mise install
 ```
 
-#### TypstのソースコードからドキュメントデータのJSONファイルを生成する
+#### TypstのソースコードからドキュメントデータのJSONファイルを生成
 
 ドキュメントデータのJSONファイルは、typst-docsによりTypstのソースコード内のコメントおよび`docs/`にあるMarkdownファイル群から生成されます。
 
@@ -104,7 +113,7 @@ mise install
 mise run generate-docs
 ```
 
-#### ドキュメントデータのJSONファイルからWebサイトを生成する
+#### ドキュメントデータのJSONファイルからWebサイトを生成
 
 Webサイトの生成にはNode.jsとViteとHonoを使用しています。また、パッケージ管理にBunを使用しています。
 
@@ -120,12 +129,38 @@ mise run generate-web
 mise run preview
 ```
 
-#### Webサイトの生成までを一括で行う
+#### Webサイトの生成までを一括実行
 
 `mise run generate`を実行すると、`generate-docs`および`generate-web`を一括で実行します。
 
 ```sh
 mise run generate
+```
+
+#### 文章校正
+
+[翻訳ガイドライン](./TRANSLATING_GUIDELINES.md)に従った体裁へと校正するための補助ツールとしてtextlintの設定も整備しております。
+`mise run textlint-html`を実行すると、生成されたWebサイトのHTMLコードをtextlintで校正します。
+
+```sh
+mise run textlint-html
+```
+
+現在、Rustのソースコードを直接textlintで解析することはできません。これは、Rustのrustdocに対応したtextlintプラグインがまだ存在しないためです。そのため、当面の対応として、出力されたHTMLファイルをtextlintで解析しています。
+そのため、textlintの警告が出た該当箇所のRustコードを手動で修正して、再度`mise run generate`を実行してください。
+textlintの警告内容が不適当であると思われる場合にはIssueやPull Requestにてご報告お願いいたします。
+
+Markdownファイルを翻訳した場合には、`mise run textlint-md`を実行します。
+
+```sh
+mise run textlint-md
+```
+
+直接textlintで校正するMarkdownファイルに関しては、`mise run textlint-md-fix`を実行することで、自動修正も可能です。
+ファイルを上書きするため、Gitで現状を記録した状態で実施することを推奨します。
+
+```sh
+mise run textlint-md-fix
 ```
 
 #### Dev Containerによる開発環境のセットアップ
@@ -139,8 +174,8 @@ Visual Studio Codeにおける操作フロー例は以下の通りです。
 2. Webサーバーが起動したらブラウザで http://localhost:5173 にアクセスします。
 3. 翻訳したファイルの変更を反映させるためにはCtrl+Shift+Bで再ビルドしてください。
 4. 体裁を確認したい場合、Ctrl+Shift+Pを押してから`> Tasks: Run task`を実行し以下のいずれかを選択します。
-    - `textlint-md` : Markdownファイルを翻訳した場合
     - `textlint-html` : Rustソースコードを翻訳した場合
+    - `textlint-md` : Markdownファイルを翻訳した場合
 5. 自動修正を実施したい場合も同様に以下から選択します。
     - `textlint-md:fix` : Markdownファイルを自動修正します。
     - Rustコードの自動修正は対応していなため、該当箇所を手動で修正してください。
