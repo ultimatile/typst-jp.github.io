@@ -1,6 +1,8 @@
+import { html } from "hono/html";
 import type { FC, PropsWithChildren } from "hono/jsx";
-import { baseUrl, typstOfficialUrl } from "../../metadata";
+import { basePath, originUrl, typstOfficialDocsUrl } from "../../metadata";
 import type { Page } from "../../types/model";
+import { joinPath, removeBasePath } from "../../utils/path";
 import { getTranslationStatus } from "../../utils/translationStatus";
 import {
 	CaretRightCircleIcon,
@@ -42,9 +44,15 @@ export const BaseTemplate: FC<BaseTemplateProps> = ({
 	const route = page.route;
 	const outline = page.outline;
 	const translationStatus = getTranslationStatus(route);
-	const absoluteRouteUrl = new URL(route, baseUrl).toString();
-	const faviconUrl = new URL("/assets/favicon.png", baseUrl).toString();
-	const typstOfficialRouteUrl = new URL(route, typstOfficialUrl).toString();
+	const absoluteRouteUrl = new URL(route, originUrl).toString();
+	const faviconUrl = new URL(
+		joinPath(basePath, "/favicon.png"),
+		originUrl,
+	).toString();
+	const typstOfficialRouteUrl = joinPath(
+		typstOfficialDocsUrl,
+		removeBasePath(basePath, route),
+	);
 	return (
 		<html lang="ja" class="scroll-pt-24">
 			<head>
@@ -68,7 +76,6 @@ export const BaseTemplate: FC<BaseTemplateProps> = ({
 				<meta name="twitter:card" content="summary_large_image" />
 				<link rel="canonical" href={absoluteRouteUrl} />
 				<meta name="robots" content="index, follow" />
-				<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 				<meta
 					name="twitter:image:alt"
 					content="The left side of a text editor with colorful cursors, as well as the text 'Compose papers faster, Typst'"
@@ -77,39 +84,53 @@ export const BaseTemplate: FC<BaseTemplateProps> = ({
 					rel="icon"
 					type="image/png"
 					sizes="32x32"
-					href="/assets/favicon.png"
+					href={joinPath(basePath, "/favicon.png")}
 				/>
 				<link
 					rel="preload"
-					href="/assets/fonts/hanken-grotesk/HKGrotesk-Regular.woff2"
+					href={joinPath(
+						basePath,
+						"/fonts/hanken-grotesk/HKGrotesk-Regular.woff2",
+					)}
 					as="font"
 					type="font/woff2"
 					crossOrigin="anonymous"
 				/>
 				<link
 					rel="preload"
-					href="/assets/fonts/hanken-grotesk/HKGrotesk-Bold.woff2"
+					href={joinPath(
+						basePath,
+						"/fonts/hanken-grotesk/HKGrotesk-Bold.woff2",
+					)}
 					as="font"
 					type="font/woff2"
 					crossOrigin="anonymous"
 				/>
 				<link
 					rel="preload"
-					href="/assets/fonts/hanken-grotesk/HKGrotesk-SemiBold.woff2"
+					href={joinPath(
+						basePath,
+						"/fonts/hanken-grotesk/HKGrotesk-SemiBold.woff2",
+					)}
 					as="font"
 					type="font/woff2"
 					crossOrigin="anonymous"
 				/>
 				<link
 					rel="preload"
-					href="/assets/fonts/cascadia-code/CascadiaMono-Regular-Sub.woff2"
+					href={joinPath(
+						basePath,
+						"/fonts/cascadia-code/CascadiaMono-Regular-Sub.woff2",
+					)}
 					as="font"
 					type="font/woff2"
 					crossOrigin="anonymous"
 				/>
 				<link
 					href={
-						import.meta.env.DEV ? "/src/globals.css" : "/assets/globals.css"
+						import.meta.env.DEV
+							? joinPath(basePath, "/src/globals.css")
+							: joinPath(basePath, "/globals.css")
 					}
 					rel="stylesheet"
 				/>
@@ -117,6 +138,13 @@ export const BaseTemplate: FC<BaseTemplateProps> = ({
 					defer
 					src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"
 				/>
+				{/* NOTE: @hono/vite-dev-server does not respect the base setting in the Vite configuration. */}
+				{import.meta.env.DEV &&
+					html`
+          <script>
+			import("${joinPath(basePath, "/@vite/client")}")
+          </script>
+        `}
 			</head>
 
 			<body
@@ -218,11 +246,11 @@ export const BaseTemplate: FC<BaseTemplateProps> = ({
 								</a>
 							)}
 
-							{route === "/docs/" ? (
+							{route === basePath ? (
 								<div class="doc-categories grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
 									<a
 										class="doc-category flex flex-col p-6 bg-white border border-gray-200 rounded-lg hover:border-gray-500 hover:bg-gray-50 transition-all duration-200"
-										href="/docs/tutorial"
+										href={joinPath(basePath, "/tutorial/")}
 									>
 										<div class="flex items-center mb-3">
 											<div class="w-6 h-6 text-gray-800 mr-2">
@@ -238,7 +266,7 @@ export const BaseTemplate: FC<BaseTemplateProps> = ({
 									</a>
 									<a
 										class="doc-category flex flex-col p-6 bg-white border border-gray-200 rounded-lg hover:border-gray-500 hover:bg-gray-50 transition-all duration-200"
-										href="/docs/reference"
+										href={joinPath(basePath, "/reference/")}
 									>
 										<div class="flex items-center mb-3">
 											<div class="w-6 h-6 text-gray-800 mr-2">
