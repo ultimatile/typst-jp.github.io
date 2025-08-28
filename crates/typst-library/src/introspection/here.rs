@@ -4,22 +4,18 @@ use crate::diag::HintedStrResult;
 use crate::foundations::{func, Context};
 use crate::introspection::Location;
 
-/// Provides the current location in the document.
+/// 文書中における現在位置を提供。
 ///
-/// You can think of `here` as a low-level building block that directly extracts
-/// the current location from the active [context]. Some other functions use it
-/// internally: For instance, `{counter.get()}` is equivalent to
-/// `{counter.at(here())}`.
+/// `here`はアクティブな[context]から現在位置を直接取得する低レベルな構成要素と考えることができます。
+/// 他のいくつかの関数は内部で使用しています。
+/// 例えば、`{counter.get()}`は`{counter.at(here())}`と等価です。
 ///
-/// Within show rules on [locatable]($location/#locatable) elements, `{here()}`
-/// will match the location of the shown element.
+/// Within show rules on [locatable]($location/#locatable) 要素に対するshowルールにおいて, `{here()}`will match the location of the shown element.
 ///
-/// If you want to display the current page number, refer to the documentation
-/// of the [`counter`] type. While `here` can be used to determine the physical
-/// page number, typically you want the logical page number that may, for
-/// instance, have been reset after a preface.
+/// 現在のページ番号を表示したい場合は、[`counter`]型のドキュメントを参照してください。
+/// `here`は物理的なページ番号を決定できますが、通常は、前書きの後にリセットされるような、論理的なページ番号が必要でしょう。
 ///
-/// # Examples
+/// # 例
 /// Determining the current position in the document in combination with the
 /// [`position`]($location.position) method:
 /// ```example
