@@ -21,21 +21,18 @@ use crate::model::{FigureElem, FootnoteElem, HeadingElem, Numbering, NumberingPa
 use crate::routines::Routines;
 use crate::World;
 
-/// Counts through pages, elements, and more.
+/// ページや要素などの数え上げ。
 ///
-/// With the counter function, you can access and modify counters for pages,
-/// headings, figures, and more. Moreover, you can define custom counters for
-/// other things you want to count.
+/// counter関数を用いることで、ページや見出し、図表などのカウンターにアクセスしたり、修正を加えたりできます。
+/// さらに、独自のカウンターを定義して、他のものを数えることもできます。
 ///
-/// Since counters change throughout the course of the document, their current
-/// value is _contextual._ It is recommended to read the chapter on [context]
-/// before continuing here.
+/// カウンターは文書全体を通して変化するため, 現在のその値は _コンテキスト依存_ です。
+/// 先に進む前に[コンテキスト]($context)の章を読むことを勧めます。
 ///
-/// # Accessing a counter { #accessing }
-/// To access the raw value of a counter, we can use the [`get`]($counter.get)
-/// function. This function returns an [array]: Counters can have multiple
-/// levels (in the case of headings for sections, subsections, and so on), and
-/// each item in the array corresponds to one level.
+/// # カウンターへのアクセス { #accessing }
+/// [`get`]($counter.get)関数を用いると、カウンターの未加工値にアクセスできます。
+/// この関数は[配列]($array)を返します。
+/// カウンターは（節や小節などの見出しの場合に）複数のレベルを持ち、配列の各アイテムが1つのレベルに対応します。
 ///
 /// ```example
 /// #set heading(numbering: "1.")
@@ -45,11 +42,10 @@ use crate::World;
 /// #context counter(heading).get()
 /// ```
 ///
-/// # Displaying a counter { #displaying }
-/// Often, we want to display the value of a counter in a more human-readable
-/// way. To do that, we can call the [`display`]($counter.display) function on
-/// the counter. This function retrieves the current counter value and formats
-/// it either with a provided or with an automatically inferred [numbering].
+/// # カウンターの表示 { #displaying }
+/// しばしば、カウンターの値をより人間が読みやすい形で表示したいことがあります。
+/// そうするために、カウンターの[`display`]($counter.display)関数を呼び出します。
+/// この関数は現在のカウンターの値を取得し、与えられた形式か自動的に推論された[numbering]で整形します。
 ///
 /// ```example
 /// #set heading(numbering: "1.")
@@ -67,21 +63,19 @@ use crate::World;
 /// }
 /// ```
 ///
-/// # Modifying a counter { #modifying }
-/// To modify a counter, you can use the `step` and `update` methods:
+/// # カウンターの変更 { #modifying }
+/// `step`および`update`メソッドを用いてカウンターを変更できます。
 ///
-/// - The `step` method increases the value of the counter by one. Because
-///   counters can have multiple levels , it optionally takes a `level`
-///   argument. If given, the counter steps at the given depth.
+/// - `step`メソッドは、カウンターの値を1増加させます。
+///   カウンターはレベルを複数持つことがあるため、オプションで`level`引数を取ります。
+///   `level`が指定された場合、指定された深さのカウンターの値を増加させます。
 ///
-/// - The `update` method allows you to arbitrarily modify the counter. In its
-///   basic form, you give it an integer (or an array for multiple levels). For
-///   more flexibility, you can instead also give it a function that receives
-///   the current value and returns a new value.
+/// - `update`メソッドを用いるとカウンターを任意に変更できます。
+///   通常の形式では、整数（あるいは複数レベルに対しては配列を）与えます。
+///   現在の値を受け取り新しい値を返す関数を代わりに与えると、より柔軟にできます。
 ///
-/// The heading counter is stepped before the heading is displayed, so
-/// `Analysis` gets the number seven even though the counter is at six after the
-/// second update.
+/// 見出しのカウンターは見出しが表示される前にインクリメントされます。
+/// そのため、2回目のupdateの後にカウンターが6であったとしても`Analysis`は7になります。
 ///
 /// ```example
 /// #set heading(numbering: "1.")
@@ -103,11 +97,11 @@ use crate::World;
 /// }
 /// ```
 ///
-/// # Page counter
-/// The page counter is special. It is automatically stepped at each pagebreak.
-/// But like other counters, you can also step it manually. For example, you
-/// could have Roman page numbers for your preface, then switch to Arabic page
-/// numbers for your main content and reset the page counter to one.
+/// # ページカウンター
+/// ページカウンターは特別です。
+/// 改ページ毎に値がインクリメントされます。
+/// しかし、他のカウンターと同様に手動でインクリメントもできます。
+/// 例えば、前書きではローマ数字のページ番号を使い、メインのコンテンツではアラビア数字のページ番号に変更し、ページカウンターを1にリセットすることができます。
 ///
 /// ```example
 /// >>> #set page(
@@ -130,9 +124,9 @@ use crate::World;
 /// Arabic numbers.
 /// ```
 ///
-/// # Custom counters
-/// To define your own counter, call the `counter` function with a string as a
-/// key. This key identifies the counter globally.
+/// # カスタムカウンター
+/// 独自のカウンターを定義するには文字列をキーとして`counter`関数を呼び出します。
+/// このキーはグローバルにカウンターを識別します。
 ///
 /// ```example
 /// #let mine = counter("mycounter")
@@ -143,13 +137,10 @@ use crate::World;
 /// #context mine.display()
 /// ```
 ///
-/// # How to step
-/// When you define and use a custom counter, in general, you should first step
-/// the counter and then display it. This way, the stepping behaviour of a
-/// counter can depend on the element it is stepped for. If you were writing a
-/// counter for, let's say, theorems, your theorem's definition would thus first
-/// include the counter step and only then display the counter and the theorem's
-/// contents.
+/// # インクリメント方法
+/// カスタムカウンターを定義して使用する場合、一般にカウンターを最初にインクリメントしてから表示するべきです。
+/// こうすることで、カウンターのインクリメント動作をインクリメントする要素に依存させることができます。
+/// 仮に、theoremのカウンター書いているとします。If you were writing a counter for, let's say, theorems, your theoremの定義には を含め、その後に限りカウンターとtheoremのコンテンツを表示。
 ///
 /// ```example
 /// #let c = counter("theorem")
@@ -163,21 +154,17 @@ use crate::World;
 /// #theorem[$2 < 3$]
 /// ```
 ///
-/// The rationale behind this is best explained on the example of the heading
-/// counter: An update to the heading counter depends on the heading's level. By
-/// stepping directly before the heading, we can correctly step from `1` to
-/// `1.1` when encountering a level 2 heading. If we were to step after the
-/// heading, we wouldn't know what to step to.
+/// この背景にある考え方は、見出しカウンターの例で説明するのが最適です。
+/// 見出しカウンターの更新は、その見出しのレベルに依存します。
+/// 見出しの直前にインクリメントすることで、第2レベルの見出しがあるときに`1`から`1.1`へと正しく更新できます。
+/// もし見出しの後にインクリメントする場合、どれをインクリメントするのかわかりません。
 ///
-/// Because counters should always be stepped before the elements they count,
-/// they always start at zero. This way, they are at one for the first display
-/// (which happens after the first step).
+/// カウンターは常に数える要素の前にインクリメントすべきなため、必ず0始まりです。
+/// このようにして、（最初のインクリメントの後に）最初に表示されるときには1になります。
 ///
-/// # Time travel
-/// Counters can travel through time! You can find out the final value of the
-/// counter before it is reached and even determine what the value was at any
-/// particular location in the document.
-///
+/// # タイムトラベル
+/// カウンターはタイムトラベルできます！
+/// カウンターの最終的な値を実際に到達する前に知ることができますし、文書の任意の特定の場所での値がどうなっていたかさえ決定できます。
 /// ```example
 /// #let mine = counter("mycounter")
 ///
@@ -197,10 +184,9 @@ use crate::World;
 /// #mine.step()
 /// ```
 ///
-/// # Other kinds of state { #other-state }
-/// The `counter` type is closely related to [state] type. Read its
-/// documentation for more details on state management in Typst and why it
-/// doesn't just use normal variables for counters.
+/// # その他の状態 { #other-state }
+/// `counter`型は[state]型と密接に関係しています。
+/// Typstにおける状態管理のより詳しい詳細と、なぜ単に普通の変数をカウンターに用いないのかについてはstateのドキュメントを参照してください。
 #[ty(scope)]
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub struct Counter(CounterKey);
@@ -404,10 +390,10 @@ impl Counter {
 
 #[scope]
 impl Counter {
-    /// Create a new counter identified by a key.
+    /// キーで識別される新しいカウンターの作成。
     #[func(constructor)]
     pub fn construct(
-        /// The key that identifies this counter.
+        /// The key that identifies this counterこのカウンターを識別するキー。
         ///
         /// - If it is a string, creates a custom counter that is only affected
         ///   by manual updates,
@@ -505,19 +491,17 @@ impl Counter {
         Ok(state)
     }
 
-    /// Increases the value of the counter by one.
+    /// カウンターの値を1増加。
     ///
-    /// The update will be in effect at the position where the returned content
-    /// is inserted into the document. If you don't put the output into the
-    /// document, nothing happens! This would be the case, for example, if you
-    /// write `{let _ = counter(page).step()}`. Counter updates are always
-    /// applied in layout order and in that case, Typst wouldn't know when to
-    /// step the counter.
+    /// The update will be in effect at the position where the returned content is inserted into the document.
+    /// If you don't put the output into the document, nothing happens! This would be the case, for example, if you write `{let _ = counter(page).step()}`.
+    /// Counter updates are always applied in layout order and in that case, Typst wouldn't know when to step the counter.
     #[func]
     pub fn step(
         self,
         span: Span,
-        /// The depth at which to step the counter. Defaults to `{1}`.
+        /// カウンターをインクリメントする深さ。
+        /// デフォルトは`{1}`です。
         #[named]
         #[default(NonZeroUsize::ONE)]
         level: NonZeroUsize,
@@ -525,10 +509,9 @@ impl Counter {
         self.update(span, CounterUpdate::Step(level))
     }
 
-    /// Updates the value of the counter.
+    /// カウンターの値の更新。
     ///
-    /// Just like with `step`, the update only occurs if you put the resulting
-    /// content into the document.
+    /// Just like with `step`, the update only occurs if you put the resulting content into the document.
     #[func]
     pub fn update(
         self,
