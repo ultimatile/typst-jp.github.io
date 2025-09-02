@@ -1,10 +1,4 @@
-import {
-	discordServerUrl,
-	githubOrganizationUrl,
-	githubRepositoryUrl,
-	typstOfficialDocsUrl,
-	version,
-} from "../../../metadata";
+import { Translation } from "../../../translation";
 import { InfoCircleIcon } from "../../icons";
 
 export const SiteNoticeBanner = () => {
@@ -43,35 +37,15 @@ export const SiteNoticeBanner = () => {
 						<div class="w-4 h-4">
 							<InfoCircleIcon />
 						</div>
-						<strong>情報 / Info</strong>
+						<strong>
+							<Translation translationKey="siteNoticeBannerTitle" />
+						</strong>
 					</span>
 					<span class="hidden sm:flex items-center">
 						<span class="inline-block w-px h-12 bg-neutral-200 mx-3" />
 					</span>
 					<span class="block flex-1 pt-1 pb-2 leading-normal sm:inline sm:pt-0 sm:pb-0">
-						当サイトは、Typst GmbHの許諾を得て、日本語コミュニティ「
-						<a href={githubOrganizationUrl}>Typst Japanese Community</a>」が
-						<a href={typstOfficialDocsUrl}>
-							Typst v{version}の公式ドキュメント
-						</a>
-						を翻訳したものです。誤訳や古い情報が含まれている可能性があるため、
-						<a href={typstOfficialDocsUrl}>公式ドキュメント</a>
-						との併用を推奨します。翻訳の改善やサイトの機能向上について、
-						<a href={githubRepositoryUrl}>GitHub</a>でのIssueやPull
-						Requestを歓迎します。コミュニティにご興味のある方は
-						<a href={discordServerUrl}>Discordサーバー「くみはんクラブ」</a>
-						にぜひご参加ください。
-						<br />
-						This site provides a Japanese translation of the{" "}
-						<a href={typstOfficialDocsUrl}>Typst v{version} documentation</a>{" "}
-						maintained by the "
-						<a href={githubOrganizationUrl}>Typst Japanese Community</a>" with
-						permission from Typst GmbH. We recommend using this alongside the{" "}
-						<a href={typstOfficialDocsUrl}>official documentation</a>. We
-						welcome contributions through Issues and Pull Requests on{" "}
-						<a href={githubRepositoryUrl}>our GitHub repository</a> for both
-						translation improvements and website enhancements. Feel free to join{" "}
-						<a href={discordServerUrl}>our Discord server "Kumihan Club"</a>.
+						<Translation translationKey="siteNoticeBannerDescription" />
 					</span>
 				</div>
 			</div>

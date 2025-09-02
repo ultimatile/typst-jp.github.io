@@ -1,4 +1,5 @@
 import type { FC } from "hono/jsx";
+import { Translation } from "../../translation";
 import type { Func, FuncBody, Page } from "../../types/model";
 import {
 	FunctionDefinition,
@@ -52,7 +53,7 @@ export const FuncTemplate: FC<FuncTemplateProps> = ({
 			</div>
 
 			<h2 id="parameters" class="flex items-baseline gap-1">
-				引数
+				<Translation translationKey="argument" />
 				<Tooltip kind="parameters" />
 			</h2>
 
@@ -82,7 +83,10 @@ export const FuncTemplate: FC<FuncTemplateProps> = ({
 function ScopedDefinitions({
 	scope,
 	parent,
-}: { scope: Func[]; parent?: { name: string; id: string } | undefined }) {
+}: {
+	scope: Func[];
+	parent?: { name: string; id: string } | undefined;
+}) {
 	if (scope.length === 0) {
 		return null;
 	}
@@ -99,10 +103,10 @@ function ScopedDefinitions({
 					// Currently, the scope has at most two levels.
 					// Therefore, it is sufficient to only annotate the direct `parent`.
 					<>
-						<code>{parent.name}</code>の定義
+						<Translation translationKey="definitionOf" name={parent.name} />
 					</>
 				) : (
-					"定義"
+					<Translation translationKey="definition" />
 				)}
 				<Tooltip kind="definitions" />
 			</h2>
