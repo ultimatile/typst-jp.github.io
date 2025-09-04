@@ -1,21 +1,14 @@
-import type { FC } from "hono/jsx";
-import type { TooltipProps } from "./components/ui/Tooltip";
+import type { TooltipProps } from "../components/ui/Tooltip";
 import {
 	discordServerUrl,
 	githubOrganizationUrl,
 	githubRepositoryUrl,
 	typstOfficialDocsUrl,
 	version,
-} from "./metadata";
+} from "../metadata";
+import type { TranslationComponent, TranslationObject } from "./";
 
-/**
- * Translation dictionary for UI attributes and aria labels.
- *
- * @example
- * translation.closeMenu()
- * translation.showInformation({ name: "foo" })
- */
-export const translation = {
+export const translation: TranslationObject = {
 	htmlLang: () => "ja",
 	documentationTitle: () => "Typstドキュメント日本語版",
 	close: () => "閉じる",
@@ -48,64 +41,7 @@ export const translation = {
 	},
 } as const;
 
-type TranslationKey =
-	| "definition"
-	| "constructor"
-	| "tableOfContents"
-	| "untranslated"
-	| "untranslatedMessage"
-	| "document"
-	| "langVersion"
-	| "elementFunction"
-	| "elementFunctionDescription"
-	| "contextFunction"
-	| "contextFunctionDescription"
-	| "definitionTooltip"
-	| "definitionTooltipDescription"
-	| "variadic"
-	| "translationRate"
-	| "variadicDescription"
-	| "typstOfficialDocs"
-	| "typstOfficialWebsite"
-	| "communityContent"
-	| "contentAddedByCommunity"
-	| "partiallyTranslated"
-	| "partiallyTranslatedMessage"
-	| "translated"
-	| "translatedMessage"
-	| "siteNoticeBannerTitle"
-	| "siteNoticeBannerDescription"
-	| "tutorial"
-	| "tutorialDescription"
-	| "referenceDescription"
-	| "reference"
-	| "openOfficialDocs"
-	| "search"
-	| "argument"
-	| "argumentDescription"
-	| "required"
-	| "requiredDescription"
-	| "positional"
-	| "positionalDescription"
-	| "defaultValue"
-	| "stringValues"
-	| "showExample"
-	| "settable"
-	| "settableDescription"
-	| "previousPage"
-	| "nextPage";
-
-export type TranslationProps =
-	| { translationKey: TranslationKey }
-	| { translationKey: "definitionOf"; name: string };
-
-/**
- * Translation component for UI text, descriptions, and other content to be embedded as JSX.
- *
- * @example
- * <Translation translationKey="definition" />
- */
-export const Translation: FC<TranslationProps> = (props) => {
+export const Translation: TranslationComponent = (props) => {
 	switch (props.translationKey) {
 		case "definition":
 			return <>定義</>;
@@ -260,6 +196,13 @@ export const Translation: FC<TranslationProps> = (props) => {
 					<a href={githubRepositoryUrl}>our GitHub repository</a> for both
 					translation improvements and website enhancements. Feel free to join{" "}
 					<a href={discordServerUrl}>our Discord server "Kumihan Club"</a>.
+				</>
+			);
+		case "footer":
+			return (
+				<>
+					Translated by{" "}
+					<a href={githubOrganizationUrl}>Typst Japanese Community</a>
 				</>
 			);
 		default:
