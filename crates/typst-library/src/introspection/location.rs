@@ -67,7 +67,7 @@ impl Location {
     /// このlocationのページ番号とx座標とy座標を辞書で返します。
     /// ページ番号は1始まりで、座標はページの左上から測ります。
     ///
-    /// ページ番号にのみ興味がある場合は、代わりに`page()`を使用すると不必要な処理を省略できます。
+    /// ページ番号のみに興味がある場合は、代わりに`page()`を使用すると不要な処理を省略できます。
     #[func]
     pub fn position(self, engine: &mut Engine) -> Position {
         engine.introspector.position(self)
