@@ -11,7 +11,7 @@ use crate::introspection::Location;
 /// このlocationを用いると、特に、物理的な[`page`]($location.page)番号やその要素の[`position`]($location.position)（ページ番号、x座標、y座標）を取得できます。
 ///
 /// # 例
-/// 特定の要素の位置を特定します。
+/// 特定の要素のロケーションを特定します。
 /// ```example
 /// #context [
 ///   Introduction is at: \
