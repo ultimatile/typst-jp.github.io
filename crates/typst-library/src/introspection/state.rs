@@ -271,7 +271,7 @@ impl State {
         Self::new(key, init)
     }
 
-    /// 現在位置での状態値を取得。
+    /// 現在のロケーションでの状態値を取得。
     ///
     /// これは`{state.at(here())}`と等価です。
     #[typst_macros::time(name = "state.get", span = span)]
