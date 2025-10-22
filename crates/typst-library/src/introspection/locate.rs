@@ -28,7 +28,7 @@ pub fn locate(
     /// その要素のロケーションが決定されます。
     ///
     /// 以下との組み合わせが特に便利です。
-    /// - [`here`]と組み合わせた現在のコンテキストでの位置の特定
+    /// - [`here`]と組み合わせた現在のコンテキストでのロケーションの特定
     /// - 何らかのクエリで得られた要素からコンテンツの[`location()`]($content.location)メソッドを用いて取得した[`location`]
     selector: LocatableSelector,
 ) -> HintedStrResult<Location> {
