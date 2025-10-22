@@ -5,7 +5,7 @@ use crate::engine::Engine;
 use crate::foundations::{func, Context, LocatableSelector};
 use crate::introspection::Location;
 
-/// 文書中の要素の位置を特定。
+/// 文書中の要素のロケーションを特定。
 ///
 /// 厳密に1つだけの要素にマッチしなければならないセレクターを受け取り、要素の[`location`]を返します。
 /// このlocationを用いると、特に、物理的な[`page`]($location.page)番号やその要素の[`position`]($location.position)（ページ番号、x座標、y座標）を取得できます。
