@@ -289,7 +289,7 @@ impl State {
     /// 指定したセレクターで一意に特定される対象の状態値を取得。
     ///
     /// `selector`は文書中で厳密に1つだけの要素にマッチしなければなりません。
-    /// この目的で最も便利なセレクターは[ラベル]($label)と[位置]($location)です。
+    /// この目的で最も便利なセレクターは[ラベル]($label)と[ロケーション]($location)です。
     #[typst_macros::time(name = "state.at", span = span)]
     #[func(contextual)]
     pub fn at(
