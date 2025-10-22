@@ -4,7 +4,7 @@ use crate::diag::HintedStrResult;
 use crate::foundations::{func, Context};
 use crate::introspection::Location;
 
-/// 文書中における現在位置を提供。
+/// 文書中における現在のロケーションを提供。
 ///
 /// `here`はアクティブな[コンテキスト]($context)から現在位置を直接取得する低レベルな構成要素と考えることができます。
 /// いくつかの他の関数が内部で使用しています。
