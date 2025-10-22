@@ -58,7 +58,7 @@ use crate::foundations::{func, Array, Context, LocatableSelector, Value};
 /// #lorem(18)
 /// ```
 ///
-/// ページ番号を取得するために、まず[`location`]($content.location)メソッドを用いて`query`が返す要素の位置を取得します。
+/// ページ番号を取得するために、まず[`location`]($content.location)メソッドを用いて`query`が返す要素のロケーションを取得します。
 /// 続けて、その位置にある[ページの番号付け]($location.page-numbering)と[ページカウンター]($counter/#page-counter)を取得し、カウンターに番号付けを適用します。
 ///
 /// # 注意事項 { #caution }
