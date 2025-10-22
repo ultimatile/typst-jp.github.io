@@ -77,7 +77,7 @@ impl Location {
     /// これにより、ページカウンターの表示する際に、その位置での番号付けを取得できます。
     /// これは独自の索引やアウトラインを作成する場合に便利です。
     ///
-    /// その位置でのページの番号付けが`{none}`に設定されていた場合、`{none}`を返します。
+    /// そのロケーションのページの番号付けが`{none}`に設定されていた場合、`{none}`を返します。
     #[func]
     pub fn page_numbering(self, engine: &mut Engine) -> Option<Numbering> {
         engine.introspector.page_numbering(self).cloned()
