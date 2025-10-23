@@ -21,8 +21,8 @@ use crate::visualize::{Paint, Stroke};
 
 /// グリッド状にコンテンツを配置。
 ///
-/// グリッド要素を用いるとコンテンツをグリッド状に配置することができます。
-/// 行と列の数に加えて、それらの間隔を定義することができます。
+/// グリッド要素を用いるとコンテンツをグリッド状に配置できます。
+/// 行と列の数に加えて、それらの間隔を定義できます。
 /// 複雑なレイアウトが作成できるような、列と行の大きさに関するモードが複数あります。
 ///
 /// グリッド要素とテーブル要素はとてもよく似た挙動をする一方で、これらは異なるユースケースが想定されており、異なる意味論が提供されています。
@@ -36,20 +36,20 @@ use crate::visualize::{Paint, Stroke};
 /// トラックサイズは以下のいずれかです。
 ///
 /// - `{auto}`: トラックはコンテンツに合わせた大きさになります。
-/// It will be at most as large as the remaining space.
+/// 残されたスペース全体まで大きくなります。
 /// If there is more than one `{auto}` track width, and together they claim more than the available space, the `{auto}` tracks will fairly distribute the available space among themselves.
 ///
-/// - A fixed or relative length (e.g. `{10pt}` or `{20% - 1cm}`): The track will be exactly of this size.
+/// - A fixed or relative length （`{10pt}`や`{20% - 1cm}`など）:トラックは厳密にその大きさになります。
 ///
 /// - A fractional length (e.g. `{1fr}`): Once all other tracks have been sized, the remaining space will be divided among the fractional tracks according to their fractions.
-/// For example, if there are two fractional tracks, each with a fraction of `{1fr}`, they will each take up half of the remaining space.
+/// 例えば、if there are two fractional tracks, each with a fraction of `{1fr}`, they will each take up half of the remaining space.
 ///
 /// 単一のトラックを指定する場合は、配列を省略して単一の値を指定できます。
 /// 複数の`{auto}`のトラックを指定する場合は、配列の代わりにトラックの数を入力して下さい。
 /// 例えば、`columns:` `{3}`は`columns:` `{(auto, auto, auto)}`と同じ意味になります。
 ///
 /// # 例
-/// The example below demonstrates the different track sizing options.以下の例は異なるトラックサイズオプションの実演です。
+/// 以下の例は異なるトラックサイズオプションの実演です。
 /// また、1つのセルをグリッドの2つのトラックに跨がせるために[`grid.cell`]($grid.cell)をどう使うのかも示しています。
 ///
 /// ```example
@@ -105,7 +105,8 @@ use crate::visualize::{Paint, Stroke};
 /// It also allows you to easily change the grid's appearance in one place.
 ///
 /// ## Stroke styling precedence
-/// There are three ways to set the stroke of a grid cell: through [`{grid.cell}`'s `stroke` field]($grid.cell.stroke), by using [`{grid.hline}`]($grid.hline) and [`{grid.vline}`]($grid.vline), or by setting the [`{grid}`'s `stroke` field]($grid.stroke).
+/// グリッドセルのストローク指定法は3種類あります。
+/// [`{grid.cell}`の`stroke`フィールド]($grid.cell.stroke)を用いる方法、[`{grid.hline}`]($grid.hline)と[`{grid.vline}`]($grid.vline)を用いる方法、[`{grid}`の`stroke`フィールド]($grid.stroke)を用いる方法です。
 /// When multiple of these settings are present and conflict, the `hline` and `vline` settings take the highest precedence, followed by the `cell` settings, and finally the `grid` settings.
 ///
 /// Furthermore, strokes of a repeated grid header or footer will take precedence over regular cell strokes.
