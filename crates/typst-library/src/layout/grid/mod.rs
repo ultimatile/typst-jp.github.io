@@ -99,27 +99,27 @@ use crate::visualize::{Paint, Stroke};
 /// 同様に、個々のグリッドの線も[`grid.hline`]($grid.hline)要素や[`grid.vline`]($grid.vline)要素を用いて上書きできます。
 ///
 /// Alternatively, if you need the appearance options to depend on a cell's position (column and row), you may specify a function to `fill` or `align` of the form `(column, row) => value`.
-/// You may also use a showルール on [`grid.cell`]($grid.cell) - see that element's examples or the examples below for more information.
+/// [`grid.cell`]($grid.cell)に対してもshowルールを使用できます。 - see that element's examples or the examples below for more information.
 ///
-/// Locating most of your styling in set and show rules is recommended, as it keeps the grid's or table's actual usages clean and easy to read.
+/// スタイル設定の多くはsetルールとshowルールを用いることを推奨します。 is recommended, as it keeps the grid's or table's actual usages clean and easy to read.
 /// It also allows you to easily change the grid's appearance in one place.
 ///
-/// ## Stroke styling precedence
-/// グリッドセルのストローク指定法は3種類あります。
+/// ## ストロークのスタイル設定の優先順位
+/// グリッドセルのストローク指定方法は3種類あります。
 /// [`{grid.cell}`の`stroke`フィールド]($grid.cell.stroke)を用いる方法、[`{grid.hline}`]($grid.hline)と[`{grid.vline}`]($grid.vline)を用いる方法、[`{grid}`の`stroke`フィールド]($grid.stroke)を用いる方法です。
-/// When multiple of these settings are present and conflict, the `hline` and `vline` settings take the highest precedence, followed by the `cell` settings, and finally the `grid` settings.
+/// これらの設定が複数存在し、競合する場合、`hline`と`vline`の設定が最優先となり、続いて優先されるのが`cell`の設定で、最後に`grid`の設定が適用されます。
 ///
 /// Furthermore, strokes of a repeated grid header or footer will take precedence over regular cell strokes.
 #[elem(scope, Show)]
 pub struct GridElem {
-    /// The column sizes.
+    /// 列の数。
     ///
     /// Either specify a track size array or provide an integer to create a grid with that many `{auto}`-sized columns.
     /// Note that opposed to rows and gutters, providing a single track size will only ever create a single column.
     #[borrowed]
     pub columns: TrackSizings,
 
-    /// The row sizes.
+    /// 行の数。
     ///
     /// If there are more cells than fit the defined rows, the last row is repeated until there are no more cells.
     #[borrowed]
@@ -127,7 +127,7 @@ pub struct GridElem {
 
     /// 行間と列間の間隔。
     ///
-    /// If there are more gutters than defined sizes, the last gutter is repeated.
+    /// 定義した数よりもgutterがある場合、最後のgutterが繰り返されます。If there are more gutters than defined sizes, the last gutter is repeated.
     ///
     /// これは`column-gutter`と`row-gutter`を同じ値で設定する省略記法です。
     #[external]
@@ -173,9 +173,9 @@ pub struct GridElem {
     ///
     /// 単一の配置、（各列に対応する）配置の配列、配置を返す関数のいずれかが使用可能です。
     /// The function receives the cells' column and row indices, starting from zero.
-    /// `{auto}`に設定された場合外側の配置が使用されます。
+    /// `{auto}`に設定された場合は外側の配置が使用されます。
     ///
-    /// You can find an example for this argument at the [`table.align`]($table.align) parameter.
+    /// この引数に関する例は[`table.align`]($table.align)パラメーターにあります。
     #[borrowed]
     pub align: Celled<Smart<Alignment>>,
 
@@ -257,7 +257,7 @@ pub struct GridElem {
 
     /// How much to pad the cells' content.
     ///
-    /// You can find an example for this argument at the [`table.inset`]($table.inset) parameter.
+    /// この引数に関する例は[`table.inset`]($table.inset)パラメーターにあります。
     #[fold]
     pub inset: Celled<Sides<Option<Rel<Length>>>>,
 
