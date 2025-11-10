@@ -27,7 +27,9 @@ use crate::visualize::{Paint, Stroke};
 ///
 /// グリッド要素とテーブル要素はとてもよく似た挙動をする一方で、これらは異なるユースケースが想定されており、異なる意味論が提供されています。
 /// グリッド要素はプレゼンテーションおよびレイアウトに使われることが想定されている一方で、[`{table}`]($table)要素は複数の関係データ点を表す広い用途が想定されています。
-/// 将来的にTypst will annotate 出力 such that スクリーンリーダー will announce コンテンツ in `table` as tabular while a グリッドのコンテンツ will be announced no different than multiple コンテンツブロック in the 文書の流れ
+/// 将来、Typstは出力に注釈を付与し、スクリーンリーダーが`table`要素の内容を表として読み上げられるようになる予定です。
+/// 一方、グリッドのコンテンツは、文書の流れに沿った複数のコンテンツブロックと同様に読み上げられる予定です。
+
 /// これらの要素に対するsetルールとshowルールは、互いに影響しません。
 ///
 /// グリッドの大きさは引数に指定されたトラックサイズによって決定されます。
@@ -35,14 +37,13 @@ use crate::visualize::{Paint, Stroke};
 /// 各sizing引数は個々のトラックサイズの配列を受け入れます。
 /// トラックサイズは以下のいずれかです。
 ///
-/// - `{auto}`: トラックはコンテンツに合わせた大きさになります。
-/// 残されたスペース全体まで大きくなります。
-/// If there is more than one `{auto}` track width, and together they claim more than the available space, the `{auto}` tracks will fairly distribute the available space among themselves.
+/// - `{auto}`: トラックはコンテンツに合わせた大きさとなり、残りのスペース全体まで大きくなります。
+/// `{auto}`トラック幅が複数指定され、利用可能なスペースより大きなスペースが要求された場合、利用可能なスペースが`{auto}`トラックに等分配されます。
 ///
-/// - A fixed or relative length （`{10pt}`や`{20% - 1cm}`など）:トラックは厳密にその大きさになります。
+/// - 固定あるいは相対長さ（`{10pt}`や`{20% - 1cm}`など）: トラックは厳密にその大きさになります。
 ///
-/// - A fractional length (e.g. `{1fr}`): Once all other tracks have been sized, the remaining space will be divided among the fractional tracks according to their fractions.
-/// 例えば、if there are two fractional tracks, each with a fraction of `{1fr}`, they will each take up half of the remaining space.
+/// - 比率長さ（例えば`{1fr}`）: 他のトラック全ての大きさが確定し次第、残りのスペースは比率指定のトラックに指定された比率に応じて分配されます。
+/// 例えば、`{1fr}`で比率指定されたトラックが2つある場合、それぞれ残りのスペースの半分になります。
 ///
 /// 単一のトラックを指定する場合は、配列を省略して単一の値を指定できます。
 /// 複数の`{auto}`のトラックを指定する場合は、配列の代わりにトラックの数を入力して下さい。
@@ -76,7 +77,7 @@ use crate::visualize::{Paint, Stroke};
 /// )
 /// ```
 ///
-/// You can also [spread]($arguments/#spreading) an array of strings or content into a grid to populate its cells.
+/// また、文字列やコンテンツの配列をグリッドに[展開](#arguments/#spreading)して、セルを埋めることもできます。
 ///
 /// ```example
 /// #grid(
@@ -92,7 +93,7 @@ use crate::visualize::{Paint, Stroke};
 ///
 /// - [`fill`]($grid.fill)は全てのセルに背景を設定します。
 /// - [`align`]($grid.align)はセルの配置方法を変更します。
-/// - [`inset`]($grid.inset) to optionally add internal padding to each cell
+/// - [`inset`]($grid.inset)はオプションで各セル内のパディングを追加します。
 /// - [`stroke`]($grid.stroke)は特定のストロークでグリッドの線をオプションで有効化します。
 ///
 /// もし単一セルに対して上記のオプションの1つを上書きしなければならない場合は、[`grid.cell`]($grid.cell)要素が使用できます。
@@ -127,7 +128,7 @@ pub struct GridElem {
 
     /// 行間と列間の間隔。
     ///
-    /// 定義した数よりもgutterがある場合、最後のgutterが繰り返されます。If there are more gutters than defined sizes, the last gutter is repeated.
+    /// 定義した数よりも多くgutterがある場合、最後のgutterが繰り返されます。
     ///
     /// これは`column-gutter`と`row-gutter`を同じ値で設定する省略記法です。
     #[external]
@@ -255,7 +256,7 @@ pub struct GridElem {
     #[fold]
     pub stroke: Celled<Sides<Option<Option<Arc<Stroke>>>>>,
 
-    /// How much to pad the cells' content.
+    /// セル内のコンテンツに対するパディングの大きさ。
     ///
     /// この引数に関する例は[`table.inset`]($table.inset)パラメーターにあります。
     #[fold]
