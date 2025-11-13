@@ -93,24 +93,25 @@ use crate::visualize::{Paint, Stroke};
 ///
 /// - [`fill`]($grid.fill)は全てのセルに背景を設定します。
 /// - [`align`]($grid.align)はセルの配置方法を変更します。
-/// - [`inset`]($grid.inset)はオプションで各セル内のパディングを追加します。
+/// - [`inset`]($grid.inset)は各セル内に任意のパディングを追加します。
 /// - [`stroke`]($grid.stroke)は特定のストロークでグリッドの線をオプションで有効化します。
 ///
 /// もし単一セルに対して上記のオプションの1つを上書きしなければならない場合は、[`grid.cell`]($grid.cell)要素が使用できます。
 /// 同様に、個々のグリッドの線も[`grid.hline`]($grid.hline)要素や[`grid.vline`]($grid.vline)要素を用いて上書きできます。
 ///
-/// Alternatively, if you need the appearance options to depend on a cell's position (column and row), you may specify a function to `fill` or `align` of the form `(column, row) => value`.
-/// [`grid.cell`]($grid.cell)に対してもshowルールを使用できます。 - see that element's examples or the examples below for more information.
+/// 別の方法として、外観オプションをセルの位置（列と行）に依存させる必要がある場合、`fill`や`align`に`(column, row) => value`という形式の関数を指定できます。
+/// [`grid.cell`]($grid.cell)に対してもshowルールを使用できます。
+/// 詳細はその要素の例や以下の例を参照してください。
 ///
-/// スタイル設定の多くはsetルールとshowルールを用いることを推奨します。 is recommended, as it keeps the grid's or table's actual usages clean and easy to read.
-/// It also allows you to easily change the grid's appearance in one place.
+/// グリッドやテーブルの実際の使い方が簡素かつ読みやすくなるため、基本的にスタイル設定にはsetルールとshowルールを用いることを推奨します。
+/// これによって、グリッドの外観を1か所で簡単に変更もできます。
 ///
 /// ## ストロークのスタイル設定の優先順位
 /// グリッドセルのストローク指定方法は3種類あります。
 /// [`{grid.cell}`の`stroke`フィールド]($grid.cell.stroke)を用いる方法、[`{grid.hline}`]($grid.hline)と[`{grid.vline}`]($grid.vline)を用いる方法、[`{grid}`の`stroke`フィールド]($grid.stroke)を用いる方法です。
 /// これらの設定が複数存在し、競合する場合、`hline`と`vline`の設定が最優先となり、続いて優先されるのが`cell`の設定で、最後に`grid`の設定が適用されます。
 ///
-/// Furthermore, strokes of a repeated grid header or footer will take precedence over regular cell strokes.
+/// さらに、グリッドの繰り返されたヘッダーおよびフッターのストロークは、通常のセルのストロークよりも優先されます。
 #[elem(scope, Show)]
 pub struct GridElem {
     /// 列の数。
@@ -264,7 +265,7 @@ pub struct GridElem {
 
     /// The contents of the grid cells, plus any extra grid lines specified with the [`grid.hline`]($grid.hline) and [`grid.vline`]($grid.vline) elements.
     ///
-    /// The cells are populated in row-major order.
+    /// セルは行優先で埋められます。
     #[variadic]
     pub children: Vec<GridChild>,
 }
