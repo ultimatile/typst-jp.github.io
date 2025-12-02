@@ -116,14 +116,15 @@ use crate::visualize::{Paint, Stroke};
 pub struct GridElem {
     /// 列の数。
     ///
-    /// Either specify a track size array or provide an integer to create a grid with that many `{auto}`-sized columns.
-    /// Note that opposed to rows and gutters, providing a single track size will only ever create a single column.
+    /// トラックサイズの配列か整数を指定します。
+    /// 整数を渡した場合、その数だけ`auto`サイズ列を持つグリッドが作成されます。
+    /// rowsおよびguttersとは異なり、単一のトラックサイズを指定するとただ一つの列が作成されることに注意してください。
     #[borrowed]
     pub columns: TrackSizings,
 
     /// 行の数。
     ///
-    /// If there are more cells than fit the defined rows, the last row is repeated until there are no more cells.
+    /// 定義した行に収まらないセルがある場合、セルが無くなるまで最後の行が繰り返されます。
     #[borrowed]
     pub rows: TrackSizings,
 
@@ -174,18 +175,18 @@ pub struct GridElem {
     /// セルのコンテンツをどう配置するか。
     ///
     /// 単一の配置、（各列に対応する）配置の配列、配置を返す関数のいずれかが使用可能です。
-    /// The function receives the cells' column and row indices, starting from zero.
+     /// この関数はセルの0始まりの列と行のインデックスを受け取ります。
     /// `{auto}`に設定された場合は外側の配置が使用されます。
     ///
     /// この引数に関する例は[`table.align`]($table.align)パラメーターにあります。
     #[borrowed]
     pub align: Celled<Smart<Alignment>>,
 
-    /// How to [stroke]($stroke) the cells.
+    /// セルの[ストローク]($stroke)をどうするか。
     ///
     /// デフォルトではグリッドにストロークはありませんが、このオプションを所望のストロークに設定すれば変更できます。
     ///
-    /// If it is necessary to place lines which can cross spacing between cells produced by the `gutter` option, or to override the stroke between multiple specific cells, consider specifying one or more of [`grid.hline`]($grid.hline) and [`grid.vline`]($grid.vline) alongside your grid cells.
+    /// `gutter`オプションによって作成されたセル間の空白を横切る線を配置する必要がある場合や、複数の特定のセル間のストロークを上書きする必要がある場合は、グリッドセルに合わせて[`grid.hline`]($grid.hline)および[`grid.vline`]($grid.vline)のいずれか、または両方を指定することを検討してください。
     ///
     /// ```example
     /// #set page(height: 13em, width: 26em)
@@ -263,7 +264,7 @@ pub struct GridElem {
     #[fold]
     pub inset: Celled<Sides<Option<Rel<Length>>>>,
 
-    /// The contents of the grid cells, plus any extra grid lines specified with the [`grid.hline`]($grid.hline) and [`grid.vline`]($grid.vline) elements.
+    /// グリッドセルのコンテンツと、[`grid.hline`]($grid.hline)要素および[`grid.vline`]($grid.vline)要素で指定される任意のグリッド線。
     ///
     /// セルは行優先で埋められます。
     #[variadic]
