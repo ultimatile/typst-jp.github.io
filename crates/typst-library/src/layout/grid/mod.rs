@@ -419,11 +419,10 @@ impl TryFrom<Content> for GridItem {
     }
 }
 
-/// A repeatable grid header.
+/// 繰り返し可能なグリッドのヘッダー。
 ///
-/// If `repeat` is set to `true`, the header will be repeated across pages. For
-/// an example, refer to the [`table.header`]($table.header) element and the
-/// [`grid.stroke`]($grid.stroke) parameter.
+/// `repeat`が`true`に設定されている場合、ヘッダーは改ページ毎に繰り返されます。
+/// 例として[`table.header`]($table.header)要素および[`grid.stroke`]($grid.stroke)パラメーターのドキュメントを参照してください。
 #[elem(name = "header", title = "Grid Header")]
 pub struct GridHeader {
     /// Whether this header should be repeated across pages.
