@@ -5,47 +5,39 @@ description: Typstチュートリアル
 # テンプレートを作成する
 このチュートリアルの前回の3つの章では、Typstでドキュメントを書く方法、基本的なスタイルを適用する方法、そして出版社のスタイルガイドに準拠するために外観を詳細にカスタマイズする方法を学びました。前章で作成した論文が大成功を収めたため、同じ会議のための続報論文を書くよう依頼されました。今回は、前章で作成したスタイルを再利用可能なテンプレートに変換したいと思います。この章では、あなたとあなたのチームが単一のshowルールで使用できるテンプレートの作成方法を学びます。始めましょう！
 
-## Reusing data with variables { #variables }
-In the past chapters, most of the content of the document was entered by hand.
-In the third chapter, we used the `document` element and context to cut down on
-repetition and only enter the title once. But in practice, there may be many
-more things that occur multiple times in your document. There are multiple good
-reasons to just define these repeated values once:
+## 変数によるデータの再利用 { #variables }
+これまでの章では、文書のコンテンツの大部分を手入力していました。
+第3章では、`document`要素とcontextを使うことで重複を減らし、タイトルを1回だけ入力する方法を学びました。
+しかし実際には、文書中に複数回現れるものは他にも多くあります。
+こうした繰り返し現れる値を1度だけ定義することには、以下のような複数の利点があります。
 
-1. It makes changing them later easier
-2. It allows you to quickly find all instances where you used something
-3. It makes it easy to be consistent throughout
-4. For long or hard-to-enter repeated segments, a shorter variable name is often
-   more convenient to type
+1. 後からの変更が容易になる
+2. 何かを使用した全ての箇所をすぐに見つけられる
+3. 文書全体の一貫性を保ちやすい
+4. 長いものや入力が難しい繰り返し要素に対して、短い変数名の方が入力しやすいことが多い
 
-If you were using a conventional word processor, you might resort to using a
-placeholder value that you can later search for. In Typst, however, you can
-instead use variables to safely store content and reuse it across your whole
-document through a variable name.
+従来のワードプロセッサーを使っているなら、後で検索できるようなプレースホルダー値を使う手もあるでしょう。
+しかしTypstでは、代わりに変数を使ってコンテンツを安全に保管し、変数名を通じて文書全体で再利用できます。
 
-The technique of using context to reproduce an element's property we have
-learned earlier is not always the most appropriate for this: Typst's built-in
-elements focus on semantic properties like the title and description of a
-document, or things that directly relate to typesetting, like the text size.
+これまでに学んだ、contextを使って要素のプロパティを再現するテクニックは、必ずしもこの用途には適していません。
+Typstの組み込み要素は、文書のタイトルや説明のような意味的なプロパティ、あるいはテキストサイズのように直接組版に関わるものに焦点を当てているためです。
 
-For our example, we want to take a look at Typst's pronunciation. One of the
-best ways to transcribe pronunciation is the International Phonetic Alphabet
-(IPA). But because it uses characters not found on common keyboards, typing IPA
-repeatedly can become cumbersome. So let's instead define a variable that we can
-reference multiple times.
+例として、Typstの発音記号を見てみましょう。
+発音を表記する最良の方法の1つは国際音声記号（IPA）です。
+しかしIPAには一般的なキーボードに存在しない文字が含まれているため、繰り返し入力するのは煩雑になります。
+そこで、複数回参照できる変数を定義してみましょう。
 
 ```typ
 #let ipa = [taɪpst]
 ```
 
-Here, we use a new keyword, `{let}`, to indicate a variable definition. Then,
-we put the name of our variable, in this case, `ipa`. Finally, we type an equals
-sign and the value of our variable. It is enclosed in square brackets because
-it is content, mirroring how you would call a function accepting content. In
-other words, this syntax mirrors the phrase _"Let the variable `ipa` have the
-value `{[taɪpst]}`."_
+ここで新しいキーワード`{let}`を使って、変数定義であることを示しています。
+続けて変数名（この場合は`ipa`）を書きます。
+最後に、等号と変数の値を書きます。
+値はコンテンツであるため角括弧で囲まれており、これはコンテンツを受け取る関数を呼び出すときと同じ書き方を反映しています。
+言い換えると、この構文は_「変数`ipa`に値`{[taɪpst]}`を持たせる」_というフレーズを表現しています。
 
-Now, we can use the variable in our document:
+これで文書中で変数を使用できます。
 
 ```example
 #let ipa = [taɪpst]
@@ -60,12 +52,10 @@ pronounce Typst is #ipa.
 )
 ```
 
-In the example, you can see that the variable can be used both in markup
-(prefixed with a `#`) and in a function call (by just typing its name). Of
-course, we can change the value of the variable and all its occurrences will
-automatically change with it. Let's make it a bit clearer what is IPA and what
-is normal prose by rendering IPA in italics. We are also using slashes which, by
-convention, often enclose IPA.
+この例では、変数がマークアップ中（`#`を前に付ける）と関数呼び出し中（変数名をそのまま記述する）の両方で使用できることがわかります。
+もちろん、変数の値を変更すれば、全ての出現箇所も自動的に変わります。
+IPAと通常の散文をより明確に区別するため、IPAを斜体で表示してみましょう。
+慣習的にIPAを囲むのに使われるスラッシュも追加します。
 
 ```example
 #let ipa = text(
@@ -83,19 +73,16 @@ pronounce Typst is #ipa.
 )
 ```
 
-Here, we called the text function and assigned its _return value_ to the
-variable. When you call a function, it processes its arguments and then yields
-another value (often content). So far in this tutorial, we called most
-functions directly in markup, like this: `[#text(fill: red)[CRIMSON!]]`. This
-call to the text function returns the red text as a return value. Because we
-placed it in markup, its return value just immediately got inserted into the
-content we wrote. With variables, we can instead store it to use it later or
-compose it with other values.
+ここでは、text関数を呼び出してその_戻り値_を変数に代入しています。
+関数を呼び出すと、引数を処理して別の値（多くの場合コンテンツ）を返します。
+このチュートリアルではこれまで、`[#text(fill: red)[CRIMSON!]]`のように、ほとんどの関数をマークアップ中で直接呼び出してきました。
+このtext関数の呼び出しは、戻り値として赤色のテキストを返します。
+これをマークアップ中に置いたため、戻り値はそのまま私たちが書いたコンテンツに即座に挿入されていました。
+変数を使うと、代わりに後で使用したり、他の値と組み合わせたりするために値を保存できます。
 
-Variables are not limited to storing content: they can store any data type Typst
-knows about. Throughout this tutorial, you made use of many data types when you
-passed them to Typst's built-in functions. Here is an example assigning each of
-them to a variable:
+変数はコンテンツの保存に限られません。Typstが知っている任意のデータ型を保存できます。
+このチュートリアル全体を通して、Typstの組み込み関数に渡す際にさまざまなデータ型を利用してきました。
+以下は、それぞれの型を変数に代入する例です。
 
 ```typ
 // Content with markup inside
@@ -123,8 +110,7 @@ them to a variable:
 #let focus = center
 ```
 
-In this chapter of the tutorial, you will leverage variables and your own
-functions to build templates that can be reused across multiple documents.
+このチュートリアルの本章では、変数と独自の関数を活用して、複数の文書で再利用できるテンプレートを構築します。
 
 ## 簡易テンプレート { #toy-template }
 Typstでは、テンプレートは文書全体をラップできる関数です。その方法を学ぶために、まずは独自の関数の書き方を復習しましょう。関数は何でもできるので、少し奇抜なものを作ってみませんか？
@@ -135,22 +121,17 @@ Typstでは、テンプレートは文書全体をラップできる関数です
 You are #amazed[beautiful]!
 ```
 
-Comparing this against the previous section, you may have noticed that this
-looks a lot like a variable definition using `{let}`. This instinct is correct:
-Functions are just another data type. Here, we are defining the variable
-`amazed`, assigning it a function that takes a single argument, `term`, and
-returns content with the `term` surrounded by sparkles. We also put the whole
-thing in a [`box`]($box) so that the term we are amazed by cannot be separated from
-its sparkles by a line break. The special function definition syntax makes the
-definition shorter and more readable, but you can also use the regular variable
-definition syntax (see [the scripting reference]($scripting/#bindings) for
-details). After its definition, we are able to call the function just like all
-built-in functions.
+前のセクションと比較すると、これが`{let}`を使った変数定義によく似ていることに気付くかもしれません。
+この直感は正しく、関数は単なるもう1つのデータ型です。
+ここでは変数`amazed`を定義し、`term`という単一の引数を取り、`term`の両側にきらめきを付けたコンテンツを返す関数を割り当てています。
+さらに、感心している語が改行できらめきから分離されないように、全体を[`box`]($box)で囲んでいます。
+この特別な関数定義の構文は、定義をより短く読みやすくしますが、通常の変数定義の構文を使うこともできます（詳細は[スクリプティングリファレンス]($scripting/#bindings)を参照）。
+定義後は、組み込み関数と同じように関数を呼び出せます。
 
-Many functions that come with Typst have optional named parameters. Our
-functions can also have them. Let's add a parameter to our function that lets us
-choose the color of the text. We need to provide a default color in case the
-parameter isn't given.
+Typstの組み込み関数の多くにはオプションの名前付き引数があります。
+私たちの関数にもそれを持たせることができます。
+テキストの色を選べるパラメーターを関数に追加してみましょう。
+パラメーターが与えられなかった場合に備えて、デフォルトの色を指定する必要があります。
 
 ```example
 #let amazed(term, color: blue) = {
