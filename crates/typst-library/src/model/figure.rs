@@ -94,42 +94,31 @@ use crate::visualize::ImageElem;
 /// )
 /// ```
 ///
-/// # Accessibility
-/// You can use the [`alt`]($figure.alt) parameter to provide an [alternative
-/// description]($guides/accessibility/#textual-representations) of the figure
-/// for screen readers and other Assistive Technology (AT). Refer to [its
-/// documentation]($figure.alt) to learn more.
+/// # アクセシビリティ
+/// [`alt`]($figure.alt)パラメーターを使うと、スクリーンリーダーやその他の支援技術（AT）向けに、図表の[代替説明]($guides/accessibility/#textual-representations)を提供できます。
+/// 詳細は[`alt`のドキュメント]($figure.alt)を参照してください。
 ///
-/// You can use figures to add alternative descriptions to paths, shapes, or
-/// visualizations that do not have their own `alt` parameter. If your graphic
-/// is purely decorative and does not have a semantic meaning, consider wrapping
-/// it in [`pdf.artifact`] instead, which will hide it from AT when exporting to
-/// PDF.
+/// 独自の`alt`パラメーターを持たないパスや図形、視覚化に代替説明を付与するために図表を利用できます。
+/// グラフィックが純粋に装飾的で意味的な情報を持たない場合は、代わりに[`pdf.artifact`]でラップすることを検討してください。これによりPDFエクスポート時にATから非表示になります。
 ///
-/// AT will always read the figure at the point where it appears in the
-/// document, regardless of its [`placement`]($figure.placement). Put its markup
-/// where it would make the most sense in the reading order.
+/// ATは、[`placement`]($figure.placement)に関係なく、文書中で図表が現れる位置で常に読み上げます。
+/// 読み上げ順序として最も意味が通る位置にマークアップを配置してください。
 #[elem(scope, Locatable, Tagged, Synthesize, Count, ShowSet, Refable, Outlinable)]
 pub struct FigureElem {
     /// 図表のコンテンツ。多くの場合、 [image] が使われます。
     #[required]
     pub body: Content,
 
-    /// An alternative description of the figure.
+    /// 図表の代替説明。
     ///
-    /// When you add an alternative description, AT will read both it and the
-    /// caption (if any). However, the content of the figure itself will be
-    /// skipped.
+    /// 代替説明を追加すると、ATはこの説明と（存在すれば）キャプションの両方を読み上げます。
+    /// ただし、図表本体のコンテンツは読み飛ばされます。
     ///
-    /// When the body of your figure is an [image]($image) with its own `alt`
-    /// text set, this parameter should not be used on the figure element.
-    /// Likewise, do not use this parameter when the figure contains a table,
-    /// code, or other content that is already accessible. In such cases, the
-    /// content of the figure will be read by AT, and adding an alternative
-    /// description would lead to a loss of information.
+    /// 図表のbodyが独自の`alt`テキストを設定した[image]($image)の場合、このパラメーターをfigure要素に対して使用しないでください。
+    /// 同様に、図表が表、コード、その他既にアクセシブルなコンテンツを含む場合もこのパラメーターを使用しないでください。
+    /// このような場合、図表のコンテンツはATによって読み上げられるため、代替説明を追加すると情報の損失につながります。
     ///
-    /// You can learn how to write good alternative descriptions in the
-    /// [Accessibility Guide]($guides/accessibility/#textual-representations).
+    /// 良い代替説明の書き方については[アクセシビリティガイド]($guides/accessibility/#textual-representations)を参照してください。
     pub alt: Option<EcoString>,
 
     /// ページ上における図表の配置。
@@ -205,13 +194,11 @@ pub struct FigureElem {
     /// )
     /// ```
     ///
-    /// If you want to modify a counter to skip a number or reset the counter,
-    /// you can access the [counter] of each kind of figure with a
-    /// [`where`]($function.where) selector:
+    /// カウンターの値をスキップしたりリセットしたい場合、[`where`]($function.where)セレクターを使うことで、図表の種類ごとの[counter]にアクセスできます。
     ///
-    /// - For [tables]($table): `{counter(figure.where(kind: table))}`
-    /// - For [images]($image): `{counter(figure.where(kind: image))}`
-    /// - For a custom kind: `{counter(figure.where(kind: kind))}`
+    /// - [table]の場合: `{counter(figure.where(kind: table))}`
+    /// - [image]の場合: `{counter(figure.where(kind: image))}`
+    /// - カスタム種別の場合: `{counter(figure.where(kind: kind))}`
     ///
     /// ```example:"Modifying the figure counter for specific kinds"
     /// #figure(
@@ -234,9 +221,8 @@ pub struct FigureElem {
     /// )
     /// ```
     ///
-    /// To conveniently use the correct counter in a show rule, you can access
-    /// the `counter` field. There is an example of this in the documentation
-    /// [of the `figure.caption` element's `body` field]($figure.caption.body).
+    /// showルールで正しいカウンターを簡単に利用するには、`counter`フィールドにアクセスできます。
+    /// この例は[`figure.caption`要素の`body`フィールドのドキュメント]($figure.caption.body)にあります。
     pub kind: Smart<FigureKind>,
 
     /// 図表の補足語。
@@ -531,19 +517,19 @@ pub struct FigureCaption {
     #[required]
     pub body: Content,
 
-    /// The figure's supplement.
+    /// 図表の種類。
     #[synthesized]
     pub kind: FigureKind,
 
-    /// The figure's supplement.
+    /// 図表の補足語。
     #[synthesized]
     pub supplement: Option<Content>,
 
-    /// How to number the figure.
+    /// 図表の番号付け方法。
     #[synthesized]
     pub numbering: Option<Numbering>,
 
-    /// The counter for the figure.
+    /// 図表のカウンター。
     #[synthesized]
     pub counter: Option<Counter>,
 
