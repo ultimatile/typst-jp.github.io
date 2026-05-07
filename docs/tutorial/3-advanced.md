@@ -76,7 +76,7 @@ description: Typstチュートリアル
 
 ## タイトルとアブストラクトの作成 { #title-and-abstract }
 それでは、タイトルとアブストラクトを追加しましょう。
-Typst comes with a [`title`]($title) function. Let's start by providing our title as an argument:
+Typstには[`title`]($title)関数が用意されています。まずはタイトルを引数として与えるところから始めましょう。
 
 ```example
 >>> #set page(width: 300pt, margin: 30pt)
@@ -87,40 +87,37 @@ Typst comes with a [`title`]($title) function. Let's start by providing our titl
 ]
 ```
 
-You can see that the title is already boldfaced and has some space around it.
-However, it is left-aligned and not exactly 17pt large. Hence, we need to adjust
-its appearance. The title function does not come with any arguments for
-font or text size we could set. Instead, these properties are defined on the
-`text` and `align` functions.
+タイトルがすでに太字になっており、周囲にいくらかの空白があることがわかります。
+しかし、左揃えになっており、ちょうど17ptの大きさでもありません。
+そのため、外観を調整する必要があります。
+title関数にはフォントやテキストサイズを設定するための引数はありません。
+代わりに、これらのプロパティは`text`関数と`align`関数で定義されています。
 
 <div class="info-box">
 
-What is the difference between what the `title` function inserted and the
-headings we produced with equals signs?
+`title`関数が挿入したものと、等号で作成した見出しとの違いは何でしょうか？
 
-Headings, even first-level headings, can appear multiple times in your document
-whereas a title only appears once, usually at the beginning. Differentiating
-between the two helps Typst make your document accessible for users of
-Assistive Technology such as screen readers.
+見出しは第1レベルのものでも文書中に複数回現れる可能性がありますが、タイトルは通常文書の冒頭に1回だけ現れます。
+両者を区別することで、Typstはスクリーンリーダーなどの支援技術のユーザーに対して文書をアクセシブルにできます。
 </div>
 
-When we want to customize the properties of some element inside of another kind
-of element, we can use show-set rules. First, we use `show` to select which
-element we want to customize. We call this a _selector._ Then, we type a colon.
-Next, we write the set rule that should apply to elements matching the selector.
-Summarized, the syntax looks like this:
+ある要素のプロパティを、別の種類の要素の中で設定したい場合、show-setルールを使用できます。
+まず`show`を使って、設定したい要素を選択します。
+これを_セレクター_と呼びます。
+続けてコロンを書き、セレクターに一致する要素に適用すべきsetルールを記述します。
+まとめると、構文は以下のようになります。
 
 ```typ
 #show your-selector: set some-element(/* ... */)
 ```
 
-Let's recall: We want to center-align the title and make it 17pt large. Hence,
-we need two show-set rules:
+思い出してみましょう。タイトルを中央揃えにし、17ptの大きさにしたいのでした。
+そのため、以下のように2つのshow-setルールが必要です。
 
-- One with the selector `title` and the rule `{set text(size: 17pt)}`
-- One with the selector `title` and the rule `{set align(center)}`
+- セレクターを`title`、ルールを`{set text(size: 17pt)}`としたもの
+- セレクターを`title`、ルールを`{set align(center)}`としたもの
 
-Our example now looks like this:
+これで例は次のようになります。
 
 ```example
 >>> #set page(width: 300pt, margin: 30pt)
@@ -134,8 +131,8 @@ Our example now looks like this:
 ]
 ```
 
-This looks right. Let's also add the author list: Since we are writing this
-paper together with our supervisor, we'll add our own and their name.
+よさそうですね。著者リストも追加しましょう。
+今回は指導教員と一緒にこの論文を書いているので、自分と教員の名前を加えます。
 
 ```example
 >>> #set page(width: 300pt, margin: 30pt)
@@ -175,13 +172,12 @@ paper together with our supervisor, we'll add our own and their name.
 grid関数はセルを指定するコンテンツ引数を任意の数で受け取れます。
 行は自動的に追加されますが、`rows`引数で手動でサイズを指定することも可能です。
 
-Looking at the authors and the title, they are a bit too close together. You can
-address this by using another show-set rule to configure the space below the
-title. The title, the grid, paragraphs, and all other elements that Typst
-arranges from the top to the bottom of the page are called _blocks._ Each block
-is controlled by the [`block`]($block) function. It controls behaviors like their
-distance and whether a block can contain a page break. That means that we can
-write another show-set rule that selects the title to set the block spacing:
+著者とタイトルを見ると、両者の間隔が少し近すぎます。
+これは、タイトルの下の間隔を設定するための別のshow-setルールを使うことで解決できます。
+タイトルやグリッド、段落、その他Typstがページの上から下に配置する全ての要素は_ブロック_と呼ばれます。
+各ブロックは[`block`]($block)関数で制御されます。
+この関数は、ブロックどうしの距離やブロックが改ページを含むことができるかどうかなどの挙動を制御します。
+つまり、タイトルを選択し、ブロックの間隔を設定するもう1つのshow-setルールを記述できます。
 
 ```example
 >>> #set page(width: 300pt, margin: 30pt)
@@ -212,14 +208,12 @@ write another show-set rule that selects the title to set the block spacing:
 )
 ```
 
-With this show-set rule, we overrode the spacing below the title. We have used
-the `em` unit: It allows us to express lengths as multiples of the font size.
-Here, we used it to space the title and the author list exactly 1.2× the font
-size apart.
+このshow-setルールにより、タイトルの下の間隔を上書きしました。
+`em`単位を使っています。これにより、長さをフォントサイズの倍数として表現できます。
+ここでは、タイトルと著者リストの間隔をフォントサイズのちょうど1.2倍にするために使用しました。
 
 それでは、アブストラクトを追加しましょう。
-学会は、アブストラクトを中央に配置することを望んでいることを忘れないでください。
-Now, let's add the abstract. Remember that the conference wants the abstract to be set ragged and centered.
+学会は、アブストラクトを両端揃えなしで中央揃えに設定することを望んでいることを思い出してください。
 
 ```example:0,0,612,317.5
 >>> #set page(
@@ -270,98 +264,28 @@ Now, let's add the abstract. Remember that the conference wants the abstract to 
 これは、最初のsetルールの後に指定されたにもかかわらず、文書の残りの部分には影響しません。
 コンテンツ・ブロック内で設定されたものは、そのブロック内のコンテンツにのみ影響します。
 
-Another tweak could be to remove the duplication between the header and the
-title element's argument. Since they share the title, it would be convenient to
-store it in a place designed to hold metadata about the document. We would then
-need a way to retrieve the title in both places. The `document` element can help
-us with the former: By using it in a set rule, we can store document metadata
-like title, description, and keywords.
+もう1つの調整として、ヘッダーとtitle要素の引数におけるタイトルの重複を取り除くという案が考えられます。
+両者がタイトルを共有しているため、文書のメタデータを保持するための場所にタイトルを格納できると便利でしょう。
+そうすると、両方の場所からタイトルを取得する方法も必要になります。
+前者については、`document`要素が役立ちます。
+これをsetルールで使うことで、タイトル、説明、キーワードといった文書のメタデータを格納できます。
 
 ```typ
 #set document(title: [A Fluid Dynamic Model for Glacier Flow])
 ```
 
-When exporting a PDF, the title set here will appear in the title bar of your
-PDF reader. Your operating system will also use this title to make the file
-retrievable with search. Last but not least, it contributes to making your
-document more accessible and is required if you choose to comply with PDF/UA, a
-PDF standard focused on accessibility.
+PDFをエクスポートする際、ここで設定したタイトルはPDFリーダーのタイトルバーに表示されます。
+オペレーティングシステムもこのタイトルを使って検索でファイルを見つけられるようにします。
+さらに、これは文書のアクセシビリティ向上に寄与し、アクセシビリティに重点を置いたPDF規格であるPDF/UAに準拠する場合には必須です。
 
-Now, we need a way to retrieve the value we set in the main title and the
-header. Because the `title` function is designed to work together with the
-`document` element, calling it with no arguments will just print the title. For
-the header, we will need to be more explicit: Because Typst has no way of
-knowing that we want to insert the title there, we will need to tell it to do so
-manually.
+次に、メインのタイトルとヘッダーで設定した値を取得する方法が必要です。
+`title`関数は`document`要素と連携するように設計されているため、引数なしで呼び出すとタイトルを表示するだけになります。
+ヘッダーの場合は、もう少し明示的に指定する必要があります。
+Typstにはそこへタイトルを挿入したいことを知る術がないため、手動でそう指示する必要があります。
 
-Using _context,_ we can retrieve the contents of any values we have set on
-elements before. When we use the `{context}` keyword, we can access any property
-of any element, including the document element's title property. Its use looks
-like this:
-
-```example:single
-#set document(title: [
-  A Fluid Dynamic Model
-  for Glacier Flow
-])
-
-<<< ...
-
-#set page(
->>> "us-letter",
->>> margin: auto,
-  header: align(
-    right + horizon,
-    // Retrieve the document
-    // element's title property.
-    context document.title,
-  ),
-<<<   ...
->>> numbering: "1",
-)
->>> #set par(justify: true)
->>> #set text(font: "Libertinus Serif", 11pt)
-
->>> #show title: set text(size: 17pt)
->>>
->>> #show title: set align(center)
->>> #show title: set block(below: 1.2em)
-#title()
-```
-Well done! One notable thing is that we used a set rule within the content
-argument of `align` to turn off justification for the abstract. This does not
-affect the remainder of the document even though it was specified after the
-first set rule because content blocks _scope_ styling. Anything set within a
-content block will only affect the content within that block.
-
-Another tweak could be to remove the duplication between the header and the
-title element's argument. Since they share the title, it would be convenient to
-store it in a place designed to hold metadata about the document. We would then
-need a way to retrieve the title in both places. The `document` element can help
-us with the former: By using it in a set rule, we can store document metadata
-like title, description, and keywords.
-
-```typ
-#set document(title: [A Fluid Dynamic Model for Glacier Flow])
-```
-
-When exporting a PDF, the title set here will appear in the title bar of your
-PDF reader. Your operating system will also use this title to make the file
-retrievable with search. Last but not least, it contributes to making your
-document more accessible and is required if you choose to comply with PDF/UA, a
-PDF standard focused on accessibility.
-
-Now, we need a way to retrieve the value we set in the main title and the
-header. Because the `title` function is designed to work together with the
-`document` element, calling it with no arguments will just print the title. For
-the header, we will need to be more explicit: Because Typst has no way of
-knowing that we want to insert the title there, we will need to tell it to do so
-manually.
-
-Using _context,_ we can retrieve the contents of any values we have set on
-elements before. When we use the `{context}` keyword, we can access any property
-of any element, including the document element's title property. Its use looks
-like this:
+_コンテキスト_を使えば、これまでに要素に設定した値の内容を取得できます。
+`{context}`キーワードを使うと、document要素のtitleプロパティを含め、任意の要素の任意のプロパティにアクセスできます。
+使い方は次のようになります。
 
 ```example:single
 #set document(title: [
@@ -417,45 +341,39 @@ like this:
 >>> #lorem(600)
 ```
 
-First, notice how we called the title function with empty, round
-parentheses. Because no argument was passed, it defaulted to what we set for the
-document element above. The distinction between empty round and empty square
-brackets is important: While empty round brackets show that you are passing
-nothing, empty square brackets mean that you are passing one argument: an empty
-content block. If called that way, the title would have no visible content.
+まず、title関数を空の丸括弧で呼び出していることに注目してください。
+引数が渡されなかったため、上でdocument要素に設定したものがデフォルトとして使用されます。
+空の丸括弧と空の角括弧の違いは重要です。空の丸括弧は何も渡していないことを示しますが、空の角括弧は1つの引数（空のコンテンツブロック）を渡していることを意味します。
+そのように呼び出した場合、タイトルには表示されるコンテンツがなくなります。
 
-Next, take a look at the header. Instead of the title in square parentheses, we
-used the context keyword to access the document title. This inserted exactly
-what we set above. The role of context is not limited to accessing properties:
-With it, you can check if some elements are present in the document, measure the
-physical dimensions of others, and more. Using context, you can build powerful
-templates that react to the preferences of the end-user.
+次に、ヘッダーに注目してください。
+角括弧でタイトルを記述する代わりに、contextキーワードを使ってドキュメントのタイトルにアクセスしました。
+これにより、上で設定したものがそのまま挿入されます。
+contextの役割はプロパティへのアクセスに限られません。
+contextを使うことで、ある要素が文書中に存在するかどうかをチェックしたり、他の要素の物理的な寸法を測定したりすることなどができます。
+contextを使うと、エンドユーザーの好みに応じて反応する強力なテンプレートを構築できます。
 
 <div class="info-box">
 
 <details>
 <summary>
-Why is the context keyword required to access element properties?
+なぜ要素のプロパティにアクセスするのにcontextキーワードが必要なのでしょうか？
 </summary>
 
-Normally, when we access a variable, we know exactly what its value is going to
-be:
+通常、変数にアクセスするときには、その値が何であるかを正確に把握しています。
 
-- The variable could be a constant built into Typst, like `[#sym.pi]`
-- The variable could be defined by an argument
-- The variable could be defined or overwritten in the current scope
+- 変数はTypstに組み込まれた定数（例えば`[#sym.pi]`）かもしれません
+- 変数は引数で定義されるかもしれません
+- 変数は現在のスコープで定義あるいは上書きされるかもしれません
 
-However, sometimes, that's not enough. In this chapter of the tutorial, we have
-inserted a page header with the title. Even though we pass only one piece of
-content for the header, we may want different pages to have different headers.
-For example, we may want to print the chapter name or use the page number. When
-we use context, we can write a single context block that tells Typst to take a
-look at where it's inserted, look for the last heading, the current page number,
-or anything else, and go from there. That means that the same context block,
-inserted on different pages, can produce different output.
+しかし、それだけでは不十分な場合もあります。
+このチュートリアルの章では、タイトルを含むページヘッダーを挿入しました。
+ヘッダーにはコンテンツを1つだけ渡しているにもかかわらず、ページごとに異なるヘッダーが必要になる場合があります。
+例えば、章の名前を表示したり、ページ番号を使用したりしたいことがあるでしょう。
+contextを使うと、Typstに対して、挿入された場所を見て、直近の見出しや現在のページ番号、その他必要なものを探してから処理を行うように指示する1つのcontextブロックを書けます。
+つまり、同じcontextブロックでも、異なるページに挿入されると異なる出力を生成することができるのです。
 
-For more information, read up on context [in its docs]($context) after
-completing this tutorial.
+詳細については、このチュートリアルを完了した後で[contextのドキュメント]($context)を参照してください。
 </details>
 </div>
 
@@ -624,18 +542,16 @@ place関数は引数として配置とコンテンツを受け取ります。
 >>> #lorem(45)
 ```
 
-This looks great! We used show rules that apply to all headings. In the final
-show rule, we applied the `smallcaps` function to the complete heading. As we
-will see in the next example, we can also provide a custom rule to completely
-override the default look of headings.
+これは素晴らしい！
+全ての見出しに適用されるshowルールを使用しました。
+最後のshowルールでは、見出し全体に`smallcaps`関数を適用しました。
+次の例で見るように、カスタムルールを提供して見出しのデフォルトの外観を完全に上書きすることもできます。
 
-The only remaining problem is that all headings look the same now. The
-"Motivation" and "Problem Statement" subsections ought to be italic run-in
-headers, but right now, they look indistinguishable from the section headings.
-We can fix that by using a `where` selector on our show rule: This is a
-[method]($scripting/#methods) we can call on headings (and other elements) that
-allows us to filter them by their properties. We can use it to differentiate
-between section and subsection headings:
+残る唯一の問題は、全ての見出しが同じ見た目になってしまっていることです。
+「Motivation」や「Problem Statement」のサブセクションは、斜体のラン・イン見出しであるべきですが、現状ではセクション見出しと区別できません。
+これは、showルールに`where`セレクターを使うことで解決できます。
+これは見出し（およびその他の要素）に対して呼び出せる[メソッド]($scripting/#methods)で、要素をプロパティでフィルタリングできます。
+これを使って、セクション見出しとサブセクション見出しを区別できます。
 
 ```example:50,250,265,245
 >>> #set document(title: [
@@ -708,24 +624,20 @@ between section and subsection headings:
 >>> #lorem(45)
 ```
 
-In this example, we first scope our previous rules to first-level headings by
-using `{.where(level: 1)}` to make the selector more specific. Then, we add a
-show-set rule for the second heading level. Finally, we need a show rule with a
-custom function: Headings enclose their contents with a block by default. This
-has the effect that the heading gets its own line. However, we want it to run
-into the text, so we need to provide our own show rule to get rid of this block.
+この例ではまず、`{.where(level: 1)}`を使ってセレクターをより具体的にすることで、これまでのルールを第1レベルの見出しに限定しました。
+次に、第2レベルの見出しのためのshow-setルールを追加しました。
+最後に、カスタム関数を伴うshowルールが必要になります。
+見出しはデフォルトでコンテンツをブロックで囲みます。
+これにより、見出しが独立した行になる効果が生まれます。
+しかし、ここでは見出しを本文に続けて表示したいので、このブロックを取り除くために独自のshowルールを提供する必要があります。
 
-We provide the rule with a function that takes the heading as a parameter.
-This parameter is conventionally called `it`, but can have another name. The
-parameter can be used as content and will just display the whole default
-heading. Alternatively, when we want to build our own heading instead, we can
-use its fields like `body`, `numbering`, and `level` to compose a custom look.
-Here, we are just printing the body of the heading with a trailing dot and leave
-out the block that the built-in show rule produces. Note that this heading will
-no longer react to set rules for heading numbering and similar because we did
-not explicitly use `it.numbering` in the show rule. If you are writing show
-rules like this and want the document to remain customizable, you will need to
-take these fields into account.
+このルールには、見出しを引数として受け取る関数を渡します。
+この引数は慣習的に`it`と呼ばれますが、別の名前にすることもできます。
+この引数はコンテンツとして利用でき、そのまま使うとデフォルトの見出し全体が表示されます。
+別の方法として、独自の見出しを構築したい場合は、`body`、`numbering`、`level`などのフィールドを利用してカスタムな見た目を組み立てられます。
+ここでは見出しの本文の末尾にピリオドを付けて表示するだけにとどめ、組み込みのshowルールが生成するブロックは省略しています。
+このshowルールでは`it.numbering`を明示的に使用していないため、この見出しは見出しの番号付けなどに関するsetルールに反応しなくなる点に注意してください。
+このようなshowルールを書きつつ文書をカスタマイズ可能なまま保ちたい場合には、これらのフィールドを考慮する必要があります。
 
 これは素晴らしい！
 第1レベルと第2レベルの見出しにそれぞれ選択的に適用される2つのshowルールを書きました。
@@ -753,7 +665,7 @@ take these fields into account.
 
 ## まとめ
 このセクションでは、ヘッダーとフッターの作成方法、関数とスコープを使用してローカルにスタイルをオーバーライドする方法、[`grid`]関数を使用してより複雑なレイアウトを作成する方法、個々の関数と文書全体のshowルールを記述する方法を学びました。
-You also learned how to access element properties with context.
+また、contextを使って要素のプロパティにアクセスする方法も学びました。
 また、[`where`セレクタ]($styling/#show-rules)を使用して、見出しをそのレベルによってフィルタリングする方法も学びました。
 
 結果として論文は大成功でした！
