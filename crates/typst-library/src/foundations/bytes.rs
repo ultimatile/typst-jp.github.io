@@ -13,20 +13,21 @@ use typst_utils::LazyHash;
 use crate::diag::{StrResult, bail};
 use crate::foundations::{Array, Reflect, Repr, Str, Value, cast, func, scope, ty};
 
-/// A sequence of bytes.
+/// バイト列。
 ///
-/// This is conceptually similar to an array of [integers]($int) between `{0}`
-/// and `{255}`, but represented much more efficiently. You can iterate over it
-/// using a [for loop]($scripting/#loops).
+/// これは概念的には`{0}`から`{255}`までの[整数]($int)の配列に似ていますが、
+/// はるかに効率的に表現されています。[forループ]($scripting/#loops)で
+/// 反復処理できます。
 ///
-/// You can convert
-/// - a [string]($str) or an [array] of integers to bytes with the [`bytes`]
-///   constructor
-/// - bytes to a string with the [`str`] constructor, with UTF-8 encoding
-/// - bytes to an array of integers with the [`array`] constructor
+/// 以下の変換ができます。
+/// - [`bytes`]コンストラクターを用いて、[文字列]($str)または整数の[配列]($array)を
+///   バイト列に変換
+/// - [`str`]コンストラクターを用いて、UTF-8エンコーディングでバイト列を
+///   文字列に変換
+/// - [`array`]コンストラクターを用いて、バイト列を整数の配列に変換
 ///
-/// When [reading]($read) data from a file, you can decide whether to load it
-/// as a string or as raw bytes.
+/// ファイルから[データを読み込む]($read)際に、文字列として読み込むか
+/// 生のバイト列として読み込むかを選択できます。
 ///
 /// ```example
 /// #bytes((123, 160, 22, 0)) \
@@ -136,13 +137,12 @@ impl Bytes {
 
 #[scope]
 impl Bytes {
-    /// Converts a value to bytes.
+    /// 値をバイト列に変換します。
     ///
-    /// - Strings are encoded in UTF-8.
-    /// - Arrays of integers between `{0}` and `{255}` are converted directly. The
-    ///   dedicated byte representation is much more efficient than the array
-    ///   representation and thus typically used for large byte buffers (e.g. image
-    ///   data).
+    /// - 文字列はUTF-8でエンコードされます。
+    /// - `{0}`から`{255}`までの整数の配列は直接変換されます。専用のバイト表現は
+    ///   配列表現よりはるかに効率的なので、大きなバイトバッファ
+    ///   （例えば画像データ）には通常こちらが使われます。
     ///
     /// ```example
     /// #bytes("Hello 😃") \
@@ -150,27 +150,26 @@ impl Bytes {
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The value that should be converted to bytes.
+        /// バイト列に変換する値。
         value: ToBytes,
     ) -> Bytes {
         value.0
     }
 
-    /// The length in bytes.
+    /// バイト単位の長さ。
     #[func(title = "Length")]
     pub fn len(&self) -> usize {
         self.as_slice().len()
     }
 
-    /// Returns the byte at the specified index. Returns the default value if
-    /// the index is out of bounds or fails with an error if no default value
-    /// was specified.
+    /// 指定したインデックスのバイトを返します。インデックスが範囲外の場合は
+    /// デフォルト値を返し、デフォルト値が指定されていない場合はエラーになります。
     #[func]
     pub fn at(
         &self,
-        /// The index at which to retrieve the byte.
+        /// バイトを取得するインデックス。
         index: i64,
-        /// A default value to return if the index is out of bounds.
+        /// インデックスが範囲外の場合に返すデフォルト値。
         #[named]
         default: Option<Value>,
     ) -> StrResult<Value> {
@@ -180,20 +179,19 @@ impl Bytes {
             .ok_or_else(|| out_of_bounds_no_default(index, self.len()))
     }
 
-    /// Extracts a subslice of the bytes. Fails with an error if the start or
-    /// end index is out of bounds.
+    /// バイト列のサブスライスを取り出します。開始または終了のインデックスが
+    /// 範囲外の場合はエラーになります。
     #[func]
     pub fn slice(
         &self,
-        /// The start index (inclusive).
+        /// 開始インデックス（このインデックスを含みます）。
         start: i64,
-        /// The end index (exclusive). If omitted, the whole slice until the end
-        /// is extracted.
+        /// 終了インデックス（このインデックスは含みません）。
+        /// 省略した場合、末尾までのスライス全体が取り出されます。
         #[default]
         end: Option<i64>,
-        /// The number of items to extract. This is equivalent to passing
-        /// `start + count` as the `end` position. Mutually exclusive with
-        /// `end`.
+        /// 取り出す要素の数。`end`の位置として`start + count`を渡すのと等価です。
+        /// `end`と同時には指定できません。
         #[named]
         count: Option<i64>,
     ) -> StrResult<Bytes> {
