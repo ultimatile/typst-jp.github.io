@@ -6,11 +6,11 @@ use crate::foundations::{Content, NativeElement, Smart, elem, func, scope};
 use crate::layout::{Axes, Em, Length, Rel};
 use crate::visualize::{FillRule, Paint, Stroke};
 
-/// A closed polygon.
+/// 閉じた多角形。
 ///
-/// The polygon is defined by its corner points and is closed automatically.
+/// 多角形は頂点で定義され、自動的に閉じられます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #polygon(
 ///   fill: blue.lighten(80%),
@@ -23,34 +23,34 @@ use crate::visualize::{FillRule, Paint, Stroke};
 /// ```
 #[elem(scope)]
 pub struct PolygonElem {
-    /// How to fill the polygon.
+    /// 多角形の塗りつぶし方法。
     ///
-    /// When setting a fill, the default stroke disappears. To create a
-    /// rectangle with both fill and stroke, you have to configure both.
+    /// fillを設定すると、デフォルトのストロークは消えます。塗りつぶしと
+    /// ストロークの両方を持つ矩形を作るには、両方を設定する必要があります。
     pub fill: Option<Paint>,
 
-    /// The drawing rule used to fill the polygon.
+    /// 多角形の塗りつぶしに使用する描画規則。
     ///
-    /// See the [curve documentation]($curve.fill-rule) for an example.
+    /// 例については[curveのドキュメント]($curve.fill-rule)を参照してください。
     #[default]
     pub fill_rule: FillRule,
 
-    /// How to [stroke] the polygon.
+    /// 多角形の[ストローク]($stroke)の方法。
     ///
-    /// Can be set to  `{none}` to disable the stroke or to `{auto}` for a
-    /// stroke of `{1pt}` black if and only if no fill is given.
+    /// ストロークを無効にするには `{none}` を設定でき、塗りつぶしが指定されて
+    /// いない場合に限り `{1pt}` の黒のストロークにするには `{auto}` を設定できます。
     #[fold]
     pub stroke: Smart<Option<Stroke>>,
 
-    /// The vertices of the polygon. Each point is specified as an array of two
-    /// [relative lengths]($relative).
+    /// 多角形の頂点。各点は2つの[相対長さ]($relative)からなる配列として
+    /// 指定されます。
     #[variadic]
     pub vertices: Vec<Axes<Rel<Length>>>,
 }
 
 #[scope]
 impl PolygonElem {
-    /// A regular polygon, defined by its size and number of vertices.
+    /// 正多角形。サイズと頂点数で定義されます。
     ///
     /// ```example
     /// #polygon.regular(
@@ -64,23 +64,22 @@ impl PolygonElem {
     pub fn regular(
         span: Span,
 
-        /// How to fill the polygon. See the general
-        /// [polygon's documentation]($polygon.fill) for more details.
+        /// 多角形の塗りつぶし方法。詳細は一般的な
+        /// [polygonのドキュメント]($polygon.fill)を参照してください。
         #[named]
         fill: Option<Option<Paint>>,
 
-        /// How to stroke the polygon. See the general
-        /// [polygon's documentation]($polygon.stroke) for more details.
+        /// 多角形のストロークの方法。詳細は一般的な
+        /// [polygonのドキュメント]($polygon.stroke)を参照してください。
         #[named]
         stroke: Option<Smart<Option<Stroke>>>,
 
-        /// The diameter of the [circumcircle](https://en.wikipedia.org/wiki/Circumcircle)
-        /// of the regular polygon.
+        /// 正多角形の[外接円](https://en.wikipedia.org/wiki/Circumcircle)の直径。
         #[named]
         #[default(Em::one().into())]
         size: Length,
 
-        /// The number of vertices in the polygon.
+        /// 多角形の頂点数。
         #[named]
         #[default(3)]
         vertices: u64,
