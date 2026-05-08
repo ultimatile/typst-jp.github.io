@@ -12,84 +12,73 @@ use crate::diag::{At, SourceResult, warning};
 use crate::engine::Engine;
 use crate::foundations::{Repr, Str, cast, func, repr, scope, ty};
 
-/// A fixed-point decimal number type.
+/// 固定小数点decimal型。
 ///
-/// This type should be used for precise arithmetic operations on numbers
-/// represented in base 10. A typical use case is representing currency.
+/// この型は、10進数で表される数値の正確な算術演算に用いるべきです。
+/// 典型的なユースケースは通貨の表現です。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// Decimal: #(decimal("0.1") + decimal("0.2")) \
 /// Float: #(0.1 + 0.2)
 /// ```
 ///
-/// # Construction and casts
-/// To create a decimal number, use the `{decimal(string)}` constructor, such as
-/// in `{decimal("3.141592653")}` **(note the double quotes!)**. This
-/// constructor preserves all given fractional digits, provided they are
-/// representable as per the limits specified below (otherwise, an error is
-/// raised).
+/// # 構築とキャスト
+/// decimalを生成するには、`{decimal(string)}`コンストラクターを用います。
+/// 例えば`{decimal("3.141592653")}`のように記述します**（ダブルクォートに注意）**。
+/// このコンストラクターは、後述の制限の範囲内で表現可能であれば、
+/// 与えられた小数部の桁を全て保持します（そうでない場合はエラーが発生します）。
 ///
-/// You can also convert any [integer]($int) to a decimal with the
-/// `{decimal(int)}` constructor, e.g. `{decimal(59)}`. However, note that
-/// constructing a decimal from a [floating-point number]($float), while
-/// supported, **is an imprecise conversion and therefore discouraged.** A
-/// warning will be raised if Typst detects that there was an accidental `float`
-/// to `decimal` cast through its constructor, e.g. if writing `{decimal(3.14)}`
-/// (note the lack of double quotes, indicating this is an accidental `float`
-/// cast and therefore imprecise). It is recommended to use strings for
-/// constant decimal values instead (e.g. `{decimal("3.14")}`).
+/// `{decimal(int)}`コンストラクターで、任意の[整数]($int)をdecimalに変換することもできます
+/// （例：`{decimal(59)}`）。
+/// ただし、[浮動小数点数]($float)からdecimalを構築することは、サポートされてはいるものの、
+/// **不正確な変換であるため推奨されません**。
+/// `{decimal(3.14)}`のように記述した場合（ダブルクォートがなく、これが意図しない`float`
+/// キャストであり、不正確であることを示します）、Typstが意図しない`float`から`decimal`への
+/// キャストを検出すると警告が発生します。
+/// 代わりに、定数のdecimal値には文字列を使うことが推奨されます（例：`{decimal("3.14")}`）。
 ///
-/// The precision of a `float` to `decimal` cast can be slightly improved by
-/// rounding the result to 15 digits with [`calc.round`], but there are still no
-/// precision guarantees for that kind of conversion.
+/// `float`から`decimal`へのキャストの精度は、結果を[`calc.round`]で15桁に丸めることで
+/// わずかに改善できますが、この種の変換に対して精度の保証は依然としてありません。
 ///
-/// # Operations
-/// Basic arithmetic operations are supported on two decimals and on pairs of
-/// decimals and integers.
+/// # 演算
+/// 2つのdecimal同士、およびdecimalと整数の組に対して基本的な算術演算がサポートされています。
 ///
-/// Built-in operations between `float` and `decimal` are not supported in order
-/// to guard against accidental loss of precision. They will raise an error
-/// instead.
+/// 不慮の精度低下を防ぐため、`float`と`decimal`との間の組み込み演算はサポートされていません。
+/// 代わりにエラーが発生します。
 ///
-/// Certain `calc` functions, such as trigonometric functions and power between
-/// two real numbers, are also only supported for `float` (although raising
-/// `decimal` to integer exponents is supported). You can opt into potentially
-/// imprecise operations with the `{float(decimal)}` constructor, which casts
-/// the `decimal` number into a `float`, allowing for operations without
-/// precision guarantees.
+/// 三角関数や2つの実数間の冪乗のような特定の`calc`関数も`float`に対してのみサポートされています
+/// （ただし、`decimal`の整数冪はサポートされています）。
+/// `{float(decimal)}`コンストラクターを用いると、`decimal`を`float`にキャストし、
+/// 精度保証のない演算を許容することで、不正確になる可能性のある演算を選べます。
 ///
-/// # Displaying decimals
-/// To display a decimal, simply insert the value into the document. To only
-/// display a certain number of digits, [round]($calc.round) the decimal first.
-/// Localized formatting of decimals and other numbers is not yet supported, but
-/// planned for the future.
+/// # decimalの表示
+/// decimalを表示するには、単にその値を文書に挿入します。
+/// 特定の桁数のみを表示するには、最初にdecimalを[丸めて]($calc.round)ください。
+/// decimalや他の数値のロケール対応書式設定はまだサポートされていませんが、将来的に予定されています。
 ///
-/// You can convert decimals to strings using the [`str`] constructor. This way,
-/// you can post-process the displayed representation, e.g. to replace the
-/// period with a comma (as a stand-in for proper built-in localization to
-/// languages that use the comma).
+/// [`str`]コンストラクターを用いて、decimalを文字列に変換できます。
+/// これにより、表示形式を後処理できます。
+/// 例えば、ピリオドをカンマに置換できます（カンマを使う言語向けの適切な組み込み
+/// ロケール対応の代わりとして）。
 ///
-/// # Precision and limits
-/// A `decimal` number has a limit of 28 to 29 significant base-10 digits. This
-/// includes the sum of digits before and after the decimal point. As such,
-/// numbers with more fractional digits have a smaller range. The maximum and
-/// minimum `decimal` numbers have a value of `{79228162514264337593543950335}`
-/// and `{-79228162514264337593543950335}` respectively. In contrast with
-/// [`float`], this type does not support infinity or NaN, so overflowing or
-/// underflowing operations will raise an error.
+/// # 精度と制限
+/// `decimal`は、10進数で28〜29桁の有効桁数の制限を持ちます。
+/// これは小数点の前後の桁数の合計を含みます。
+/// したがって、小数部の桁数が多い数値ほど範囲が小さくなります。
+/// 最大および最小の`decimal`の値はそれぞれ`{79228162514264337593543950335}`と
+/// `{-79228162514264337593543950335}`です。
+/// [`float`]とは異なり、この型は無限大やNaNをサポートしないため、
+/// オーバーフローやアンダーフローを起こす演算ではエラーが発生します。
 ///
-/// Typical operations between `decimal` numbers, such as addition,
-/// multiplication, and [power]($calc.pow) to an integer, will be highly precise
-/// due to their fixed-point representation. Note, however, that multiplication
-/// and division may not preserve all digits in some edge cases: while they are
-/// considered precise, digits past the limits specified above are rounded off
-/// and lost, so some loss of precision beyond the maximum representable digits
-/// is possible. Note that this behavior can be observed not only when dividing,
-/// but also when multiplying by numbers between 0 and 1, as both operations can
-/// push a number's fractional digits beyond the limits described above, leading
-/// to rounding. When those two operations do not surpass the digit limits, they
-/// are fully precise.
+/// 加算、乗算、整数への[冪乗]($calc.pow)などの`decimal`同士の典型的な演算は、
+/// 固定小数点表現のために高精度で行われます。
+/// ただし、乗算や除算は、いくつかのエッジケースで全ての桁を保持しないことに注意してください。
+/// これらは正確と見なされますが、上記の制限を超える桁は丸められて失われるため、
+/// 表現可能な最大桁数を超える精度の低下が起こり得ます。
+/// この挙動は除算時だけでなく、0と1の間の数を乗算する際にも観察できます。
+/// どちらの演算も数値の小数部の桁を上記の制限を超えて押し上げ、丸めにつながる可能性があるためです。
+/// これら2つの演算が桁数の制限を超えない場合、それらは完全に正確です。
 #[ty(scope, cast)]
 #[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Decimal(rust_decimal::Decimal);
@@ -274,23 +263,20 @@ impl Decimal {
 
 #[scope]
 impl Decimal {
-    /// Converts a value to a `decimal`.
+    /// 値を`decimal`に変換します。
     ///
-    /// It is recommended to use a string to construct the decimal number, or an
-    /// [integer]($int) (if desired). The string must contain a number in the
-    /// format `{"3.14159"}` (or `{"-3.141519"}` for negative numbers). The
-    /// fractional digits are fully preserved; if that's not possible due to the
-    /// limit of significant digits (around 28 to 29) having been reached, an
-    /// error is raised as the given decimal number wouldn't be representable.
+    /// decimalの構築には文字列、または（必要なら）[整数]($int)を用いることが推奨されます。
+    /// 文字列は`{"3.14159"}`（負の数の場合は`{"-3.141519"}`）の形式の数を含む必要があります。
+    /// 小数部の桁数は完全に保持されます。
+    /// 有効桁数の制限（28〜29桁程度）に達したためにそれが不可能な場合、
+    /// 与えられたdecimalは表現できないためエラーが発生します。
     ///
-    /// While this constructor can be used with [floating-point numbers]($float)
-    /// to cast them to `decimal`, doing so is **discouraged** as **this cast is
-    /// inherently imprecise.** It is easy to accidentally perform this cast by
-    /// writing `{decimal(1.234)}` (note the lack of double quotes), which is
-    /// why Typst will emit a warning in that case. Please write
-    /// `{decimal("1.234")}` instead for that particular case (initialization of
-    /// a constant decimal). Also note that floats that are NaN or infinite
-    /// cannot be cast to decimals and will raise an error.
+    /// このコンストラクターは[浮動小数点数]($float)を`decimal`にキャストする用途にも使えますが、
+    /// **このキャストは本質的に不正確である**ため**推奨されません**。
+    /// `{decimal(1.234)}`のように記述すると（ダブルクォートがない点に注意）、
+    /// 意図せずこのキャストを行ってしまいやすいので、Typstはその場合警告を発します。
+    /// この特定のケース（定数decimalの初期化）では、代わりに`{decimal("1.234")}`と記述してください。
+    /// また、NaNや無限大の浮動小数点数はdecimalにキャストできず、エラーが発生する点に注意してください。
     ///
     /// ```example
     /// #decimal("1.222222222222222")
@@ -298,7 +284,7 @@ impl Decimal {
     #[func(constructor)]
     pub fn construct(
         engine: &mut Engine,
-        /// The value that should be converted to a decimal.
+        /// decimalに変換する値。
         value: Spanned<ToDecimal>,
     ) -> SourceResult<Decimal> {
         match value.v {
@@ -428,15 +414,15 @@ impl Hash for Decimal {
     }
 }
 
-/// A value that can be cast to a decimal.
+/// decimalにキャスト可能な値。
 pub enum ToDecimal {
-    /// A decimal to be converted to itself.
+    /// それ自身に変換されるdecimal。
     Decimal(Decimal),
-    /// A string with the decimal's representation.
+    /// decimalの表現を含む文字列。
     Str(EcoString),
-    /// An integer to be converted to the equivalent decimal.
+    /// 等価なdecimalに変換される整数。
     Int(i64),
-    /// A float to be converted to the equivalent decimal.
+    /// 等価なdecimalに変換される浮動小数点数。
     Float(f64),
 }
 
