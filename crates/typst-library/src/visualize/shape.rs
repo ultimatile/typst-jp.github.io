@@ -203,9 +203,9 @@ pub struct SquareElem {
     pub body: Option<Content>,
 }
 
-/// An ellipse with optional content.
+/// オプションでコンテンツを含められる楕円。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// // Without content.
 /// #ellipse(width: 35%, height: 30pt)
@@ -219,36 +219,35 @@ pub struct SquareElem {
 /// ```
 #[elem]
 pub struct EllipseElem {
-    /// The ellipse's width, relative to its parent container.
+    /// 楕円の幅。親コンテナーに対する相対指定です。
     pub width: Smart<Rel<Length>>,
 
-    /// The ellipse's height, relative to its parent container.
+    /// 楕円の高さ。親コンテナーに対する相対指定です。
     pub height: Sizing,
 
-    /// How to fill the ellipse. See the [rectangle's documentation]($rect.fill)
-    /// for more details.
+    /// 楕円の塗りつぶし方。
+    /// 詳細は[rectangleのドキュメント]($rect.fill)を参照してください。
     pub fill: Option<Paint>,
 
-    /// How to stroke the ellipse. See the
-    /// [rectangle's documentation]($rect.stroke) for more details.
+    /// 楕円のストロークの設定方法。
+    /// 詳細は[rectangleのドキュメント]($rect.stroke)を参照してください。
     #[fold]
     pub stroke: Smart<Option<Stroke>>,
 
-    /// How much to pad the ellipse's content. See the
-    /// [box's documentation]($box.inset) for more details.
+    /// 楕円のコンテンツのパディング量。
+    /// 詳細は[boxのドキュメント]($box.inset)を参照してください。
     #[fold]
     #[default(Sides::splat(Some(Abs::pt(5.0).into())))]
     pub inset: Sides<Option<Rel<Length>>>,
 
-    /// How much to expand the ellipse's size without affecting the layout. See
-    /// the [box's documentation]($box.outset) for more details.
+    /// レイアウトに影響を与えずに楕円の大きさを拡大する量。
+    /// 詳細は[boxのドキュメント]($box.outset)を参照してください。
     #[fold]
     pub outset: Sides<Option<Rel<Length>>>,
 
-    /// The content to place into the ellipse.
+    /// 楕円に配置するコンテンツ。
     ///
-    /// When this is omitted, the ellipse takes on a default size of at most
-    /// `{45pt}` by `{30pt}`.
+    /// 省略された場合、楕円は最大で`{45pt}` × `{30pt}`のデフォルトサイズになります。
     #[positional]
     pub body: Option<Content>,
 }
