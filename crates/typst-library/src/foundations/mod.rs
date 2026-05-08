@@ -249,11 +249,11 @@ impl assert {
     }
 }
 
-/// Evaluates a string as Typst code.
+/// 文字列をTypstコードとして評価します。
 ///
-/// This function should only be used as a last resort.
+/// この関数は最後の手段としてのみ使用すべきです。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #eval("1 + 1") \
 /// #eval("(1, 2, 3, 4)").len() \
@@ -262,10 +262,9 @@ impl assert {
 #[func(title = "Evaluate")]
 pub fn eval(
     engine: &mut Engine,
-    /// A string of Typst code to evaluate.
+    /// 評価するTypstコードの文字列。
     source: Spanned<String>,
-    /// The [syntactical mode]($reference/syntax/#modes) in which the string is
-    /// parsed.
+    /// 文字列をパースする際の[構文モード]($reference/syntax/#modes)。
     ///
     /// ```example
     /// #eval("= Heading", mode: "markup")
@@ -274,7 +273,7 @@ pub fn eval(
     #[named]
     #[default(SyntaxMode::Code)]
     mode: SyntaxMode,
-    /// A scope of definitions that are made available.
+    /// 利用可能にする定義のスコープ。
     ///
     /// ```example
     /// #eval("x + 1", scope: (x: 2)) \
