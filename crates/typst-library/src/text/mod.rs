@@ -1,4 +1,4 @@
-//! Text handling.
+//! 文章を扱う処理。
 
 mod case;
 mod deco;
@@ -55,7 +55,7 @@ use crate::layout::{Abs, Axis, Dir, Em, Length, Ratio, Rel};
 use crate::math::{EquationElem, MathSize};
 use crate::visualize::{Color, Paint, RelativeTo, Stroke};
 
-/// Hook up all `text` definitions.
+/// `text` の全ての定義を結びつけます。
 pub(super) fn define(global: &mut Scope) {
     global.start_category(crate::Category::Text);
     global.define_elem::<TextElem>();
@@ -75,13 +75,13 @@ pub(super) fn define(global: &mut Scope) {
     global.reset_category();
 }
 
-/// Customizes the look and layout of text in a variety of ways.
+/// 文章の見た目とレイアウトをさまざまな方法でカスタマイズします。
 ///
-/// This function is used frequently, both with set rules and directly. While
-/// the set rule is often the simpler choice, calling the `text` function
-/// directly can be useful when passing text as an argument to another function.
+/// この関数は、setルールを使う方法と直接呼び出す方法の双方で頻繁に使用されます。
+/// 多くの場合setルールを使うほうが簡潔ですが、文章を別の関数の引数として渡すような
+/// 場合には、`text`関数を直接呼び出すことが有用です。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #set text(18pt)
 /// With a set rule.
@@ -92,43 +92,40 @@ pub(super) fn define(global: &mut Scope) {
 /// ```
 #[elem(Debug, Construct, PlainText, Repr)]
 pub struct TextElem {
-    /// A font family descriptor or priority list of font family descriptors.
+    /// フォントファミリー記述子、またはその優先順位付きリスト。
     ///
-    /// A font family descriptor can be a plain string representing the family
-    /// name or a dictionary with the following keys:
+    /// フォントファミリー記述子は、ファミリー名を表す単純な文字列、または以下のキーを
+    /// 持つ辞書として指定できます：
     ///
-    /// - `name` (required): The font family name.
-    /// - `covers` (optional): Defines the Unicode codepoints for which the
-    ///   family shall be used. This can be:
-    ///   - A predefined coverage set:
-    ///     - `{"latin-in-cjk"}` covers all codepoints except for those which
-    ///       exist in Latin fonts, but should preferably be taken from CJK
-    ///       fonts.
-    ///   - A [regular expression]($regex) that defines exactly which codepoints
-    ///     shall be covered. Accepts only the subset of regular expressions
-    ///     which consist of exactly one dot, letter, or character class.
+    /// - `name` (必須)：フォントファミリー名。
+    /// - `covers` (任意)：そのファミリーを使用するUnicodeコードポイントを定義します。
+    ///   以下のいずれかを指定できます：
+    ///   - 定義済みのカバレッジ集合：
+    ///     - `{"latin-in-cjk"}` はラテンフォントに存在するが、CJKフォントから取得する
+    ///       ほうが望ましいコードポイントを除く全てのコードポイントをカバーします。
+    ///   - カバーすべきコードポイントを正確に定義する[正規表現]($regex)。1個のドット、
+    ///     文字、または文字クラスのみで構成される正規表現の部分集合のみが受け付けられます。
     ///
-    /// When processing text, Typst tries all specified font families in order
-    /// until it finds a font that has the necessary glyphs. In the example
-    /// below, the font `Inria Serif` is preferred, but since it does not
-    /// contain Arabic glyphs, the arabic text uses `Noto Sans Arabic` instead.
+    /// 文章を処理するとき、Typstは指定された全てのフォントファミリーを順に試し、必要な
+    /// グリフを持つフォントを見つけるまで探索します。以下の例では、フォント `Inria Serif`
+    /// が優先されますが、アラビア語のグリフを含まないため、アラビア語のテキストには代わりに
+    /// `Noto Sans Arabic` が使用されます。
     ///
-    /// The collection of available fonts differs by platform:
+    /// 利用可能なフォントの集合はプラットフォームによって異なります：
     ///
-    /// - In the web app, you can see the list of available fonts by clicking on
-    ///   the "Ag" button. You can provide additional fonts by uploading `.ttf`
-    ///   or `.otf` files into your project. They will be discovered
-    ///   automatically. The priority is: project fonts > server fonts.
+    /// - Webアプリでは、「Ag」ボタンをクリックすると利用可能なフォントの一覧を確認できます。
+    ///   `.ttf` または `.otf` ファイルをプロジェクトにアップロードすることで、追加のフォントを
+    ///   提供できます。それらは自動的に検出されます。優先順位は、プロジェクトのフォント >
+    ///   サーバーのフォントです。
     ///
-    /// - Locally, Typst uses your installed system fonts or embedded fonts in
-    ///   the CLI, which are `Libertinus Serif`, `New Computer Modern`,
-    ///   `New Computer Modern Math`, and `DejaVu Sans Mono`. In addition, you
-    ///   can use the `--font-path` argument or `TYPST_FONT_PATHS` environment
-    ///   variable to add directories that should be scanned for fonts. The
-    ///   priority is: `--font-paths` > system fonts > embedded fonts. Run
-    ///   `typst fonts` to see the fonts that Typst has discovered on your
-    ///   system. Note that you can pass the `--ignore-system-fonts` parameter
-    ///   to the CLI to ensure Typst won't search for system fonts.
+    /// - ローカルでは、Typstはインストールされたシステムフォント、またはCLIに埋め込まれた
+    ///   フォント（`Libertinus Serif`、`New Computer Modern`、`New Computer Modern Math`、
+    ///   `DejaVu Sans Mono`）を使用します。これに加えて、`--font-path` 引数または
+    ///   `TYPST_FONT_PATHS` 環境変数を使用することで、フォントを走査するディレクトリを
+    ///   追加できます。優先順位は、`--font-paths` > システムフォント > 埋め込みフォントです。
+    ///   `typst fonts` を実行すると、Typstがシステム上で検出したフォントを確認できます。
+    ///   なお、CLIに `--ignore-system-fonts` パラメーターを渡すことで、Typstがシステム
+    ///   フォントを検索しないようにすることもできます。
     ///
     /// ```example
     /// #set text(font: "PT Sans")
@@ -168,15 +165,14 @@ pub struct TextElem {
     #[ghost]
     pub font: FontList,
 
-    /// Whether to allow last resort font fallback when the primary font list
-    /// contains no match. This lets Typst search through all available fonts
-    /// for the most similar one that has the necessary glyphs.
+    /// 主要なフォントリストに一致するものがない場合に、最終手段としてのフォント
+    /// フォールバックを許可するかどうか。これにより、Typstは利用可能な全ての
+    /// フォントから、必要なグリフを持つ最も近いフォントを検索します。
     ///
-    /// _Note:_ Currently, there are no warnings when fallback is disabled and
-    /// no glyphs are found. Instead, your text shows up in the form of "tofus":
-    /// Small boxes that indicate the lack of an appropriate glyph. In the
-    /// future, you will be able to instruct Typst to issue warnings so you know
-    /// something is up.
+    /// _注：_ 現在、フォールバックが無効でグリフが見つからない場合に警告は表示
+    /// されません。代わりに、文章は「豆腐」の形（適切なグリフがないことを示す小さな
+    /// 四角）で表示されます。将来的には、何か問題があることを知らせるための警告を
+    /// Typstに発行させられるようになる予定です。
     ///
     /// ```example
     /// #set text(font: "Inria Serif")
@@ -189,18 +185,18 @@ pub struct TextElem {
     #[ghost]
     pub fallback: bool,
 
-    /// The desired font style.
+    /// 望ましいフォントスタイル。
     ///
-    /// When an italic style is requested and only an oblique one is available,
-    /// it is used. Similarly, the other way around, an italic style can stand
-    /// in for an oblique one.  When neither an italic nor an oblique style is
-    /// available, Typst selects the normal style. Since most fonts are only
-    /// available either in an italic or oblique style, the difference between
-    /// italic and oblique style is rarely observable.
+    /// イタリックスタイルが要求されてオブリークスタイルしか利用できない場合、
+    /// オブリークスタイルが使用されます。逆もまた同様で、イタリックスタイルは
+    /// オブリークスタイルの代わりとして利用できます。イタリックもオブリークも
+    /// 利用できない場合、Typstはノーマルスタイルを選択します。ほとんどのフォントは
+    /// イタリックかオブリークのどちらか一方しか利用できないため、イタリックスタイルと
+    /// オブリークスタイルの違いはほとんど見分けがつきません。
     ///
-    /// If you want to emphasize your text, you should do so using the [emph]
-    /// function instead. This makes it easy to adapt the style later if you
-    /// change your mind about how to signify the emphasis.
+    /// 文章を強調したい場合は、代わりに [emph]($emph) 関数を使用すべきです。
+    /// これにより、後から強調の表現方法を変更したくなった場合に、スタイルを
+    /// 簡単に適応させられます。
     ///
     /// ```example
     /// #text(font: "Libertinus Serif", style: "italic")[Italic]
@@ -209,14 +205,13 @@ pub struct TextElem {
     #[ghost]
     pub style: FontStyle,
 
-    /// The desired thickness of the font's glyphs. Accepts an integer between
-    /// `{100}` and `{900}` or one of the predefined weight names. When the
-    /// desired weight is not available, Typst selects the font from the family
-    /// that is closest in weight.
+    /// 望ましいフォントグリフの太さ。`{100}` から `{900}` の整数、または定義済みの
+    /// ウェイト名のいずれかを受け付けます。望ましいウェイトが利用できない場合、
+    /// Typstはファミリー内でウェイトが最も近いフォントを選択します。
     ///
-    /// If you want to strongly emphasize your text, you should do so using the
-    /// [strong] function instead. This makes it easy to adapt the style later
-    /// if you change your mind about how to signify the strong emphasis.
+    /// 文章を強く強調したい場合は、代わりに [strong]($strong) 関数を使用すべきです。
+    /// これにより、後から強い強調の表現方法を変更したくなった場合に、スタイルを
+    /// 簡単に適応させられます。
     ///
     /// ```example
     /// #set text(font: "IBM Plex Sans")
@@ -230,14 +225,13 @@ pub struct TextElem {
     #[ghost]
     pub weight: FontWeight,
 
-    /// The desired width of the glyphs. Accepts a ratio between `{50%}` and
-    /// `{200%}`. When the desired width is not available, Typst selects the
-    /// font from the family that is closest in stretch. This will only stretch
-    /// the text if a condensed or expanded version of the font is available.
+    /// 望ましいグリフの幅。`{50%}` から `{200%}` の比率を受け付けます。望ましい
+    /// 幅が利用できない場合、Typstはファミリー内でストレッチが最も近いフォントを
+    /// 選択します。これは、フォントの縮小版または拡張版が利用可能な場合にのみ
+    /// 文章を伸縮させます。
     ///
-    /// If you want to adjust the amount of space between characters instead of
-    /// stretching the glyphs itself, use the [`tracking`]($text.tracking)
-    /// property instead.
+    /// グリフ自体を伸縮させるのではなく、文字間のスペース量を調整したい場合は、
+    /// 代わりに [`tracking`]($text.tracking) プロパティを使用してください。
     ///
     /// ```example
     /// #text(stretch: 75%)[Condensed] \
@@ -246,11 +240,11 @@ pub struct TextElem {
     #[ghost]
     pub stretch: FontStretch,
 
-    /// The size of the glyphs. This value forms the basis of the `em` unit:
-    /// `{1em}` is equivalent to the font size.
+    /// グリフのサイズ。この値は `em` 単位の基準となります：`{1em}` はフォントサイズに
+    /// 等しくなります。
     ///
-    /// You can also give the font size itself in `em` units. Then, it is
-    /// relative to the previous font size.
+    /// フォントサイズ自体を `em` 単位で指定することもできます。その場合は、直前の
+    /// フォントサイズに対する相対値になります。
     ///
     /// ```example
     /// #set text(size: 20pt)
@@ -262,7 +256,7 @@ pub struct TextElem {
     #[ghost]
     pub size: TextSize,
 
-    /// The glyph fill paint.
+    /// グリフの塗りつぶしのペイント。
     ///
     /// ```example
     /// #set text(fill: red)
@@ -284,7 +278,7 @@ pub struct TextElem {
     #[ghost]
     pub fill: Paint,
 
-    /// How to stroke the text.
+    /// 文章をどのようにストロークするか。
     ///
     /// ```example
     /// #text(stroke: 0.5pt + red)[Stroked]
@@ -292,7 +286,7 @@ pub struct TextElem {
     #[ghost]
     pub stroke: Option<Stroke>,
 
-    /// The amount of space that should be added between characters.
+    /// 文字間に追加されるスペースの量。
     ///
     /// ```example
     /// #set text(tracking: 1.5pt)
@@ -301,13 +295,13 @@ pub struct TextElem {
     #[ghost]
     pub tracking: Length,
 
-    /// The amount of space between words.
+    /// 単語間のスペースの量。
     ///
-    /// Can be given as an absolute length, but also relative to the width of
-    /// the space character in the font.
+    /// 絶対長で指定できますが、フォント内のスペース文字の幅に対する相対値としても
+    /// 指定できます。
     ///
-    /// If you want to adjust the amount of space between characters rather than
-    /// words, use the [`tracking`]($text.tracking) property instead.
+    /// 単語間ではなく文字間のスペース量を調整したい場合は、代わりに
+    /// [`tracking`]($text.tracking) プロパティを使用してください。
     ///
     /// ```example
     /// #set text(spacing: 200%)
@@ -317,7 +311,7 @@ pub struct TextElem {
     #[ghost]
     pub spacing: Rel<Length>,
 
-    /// Whether to automatically insert spacing between CJK and Latin characters.
+    /// CJK文字とラテン文字の間に自動的にスペースを挿入するかどうか。
     ///
     /// ```example
     /// #set text(cjk-latin-spacing: auto)
@@ -329,7 +323,7 @@ pub struct TextElem {
     #[ghost]
     pub cjk_latin_spacing: Smart<Option<Never>>,
 
-    /// An amount to shift the text baseline by.
+    /// 文章のベースラインをずらす量。
     ///
     /// ```example
     /// A #text(baseline: 3pt)[lowered]
@@ -338,8 +332,8 @@ pub struct TextElem {
     #[ghost]
     pub baseline: Length,
 
-    /// Whether certain glyphs can hang over into the margin in justified text.
-    /// This can make justification visually more pleasing.
+    /// 均等割り付けされた文章において、特定のグリフを余白にはみ出させるかどうか。
+    /// これにより、均等割り付けが視覚的により美しくなります。
     ///
     /// ```example
     /// #set page(width: 220pt)
@@ -360,8 +354,8 @@ pub struct TextElem {
     #[ghost]
     pub overhang: bool,
 
-    /// The top end of the conceptual frame around the text used for layout and
-    /// positioning. This affects the size of containers that hold text.
+    /// レイアウトと配置のために用いられる、文章の周りの概念的な枠の上端。
+    /// これは、文章を保持するコンテナのサイズに影響します。
     ///
     /// ```example
     /// #set rect(inset: 0pt)
@@ -377,8 +371,8 @@ pub struct TextElem {
     #[ghost]
     pub top_edge: TopEdge,
 
-    /// The bottom end of the conceptual frame around the text used for layout
-    /// and positioning. This affects the size of containers that hold text.
+    /// レイアウトと配置のために用いられる、文章の周りの概念的な枠の下端。
+    /// これは、文章を保持するコンテナのサイズに影響します。
     ///
     /// ```example
     /// #set rect(inset: 0pt)
@@ -394,38 +388,33 @@ pub struct TextElem {
     #[ghost]
     pub bottom_edge: BottomEdge,
 
-    /// An [ISO 639-1/2/3 language code.](https://en.wikipedia.org/wiki/ISO_639)
+    /// [ISO 639-1/2/3 言語コード。](https://en.wikipedia.org/wiki/ISO_639)
     ///
-    /// Setting the correct language affects various parts of Typst:
+    /// 正しい言語を設定すると、Typstのさまざまな部分に影響します：
     ///
-    /// - The text processing pipeline can make more informed choices.
-    /// - Hyphenation will use the correct patterns for the language.
-    /// - [Smart quotes]($smartquote) turns into the correct quotes for the
-    ///   language.
-    /// - And all other things which are language-aware.
+    /// - 文章処理のパイプラインでより適切な選択ができるようになります。
+    /// - ハイフネーションがその言語に適したパターンを使用します。
+    /// - [スマートクォート]($smartquote)がその言語に適したクォートに変換されます。
+    /// - その他、言語を認識する全ての処理。
     ///
-    /// Choosing the correct language is important for accessibility. For
-    /// example, screen readers will use it to choose a voice that matches the
-    /// language of the text. If your document is in another language than
-    /// English (the default), you should set the text language at the start of
-    /// your document, before any other content. You can, for example, put it
-    /// right after the `[#set document(/* ... */)]` rule that [sets your
-    /// document's title]($document.title).
+    /// 正しい言語を選択することはアクセシビリティの観点で重要です。例えば、スクリーン
+    /// リーダーは文章の言語に合った音声を選ぶためにこの設定を使用します。文書が英語
+    /// （デフォルト）以外の言語の場合は、他のいかなるコンテンツよりも前に、文書の冒頭で
+    /// 文章の言語を設定すべきです。例えば、[文書のタイトルを設定する]($document.title)
+    /// `[#set document(/* ... */)]` ルールの直後に配置できます。
     ///
-    /// If your document contains passages in a different language than the main
-    /// language, you should locally change the text language just for those parts,
-    /// either with a set rule [scoped to a block]($scripting/#blocks) or using
-    /// a direct text function call such as `[#text(lang: "de")[...]]`.
+    /// 文書が主要言語と異なる言語の文章を含む場合、その部分だけ局所的に文章の言語を
+    /// 変更すべきです。これは、[ブロックにスコープされた]($scripting/#blocks) setルール、
+    /// または`[#text(lang: "de")[...]]`のような直接の`text`関数呼び出しを使って行えます。
     ///
-    /// If multiple codes are available for your language, you should prefer the
-    /// two-letter code (ISO 639-1) over the three-letter codes (ISO 639-2/3).
-    /// When you have to use a three-letter code and your language differs
-    /// between ISO 639-2 and ISO 639-3, use ISO 639-2 for PDF 1.7 (Typst's
-    /// default for PDF export) and below and ISO 639-3 for PDF 2.0 and HTML
-    /// export.
+    /// その言語に複数のコードが利用可能な場合は、3文字のコード（ISO 639-2/3）よりも
+    /// 2文字のコード（ISO 639-1）を優先すべきです。3文字のコードを使用しなければならず、
+    /// かつその言語のコードがISO 639-2とISO 639-3で異なる場合は、PDF 1.7（TypstのPDF
+    /// エクスポートのデフォルト）以下ではISO 639-2を、PDF 2.0およびHTMLエクスポートでは
+    /// ISO 639-3を使用してください。
     ///
-    /// The language code is case-insensitive, and will be lowercased when
-    /// accessed through [context]($context).
+    /// 言語コードは大文字小文字を区別せず、[コンテキスト]($context)を介して取得する際には
+    /// 小文字に変換されます。
     ///
     /// ```example:"Setting the text language to German"
     /// #set text(lang: "de")
@@ -438,26 +427,24 @@ pub struct TextElem {
     #[ghost]
     pub lang: Lang,
 
-    /// An [ISO 3166-1 alpha-2 region code.](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+    /// [ISO 3166-1 alpha-2 地域コード。](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
     ///
-    /// This lets the text processing pipeline make more informed choices.
+    /// この設定により、文章処理のパイプラインでより適切な選択ができるようになります。
     ///
-    /// The region code is case-insensitive, and will be uppercased when
-    /// accessed through [context]($context).
+    /// 地域コードは大文字小文字を区別せず、[コンテキスト]($context)を介して取得する
+    /// 際には大文字に変換されます。
     #[ghost]
     pub region: Option<Region>,
 
-    /// The OpenType writing script.
+    /// OpenType writing script（OpenType書記体系）。
     ///
-    /// The combination of `{lang}` and `{script}` determine how font features,
-    /// such as glyph substitution, are implemented. Frequently the value is a
-    /// modified (all-lowercase) ISO 15924 script identifier, and the `math`
-    /// writing script is used for features appropriate for mathematical
-    /// symbols.
+    /// `{lang}` と `{script}` の組み合わせにより、グリフの置換などのフォント
+    /// 機能の実装方法が決定されます。多くの場合、その値はISO 15924の書記体系
+    /// 識別子を変更したもの（全て小文字）で、`math` writing scriptは数式記号に
+    /// 適した機能のために使用されます。
     ///
-    /// When set to `{auto}`, the default and recommended setting, an
-    /// appropriate script is chosen for each block of characters sharing a
-    /// common Unicode script property.
+    /// デフォルトかつ推奨される設定の `{auto}` を指定すると、共通のUnicode書記体系
+    /// プロパティを共有する文字のブロックごとに適切な書記体系が選択されます。
     ///
     /// ```example
     /// #set text(
@@ -477,26 +464,24 @@ pub struct TextElem {
     #[ghost]
     pub script: Smart<WritingScript>,
 
-    /// The dominant direction for text and inline objects. Possible values are:
+    /// 文章とインライン要素の主要な方向。指定可能な値は以下の通りです：
     ///
-    /// - `{auto}`: Automatically infer the direction from the `lang` property.
-    /// - `{ltr}`: Layout text from left to right.
-    /// - `{rtl}`: Layout text from right to left.
+    /// - `{auto}`：`lang` プロパティから方向を自動的に推測します。
+    /// - `{ltr}`：文章を左から右へレイアウトします。
+    /// - `{rtl}`：文章を右から左へレイアウトします。
     ///
-    /// When writing in right-to-left scripts like Arabic or Hebrew, you should
-    /// set the [text language]($text.lang) or direction. While individual runs
-    /// of text are automatically layouted in the correct direction, setting the
-    /// dominant direction gives the bidirectional reordering algorithm the
-    /// necessary information to correctly place punctuation and inline objects.
-    /// Furthermore, setting the direction affects the alignment values `start`
-    /// and `end`, which are equivalent to `left` and `right` in `ltr` text and
-    /// the other way around in `rtl` text.
+    /// アラビア語やヘブライ語などの右から左へ書く書記体系で記述する場合は、
+    /// [文章の言語]($text.lang)または方向を設定すべきです。文章の個々の連なりは
+    /// 自動的に正しい方向にレイアウトされますが、主要な方向を設定することで、
+    /// 双方向並べ替えアルゴリズムに句読点とインライン要素を正しく配置するために
+    /// 必要な情報が与えられます。さらに、方向の設定は `start` と `end` の整列値に
+    /// 影響します。これらは `ltr` の文章では `left` と `right` に等しく、`rtl` の
+    /// 文章ではその逆になります。
     ///
-    /// If you set this to `rtl` and experience bugs or in some way bad looking
-    /// output, please get in touch with us through the
-    /// [Forum](https://forum.typst.app/),
-    /// [Discord server](https://discord.gg/2uDybryKPe),
-    /// or our [contact form](https://typst.app/contact).
+    /// これを `rtl` に設定したときにバグや何らかの見た目の問題が生じた場合は、
+    /// [フォーラム](https://forum.typst.app/)、
+    /// [Discordサーバー](https://discord.gg/2uDybryKPe)、または
+    /// [お問い合わせフォーム](https://typst.app/contact)を通してご連絡ください。
     ///
     /// ```example
     /// #set text(dir: rtl)
@@ -505,11 +490,11 @@ pub struct TextElem {
     #[ghost]
     pub dir: TextDir,
 
-    /// Whether to hyphenate text to improve line breaking. When `{auto}`, text
-    /// will be hyphenated if and only if justification is enabled.
+    /// 改行を改善するために文章をハイフネーションするかどうか。`{auto}` のときは、
+    /// 均等割り付けが有効な場合に限り、文章がハイフネーションされます。
     ///
-    /// Setting the [text language]($text.lang) ensures that the correct
-    /// hyphenation patterns are used.
+    /// [文章の言語]($text.lang)を設定することで、適切なハイフネーションパターンが
+    /// 使用されることが保証されます。
     ///
     /// ```example
     /// #set page(width: 200pt)
@@ -527,35 +512,33 @@ pub struct TextElem {
     #[ghost]
     pub hyphenate: Smart<bool>,
 
-    /// The "cost" of various choices when laying out text. A higher cost means
-    /// the layout engine will make the choice less often. Costs are specified
-    /// as a ratio of the default cost, so `{50%}` will make text layout twice
-    /// as eager to make a given choice, while `{200%}` will make it half as
-    /// eager.
+    /// 文章をレイアウトする際のさまざまな選択肢に対する「コスト」。コストが高いほど、
+    /// レイアウトエンジンはその選択をしにくくなります。コストはデフォルトのコストに
+    /// 対する比率として指定されるため、`{50%}` を指定すると、文章のレイアウトは特定の
+    /// 選択を2倍積極的に行うようになり、`{200%}` を指定すると半分の積極性になります。
     ///
-    /// Currently, the following costs can be customized:
-    /// - `hyphenation`: splitting a word across multiple lines
-    /// - `runt`: ending a paragraph with a line with a single word
-    /// - `widow`: leaving a single line of paragraph on the next page
-    /// - `orphan`: leaving single line of paragraph on the previous page
+    /// 現在、以下のコストをカスタマイズできます。
+    /// - `hyphenation`：単語を複数行にまたいで分割すること
+    /// - `runt`：段落を1単語のみの行で終わらせること
+    /// - `widow`：段落の最初の1行を次のページに残すこと
+    /// - `orphan`：段落の最後の1行を前のページに残すこと
     ///
-    /// Hyphenation is generally avoided by placing the whole word on the next
-    /// line, so a higher hyphenation cost can result in awkward justification
-    /// spacing. Note: Hyphenation costs will only be applied when the
-    /// [`linebreaks`]($par.linebreaks) are set to "optimized". (For example
-    /// by default implied by [`justify`]($par.justify).)
+    /// ハイフネーションは、一般に単語全体を次の行に置くことで回避されるため、
+    /// ハイフネーションコストを高くすると、均等割り付けのスペースが不自然になる
+    /// 場合があります。注：ハイフネーションコストは、[`linebreaks`]($par.linebreaks)
+    /// が "optimized" に設定されている場合にのみ適用されます（例えばデフォルトでは
+    /// [`justify`]($par.justify)によって暗黙的に設定されます）。
     ///
-    /// Runts are avoided by placing more or fewer words on previous lines, so a
-    /// higher runt cost can result in more awkward in justification spacing.
+    /// runtは前の行に置く単語を増減させることで回避されるため、runtコストを高くすると、
+    /// 均等割り付けのスペースがより不自然になる場合があります。
     ///
-    /// Text layout prevents widows and orphans by default because they are
-    /// generally discouraged by style guides. However, in some contexts they
-    /// are allowed because the prevention method, which moves a line to the
-    /// next page, can result in an uneven number of lines between pages. The
-    /// `widow` and `orphan` costs allow disabling these modifications.
-    /// (Currently, `{0%}` allows widows/orphans; anything else, including the
-    /// default of `{100%}`, prevents them. More nuanced cost specification for
-    /// these modifications is planned for the future.)
+    /// 文章レイアウトでは、widowとorphanはスタイルガイドで一般に推奨されないため、
+    /// デフォルトで防止されます。しかし、防止する方法（行を次のページに移動する）は
+    /// ページ間の行数が不均等になる原因にもなるため、文脈によってはそれらが許可される
+    /// 場合もあります。`widow` と `orphan` のコストにより、これらの調整を無効化できます。
+    /// （現在、`{0%}` を指定するとwidow/orphanが許可され、デフォルトの `{100%}` を
+    /// 含むそれ以外の値を指定すると防止されます。これらの調整に対するより細やかな
+    /// コスト指定は将来的に予定されています）。
     ///
     /// ```example
     /// #set text(hyphenate: true, size: 11.4pt)
@@ -572,13 +555,13 @@ pub struct TextElem {
     #[ghost]
     pub costs: Costs,
 
-    /// Whether to apply kerning.
+    /// カーニングを適用するかどうか。
     ///
-    /// When enabled, specific letter pairings move closer together or further
-    /// apart for a more visually pleasing result. The example below
-    /// demonstrates how decreasing the gap between the "T" and "o" results in a
-    /// more natural look. Setting this to `{false}` disables kerning by turning
-    /// off the OpenType `kern` font feature.
+    /// 有効にすると、視覚的により美しい結果を得るために、特定の文字の組み合わせが
+    /// 互いに近づいたり遠ざかったりするようになります。以下の例では、「T」と「o」の
+    /// 間隔を狭めることでより自然な見た目になることを示しています。これを `{false}` に
+    /// 設定すると、OpenTypeの `kern` フォント機能がオフになり、カーニングが無効化
+    /// されます。
     ///
     /// ```example
     /// #set text(size: 25pt)
@@ -591,11 +574,11 @@ pub struct TextElem {
     #[ghost]
     pub kerning: bool,
 
-    /// Whether to apply stylistic alternates.
+    /// スタイリスティックな異体字を適用するかどうか。
     ///
-    /// Sometimes fonts contain alternative glyphs for the same codepoint.
-    /// Setting this to `{true}` switches to these by enabling the OpenType
-    /// `salt` font feature.
+    /// フォントによっては、同じコードポイントに対する代替のグリフを持つことがあります。
+    /// これを `{true}` に設定すると、OpenTypeの `salt` フォント機能を有効にすることで
+    /// それらの異体字に切り替わります。
     ///
     /// ```example
     /// #set text(
@@ -612,14 +595,14 @@ pub struct TextElem {
     #[ghost]
     pub alternates: bool,
 
-    /// Which stylistic sets to apply. Font designers can categorize alternative
-    /// glyphs forms into stylistic sets. As this value is highly font-specific,
-    /// you need to consult your font to know which sets are available.
+    /// 適用するスタイリスティックセット。フォントデザイナーは代替のグリフ形状を
+    /// スタイリスティックセットに分類できます。この値はフォント固有であるため、どの
+    /// セットが利用可能かを知るためには使用するフォントを確認する必要があります。
     ///
-    /// This can be set to an integer or an array of integers, all
-    /// of which must be between `{1}` and `{20}`, enabling the
-    /// corresponding OpenType feature(s) from `ss01` to `ss20`.
-    /// Setting this to `{none}` will disable all stylistic sets.
+    /// 整数または整数の配列を設定でき、それぞれ `{1}` から `{20}` の範囲でなければ
+    /// なりません。これにより、`ss01` から `ss20` に対応するOpenType機能が有効化
+    /// されます。これを `{none}` に設定すると、全てのスタイリスティックセットが
+    /// 無効化されます。
     ///
     /// ```example
     /// #set text(font: "IBM Plex Serif")
@@ -629,12 +612,11 @@ pub struct TextElem {
     #[ghost]
     pub stylistic_set: StylisticSets,
 
-    /// Whether standard ligatures are active.
+    /// 標準的な合字（リガチャ）を有効にするかどうか。
     ///
-    /// Certain letter combinations like "fi" are often displayed as a single
-    /// merged glyph called a _ligature._ Setting this to `{false}` disables
-    /// these ligatures by turning off the OpenType `liga` and `clig` font
-    /// features.
+    /// 「fi」のような特定の文字の組み合わせは、しばしば _合字_ と呼ばれる単一の融合
+    /// したグリフとして表示されます。これを `{false}` に設定すると、OpenTypeの `liga`
+    /// および `clig` フォント機能がオフになり、これらの合字が無効化されます。
     ///
     /// ```example
     /// #set text(size: 20pt)
@@ -647,20 +629,20 @@ pub struct TextElem {
     #[ghost]
     pub ligatures: bool,
 
-    /// Whether ligatures that should be used sparingly are active. Setting this
-    /// to `{true}` enables the OpenType `dlig` font feature.
+    /// 控えめに使用すべき合字を有効にするかどうか。これを `{true}` に設定すると、
+    /// OpenTypeの `dlig` フォント機能が有効化されます。
     #[default(false)]
     #[ghost]
     pub discretionary_ligatures: bool,
 
-    /// Whether historical ligatures are active. Setting this to `{true}`
-    /// enables the OpenType `hlig` font feature.
+    /// 歴史的合字を有効にするかどうか。これを `{true}` に設定すると、OpenTypeの
+    /// `hlig` フォント機能が有効化されます。
     #[default(false)]
     #[ghost]
     pub historical_ligatures: bool,
 
-    /// Which kind of numbers / figures to select. When set to `{auto}`, the
-    /// default numbers for the font are used.
+    /// どの種類の数字を選択するか。`{auto}` に設定すると、フォントのデフォルトの
+    /// 数字が使用されます。
     ///
     /// ```example
     /// #set text(font: "Noto Sans", 20pt)
@@ -673,8 +655,7 @@ pub struct TextElem {
     #[ghost]
     pub number_type: Smart<NumberType>,
 
-    /// The width of numbers / figures. When set to `{auto}`, the default
-    /// numbers for the font are used.
+    /// 数字の幅。`{auto}` に設定すると、フォントのデフォルトの数字が使用されます。
     ///
     /// ```example
     /// #set text(font: "Noto Sans", 20pt)
@@ -689,8 +670,8 @@ pub struct TextElem {
     #[ghost]
     pub number_width: Smart<NumberWidth>,
 
-    /// Whether to have a slash through the zero glyph. Setting this to `{true}`
-    /// enables the OpenType `zero` font feature.
+    /// 0のグリフにスラッシュを入れるかどうか。これを `{true}` に設定すると、
+    /// OpenTypeの `zero` フォント機能が有効化されます。
     ///
     /// ```example
     /// 0, #text(slashed-zero: true)[0]
@@ -699,12 +680,12 @@ pub struct TextElem {
     #[ghost]
     pub slashed_zero: bool,
 
-    /// Whether to turn numbers into fractions. Setting this to `{true}`
-    /// enables the OpenType `frac` font feature.
+    /// 数字を分数に変換するかどうか。これを `{true}` に設定すると、OpenTypeの
+    /// `frac` フォント機能が有効化されます。
     ///
-    /// It is not advisable to enable this property globally as it will mess
-    /// with all appearances of numbers after a slash (e.g., in URLs). Instead,
-    /// enable it locally when you want a fraction.
+    /// このプロパティをグローバルに有効化することは推奨されません。スラッシュの後の
+    /// 数字の表示が（例えばURL内などでも）全て影響を受けてしまうためです。代わりに、
+    /// 分数表示が必要な箇所で局所的に有効化してください。
     ///
     /// ```example
     /// 1/2 \
@@ -714,12 +695,12 @@ pub struct TextElem {
     #[ghost]
     pub fractions: bool,
 
-    /// Raw OpenType features to apply.
+    /// 適用する生のOpenType機能。
     ///
-    /// - If given an array of strings, sets the features identified by the
-    ///   strings to `{1}`.
-    /// - If given a dictionary mapping to numbers, sets the features
-    ///   identified by the keys to the values.
+    /// - 文字列の配列が与えられた場合、文字列によって識別される機能を `{1}` に設定
+    ///   します。
+    /// - 数値へのマッピングを表す辞書が与えられた場合、キーによって識別される機能を
+    ///   その値に設定します。
     ///
     /// ```example
     /// // Enable the `frac` feature manually.
@@ -730,59 +711,57 @@ pub struct TextElem {
     #[ghost]
     pub features: FontFeatures,
 
-    /// Content in which all text is styled according to the other arguments.
+    /// 全ての文章が他の引数に従ってスタイル設定されるコンテンツ。
     #[external]
     #[required]
     pub body: Content,
 
-    /// The text.
+    /// 文章。
     #[required]
     pub text: EcoString,
 
-    /// The offset of the text in the text syntax node referenced by this
-    /// element's span.
+    /// この要素のspanが参照するテキスト構文ノードにおける文章のオフセット。
     #[internal]
     #[ghost]
     pub span_offset: usize,
 
-    /// A delta to apply on the font weight.
+    /// フォントウェイトに適用するデルタ。
     #[internal]
     #[fold]
     #[ghost]
     pub delta: WeightDelta,
 
-    /// Whether the font style should be inverted.
+    /// フォントスタイルを反転すべきかどうか。
     #[internal]
     #[fold]
     #[default(ItalicToggle(false))]
     #[ghost]
     pub emph: ItalicToggle,
 
-    /// Decorative lines.
+    /// 装飾用の線。
     #[internal]
     #[fold]
     #[ghost]
     pub deco: SmallVec<[Decoration; 1]>,
 
-    /// A case transformation that should be applied to the text.
+    /// 文章に適用すべき大文字小文字の変換。
     #[internal]
     #[ghost]
     pub case: Option<Case>,
 
-    /// Whether small capital glyphs should be used. ("smcp", "c2sc")
+    /// スモールキャピタルのグリフを使用すべきかどうか。（"smcp"、"c2sc"）
     #[internal]
     #[ghost]
     pub smallcaps: Option<Smallcaps>,
 
-    /// The configuration for superscripts or subscripts, if one of them is
-    /// enabled.
+    /// 上付き文字または下付き文字のいずれかが有効な場合の、それらの設定。
     #[internal]
     #[ghost]
     pub shift_settings: Option<ShiftSettings>,
 }
 
 impl TextElem {
-    /// Create a new packed text element.
+    /// 新しいパックされた text 要素を作成します。
     pub fn packed(text: impl Into<EcoString>) -> Content {
         Self::new(text.into()).pack()
     }
@@ -802,9 +781,8 @@ impl Repr for TextElem {
 
 impl Construct for TextElem {
     fn construct(engine: &mut Engine, args: &mut Args) -> SourceResult<Content> {
-        // The text constructor is special: It doesn't create a text element.
-        // Instead, it leaves the passed argument structurally unchanged, but
-        // styles all text in it.
+        // text コンストラクターは特別である：text 要素を作成しない。
+        // 代わりに、渡された引数を構造的には変更せず、その中の全ての文章にスタイルを適用する。
         let styles = Self::set(engine, args)?;
         let body = args.expect::<Content>("body")?;
         Ok(body.styled_with_map(styles))
@@ -817,32 +795,32 @@ impl PlainText for Packed<TextElem> {
     }
 }
 
-/// A lowercased font family like "arial".
+/// "arial" のような小文字化されたフォントファミリー。
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub struct FontFamily {
-    // The name of the font family
+    // フォントファミリーの名前
     name: EcoString,
-    // A regex that defines the Unicode codepoints supported by the font.
+    // フォントがサポートするUnicodeコードポイントを定義する正規表現。
     covers: Option<Covers>,
 }
 
 impl FontFamily {
-    /// Create a named font family variant.
+    /// 名前付きのフォントファミリー異体を作成します。
     pub fn new(string: &str) -> Self {
         Self::with_coverage(string, None)
     }
 
-    /// Create a font family by name and optional Unicode coverage.
+    /// 名前と任意のUnicodeカバレッジから、フォントファミリーを作成します。
     pub fn with_coverage(string: &str, covers: Option<Covers>) -> Self {
         Self { name: string.to_lowercase().into(), covers }
     }
 
-    /// The lowercased family name.
+    /// 小文字化されたファミリー名。
     pub fn as_str(&self) -> &str {
         &self.name
     }
 
-    /// The user-set coverage of the font family.
+    /// ユーザーが設定したフォントファミリーのカバレッジ。
     pub fn covers(&self) -> Option<&Regex> {
         self.covers.as_ref().map(|covers| covers.as_regex())
     }
@@ -862,17 +840,17 @@ cast! {
     },
 }
 
-/// Defines which codepoints a font family will be used for.
+/// フォントファミリーがどのコードポイントに使用されるかを定義します。
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub enum Covers {
-    /// Covers all codepoints except those used both in Latin and CJK fonts.
+    /// ラテンフォントとCJKフォントの双方で使用されるものを除く、全てのコードポイントをカバーします。
     LatinInCjk,
-    /// Covers the set of codepoints for which the regex matches.
+    /// 正規表現に一致するコードポイントの集合をカバーします。
     Regex(Regex),
 }
 
 impl Covers {
-    /// Retrieve the regex for the coverage.
+    /// カバレッジを表す正規表現を取得します。
     pub fn as_regex(&self) -> &Regex {
         match self {
             Self::LatinInCjk => singleton!(
@@ -895,7 +873,7 @@ cast! {
         Self::Regex(regex) => regex.into_value(),
     },
 
-    /// Covers all codepoints except those used both in Latin and CJK fonts.
+    /// ラテンフォントとCJKフォントの双方で使用されるものを除く、全てのコードポイントをカバーします。
     "latin-in-cjk" => Covers::LatinInCjk,
 
     regex: Regex => {
@@ -917,9 +895,9 @@ cast! {
     },
 }
 
-/// Font family fallback list.
+/// フォントファミリーのフォールバックリスト。
 ///
-/// Must contain at least one font.
+/// 少なくとも1つのフォントを含まなければなりません。
 #[derive(Debug, Default, Clone, PartialEq, Hash)]
 pub struct FontList(pub Vec<FontFamily>);
 
@@ -953,7 +931,7 @@ cast! {
     values: Array => Self::new(values.into_iter().map(|v| v.cast()).collect::<HintedStrResult<_>>()?)?,
 }
 
-/// Resolve a prioritized iterator over the font families.
+/// フォントファミリーに対する優先順位付けされたイテレーターを解決します。
 pub fn families(styles: StyleChain<'_>) -> impl Iterator<Item = &'_ FontFamily> + Clone {
     let fallbacks = singleton!(Vec<FontFamily>, {
         [
@@ -972,7 +950,7 @@ pub fn families(styles: StyleChain<'_>) -> impl Iterator<Item = &'_ FontFamily> 
     styles.get_ref(TextElem::font).into_iter().chain(tail.iter())
 }
 
-/// Resolve the font variant.
+/// フォント異体を解決します。
 pub fn variant(styles: StyleChain) -> FontVariant {
     let mut variant = FontVariant::new(
         styles.get(TextElem::style),
@@ -996,13 +974,13 @@ pub fn variant(styles: StyleChain) -> FontVariant {
     variant
 }
 
-/// The size of text.
+/// 文章のサイズ。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct TextSize(pub Length);
 
 impl Fold for TextSize {
     fn fold(self, outer: Self) -> Self {
-        // Multiply the two linear functions.
+        // 2つの線形関数を掛け合わせる。
         Self(Length {
             em: Em::new(self.0.em.get() * outer.0.em.get()),
             abs: self.0.em.get() * outer.0.abs + self.0.abs,
@@ -1031,12 +1009,12 @@ cast! {
     v: Length => Self(v),
 }
 
-/// Specifies the top edge of text.
+/// 文章の上端を指定します。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum TopEdge {
-    /// An edge specified via font metrics or bounding box.
+    /// フォントのメトリクスまたはバウンディングボックスを介して指定される端。
     Metric(TopEdgeMetric),
-    /// An edge specified as a length.
+    /// 長さとして指定される端。
     Length(Length),
 }
 
@@ -1050,7 +1028,7 @@ cast! {
     v: Length => Self::Length(v),
 }
 
-/// Metrics that describe the top edge of text.
+/// 文章の上端を表すメトリクス。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum TopEdgeMetric {
     /// フォントアセンダー。通常、これは全ての字形の高さを超えます。
@@ -1079,12 +1057,12 @@ impl TryInto<VerticalFontMetric> for TopEdgeMetric {
     }
 }
 
-/// Specifies the top edge of text.
+/// 文章の下端を指定します。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum BottomEdge {
-    /// An edge specified via font metrics or bounding box.
+    /// フォントのメトリクスまたはバウンディングボックスを介して指定される端。
     Metric(BottomEdgeMetric),
-    /// An edge specified as a length.
+    /// 長さとして指定される端。
     Length(Length),
 }
 
@@ -1098,7 +1076,7 @@ cast! {
     v: Length => Self::Length(v),
 }
 
-/// Metrics that describe the bottom edge of text.
+/// 文章の下端を表すメトリクス。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum BottomEdgeMetric {
     /// 文字が置かれるベースライン。
@@ -1121,7 +1099,7 @@ impl TryInto<VerticalFontMetric> for BottomEdgeMetric {
     }
 }
 
-/// The direction of text and inline objects in their line.
+/// 行内における文章とインライン要素の方向。
 #[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct TextDir(pub Smart<Dir>);
 
@@ -1147,22 +1125,22 @@ impl Resolve for TextDir {
     }
 }
 
-/// A set of stylistic sets to enable.
+/// 有効化するスタイリスティックセットの集合。
 #[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct StylisticSets(u32);
 
 impl StylisticSets {
-    /// Converts this set into a Typst array of values.
+    /// この集合をTypstの値の配列に変換します。
     pub fn into_array(self) -> Array {
         self.sets().map(IntoValue::into_value).collect()
     }
 
-    /// Returns whether this set contains a particular stylistic set.
+    /// この集合が特定のスタイリスティックセットを含むかどうかを返します。
     pub fn has(self, ss: u8) -> bool {
         self.0 & (1 << (ss as u32)) != 0
     }
 
-    /// Returns an iterator over all stylistic sets to enable.
+    /// 有効化する全てのスタイリスティックセットを反復するイテレーターを返します。
     pub fn sets(self) -> impl Iterator<Item = u8> {
         (1..=20).filter(move |i| self.has(*i))
     }
@@ -1188,27 +1166,25 @@ cast! {
     },
 }
 
-/// Which kind of numbers / figures to select.
+/// どの種類の数字を選択するか。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum NumberType {
-    /// Numbers that fit well with capital text (the OpenType `lnum`
-    /// font feature).
+    /// 大文字の文章になじむ数字（OpenTypeの `lnum` フォント機能）。
     Lining,
-    /// Numbers that fit well into a flow of upper- and lowercase text (the
-    /// OpenType `onum` font feature).
+    /// 大文字と小文字が混在した文章の流れになじむ数字（OpenTypeの `onum` フォント機能）。
     OldStyle,
 }
 
-/// The width of numbers / figures.
+/// 数字の幅。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum NumberWidth {
-    /// Numbers with glyph-specific widths (the OpenType `pnum` font feature).
+    /// グリフごとに異なる幅を持つ数字（OpenTypeの `pnum` フォント機能）。
     Proportional,
-    /// Numbers of equal width (the OpenType `tnum` font feature).
+    /// 等幅の数字（OpenTypeの `tnum` フォント機能）。
     Tabular,
 }
 
-/// OpenType font features settings.
+/// OpenTypeフォント機能の設定。
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
 pub struct FontFeatures(pub Vec<(Tag, u32)>);
 
@@ -1246,19 +1222,19 @@ impl Fold for FontFeatures {
     }
 }
 
-/// Collect the OpenType features to apply.
+/// 適用するOpenType機能を収集します。
 pub fn features(styles: StyleChain) -> Vec<Feature> {
     let mut tags = vec![];
     let mut feat = |tag: &[u8; 4], value: u32| {
         tags.push(Feature::new(Tag::from_bytes(tag), value, ..));
     };
 
-    // Features that are on by default in Harfbuzz are only added if disabled.
+    // Harfbuzzでデフォルトで有効な機能は、無効化された場合にのみ追加する。
     if !styles.get(TextElem::kerning) {
         feat(b"kern", 0);
     }
 
-    // Features that are off by default in Harfbuzz are only added if enabled.
+    // Harfbuzzでデフォルトで無効な機能は、有効化された場合にのみ追加する。
     if let Some(sc) = styles.get(TextElem::smallcaps) {
         feat(b"smcp", 1);
         if sc == Smallcaps::All {
@@ -1321,8 +1297,7 @@ pub fn features(styles: StyleChain) -> Vec<Feature> {
     tags
 }
 
-/// Process the language and region of a style chain into a
-/// rustybuzz-compatible BCP 47 language.
+/// スタイルチェインの言語と地域を、rustybuzz互換のBCP 47言語に処理します。
 pub fn language(styles: StyleChain) -> rustybuzz::Language {
     let mut bcp: EcoString = styles.get(TextElem::lang).as_str().into();
     if let Some(region) = styles.get(TextElem::region) {
@@ -1332,7 +1307,7 @@ pub fn language(styles: StyleChain) -> rustybuzz::Language {
     rustybuzz::Language::from_str(&bcp).unwrap()
 }
 
-/// A toggle that turns on and off alternatingly if folded.
+/// foldされるとオンとオフを交互に切り替えるトグル。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct ItalicToggle(pub bool);
 
@@ -1342,7 +1317,7 @@ impl Fold for ItalicToggle {
     }
 }
 
-/// A delta that is summed up when folded.
+/// foldされると合算されるデルタ。
 #[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct WeightDelta(pub i64);
 
@@ -1352,9 +1327,9 @@ impl Fold for WeightDelta {
     }
 }
 
-/// Costs for various layout decisions.
+/// さまざまなレイアウトの選択肢に対するコスト。
 ///
-/// Costs are updated (prioritizing the later value) when folded.
+/// foldされると、コストは（後の値を優先して）更新されます。
 #[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Hash)]
 #[non_exhaustive]
 pub struct Costs {
@@ -1418,9 +1393,9 @@ cast! {
     },
 }
 
-/// Whether a codepoint is Unicode `Default_Ignorable`.
+/// コードポイントがUnicodeの `Default_Ignorable` であるかどうか。
 pub fn is_default_ignorable(c: char) -> bool {
-    /// The set of Unicode default ignorables.
+    /// Unicodeのdefault ignorableの集合。
     static DEFAULT_IGNORABLE_DATA: LazyLock<CodePointSetData> = LazyLock::new(|| {
         icu_properties::sets::load_default_ignorable_code_point(
             &BlobDataProvider::try_new_from_static_blob(typst_assets::icu::ICU)
@@ -1432,7 +1407,7 @@ pub fn is_default_ignorable(c: char) -> bool {
     DEFAULT_IGNORABLE_DATA.as_borrowed().contains(c)
 }
 
-/// Checks for font families that are not available.
+/// 利用できないフォントファミリーをチェックします。
 fn check_font_list(engine: &mut Engine, list: &Spanned<FontList>) {
     let book = engine.world.book();
     for family in &list.v {
