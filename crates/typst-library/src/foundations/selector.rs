@@ -35,29 +35,27 @@ macro_rules! __select_where {
 #[doc(inline)]
 pub use crate::__select_where as select_where;
 
-/// A filter for selecting elements within the document.
+/// 文書内の要素を選択するためのフィルター。
 ///
-/// To construct a selector you can:
-/// - use an element [function]
-/// - filter for an element function with [specific fields]($function.where)
-/// - use a [string]($str) or [regular expression]($regex)
-/// - use a [`{<label>}`]($label)
-/// - use a [`location`]
-/// - call the [`selector`] constructor to convert any of the above types into a
-///   selector value and use the methods below to refine it
+/// セレクターを構築する方法は以下の通りです。
+/// - 要素[関数]($function)を使う
+/// - [特定のフィールド]($function.where)で要素関数を絞り込む
+/// - [文字列]($str)や[正規表現]($regex)を使う
+/// - [`{<label>}`]($label)を使う
+/// - [`location`]を使う
+/// - [`selector`]コンストラクターを呼び出して、上記いずれかの型を
+///   セレクター値に変換し、以下のメソッドで絞り込む
 ///
-/// Selectors are used to [apply styling rules]($styling/#show-rules) to
-/// elements. You can also use selectors to [query] the document for certain
-/// types of elements.
+/// セレクターは要素に[スタイル設定ルールを適用]($styling/#show-rules)するために使われます。
+/// セレクターを使って、特定の種類の要素を文書から[クエリ]($query)することもできます。
 ///
-/// Furthermore, you can pass a selector to several of Typst's built-in
-/// functions to configure their behaviour. One such example is the [outline]
-/// where it can be used to change which elements are listed within the outline.
+/// さらに、Typstの組み込み関数のいくつかにセレクターを渡して、その動作を構成できます。
+/// その一例が[outline]で、目次に挙げる要素を変更するためにセレクターを使えます。
 ///
-/// Multiple selectors can be combined using the methods shown below. However,
-/// not all kinds of selectors are supported in all places, at the moment.
+/// 複数のセレクターは以下に示すメソッドで組み合わせられます。
+/// ただし、現時点では全ての種類のセレクターが全ての箇所でサポートされているわけではありません。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #context query(
 ///   heading.where(level: 1)
@@ -145,52 +143,52 @@ impl Selector {
 
 #[scope]
 impl Selector {
-    /// Turns a value into a selector. The following values are accepted:
-    /// - An element function like a `heading` or `figure`.
-    /// - A [string]($str) or [regular expression]($regex).
-    /// - A `{<label>}`.
-    /// - A [`location`].
-    /// - A more complex selector like `{heading.where(level: 1)}`.
+    /// 値をセレクターに変換します。次の値が受け付けられます。
+    /// - `heading`や`figure`のような要素関数。
+    /// - [文字列]($str)または[正規表現]($regex)。
+    /// - `{<label>}`。
+    /// - [`location`]。
+    /// - `{heading.where(level: 1)}`のようなより複雑なセレクター。
     #[func(constructor)]
     pub fn construct(
-        /// Can be an element function like a `heading` or `figure`, a `{<label>}`
-        /// or a more complex selector like `{heading.where(level: 1)}`.
+        /// `heading`や`figure`のような要素関数、`{<label>}`、または
+        /// `{heading.where(level: 1)}`のようなより複雑なセレクター。
         target: Selector,
     ) -> Selector {
         target
     }
 
-    /// Selects all elements that match this or any of the other selectors.
+    /// このセレクターまたは他のセレクターのいずれかに一致する全ての要素を選択します。
     #[func]
     pub fn or(
         self,
-        /// The other selectors to match on.
+        /// 一致対象とする他のセレクター。
         #[variadic]
         others: Vec<Selector>,
     ) -> Selector {
         Self::Or(others.into_iter().chain(Some(self)).collect())
     }
 
-    /// Selects all elements that match this and all of the other selectors.
+    /// このセレクターおよび他の全てのセレクターに一致する要素を選択します。
     #[func]
     pub fn and(
         self,
-        /// The other selectors to match on.
+        /// 一致対象とする他のセレクター。
         #[variadic]
         others: Vec<Selector>,
     ) -> Selector {
         Self::And(others.into_iter().chain(Some(self)).collect())
     }
 
-    /// Returns a modified selector that will only match elements that occur
-    /// before the first match of `end`.
+    /// `end`の最初の一致より前に現れる要素にのみ一致するように修正したセレクターを返します。
     #[func]
     pub fn before(
         self,
-        /// The original selection will end at the first match of `end`.
+        /// 元の選択は`end`の最初の一致で終了します。
         end: LocatableSelector,
-        /// Whether `end` itself should match or not. This is only relevant if
-        /// both selectors match the same type of element. Defaults to `{true}`.
+        /// `end`自体を一致対象に含めるかどうか。
+        /// これは両方のセレクターが同じ型の要素に一致する場合にのみ意味があります。
+        /// デフォルトは`{true}`です。
         #[named]
         #[default(true)]
         inclusive: bool,
@@ -202,16 +200,15 @@ impl Selector {
         }
     }
 
-    /// Returns a modified selector that will only match elements that occur
-    /// after the first match of `start`.
+    /// `start`の最初の一致より後に現れる要素にのみ一致するように修正したセレクターを返します。
     #[func]
     pub fn after(
         self,
-        /// The original selection will start at the first match of `start`.
+        /// 元の選択は`start`の最初の一致から開始します。
         start: LocatableSelector,
-        ///  Whether `start` itself should match or not. This is only relevant
-        ///  if both selectors match the same type of element. Defaults to
-        ///  `{true}`.
+        /// `start`自体を一致対象に含めるかどうか。
+        /// これは両方のセレクターが同じ型の要素に一致する場合にのみ意味があります。
+        /// デフォルトは`{true}`です。
         #[named]
         #[default(true)]
         inclusive: bool,
