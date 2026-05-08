@@ -13,20 +13,20 @@ use crate::foundations::{
     AutoValue, Func, NativeFuncData, NoneValue, Repr, Scope, Value, cast, func,
 };
 
-/// Describes a kind of value.
+/// 値の種類を表します。
 ///
-/// To style your document, you need to work with values of different kinds:
-/// Lengths specifying the size of your elements, colors for your text and
-/// shapes, and more. Typst categorizes these into clearly defined _types_ and
-/// tells you where it expects which type of value.
+/// 文書をスタイル設定するには、さまざまな種類の値を扱う必要があります。
+/// 要素のサイズを指定するための長さ、テキストや図形のための色などです。
+/// Typstはこれらを明確に定義された_型_に分類し、
+/// どの型の値が必要とされるかを示します。
 ///
-/// Apart from basic types for numeric values and [typical]($int)
-/// [types]($float) [known]($str) [from]($array) [programming]($dictionary)
-/// languages, Typst provides a special type for [_content._]($content) A value
-/// of this type can hold anything that you can enter into your document: Text,
-/// elements like headings and shapes, and style information.
+/// 数値の基本型や、プログラミング言語で[一般的に]($int)
+/// [知られている]($float)[型]($str)（[配列]($array)、[辞書]($dictionary)など）
+/// に加えて、Typstは[_コンテンツ_]($content)のための特別な型を提供します。
+/// この型の値は、文書に入力できるあらゆるもの（テキスト、見出しや図形などの要素、
+/// スタイル情報）を保持できます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #let x = 10
 /// #if type(x) == int [
@@ -39,15 +39,14 @@ use crate::foundations::{
 /// #type(image("glacier.jpg")).
 /// ```
 ///
-/// The type of `{10}` is `int`. Now, what is the type of `int` or even `type`?
+/// `{10}`の型は`int`です。では、`int`や`type`自体の型は何でしょうか？
 /// ```example
 /// #type(int) \
 /// #type(type)
 /// ```
 ///
-/// Unlike other types like `int`, [none] and [auto] do not have a name
-/// representing them. To test if a value is one of these, compare your value to
-/// them directly, e.g:
+/// `int`のような他の型と異なり、[none]と[auto]にはそれらを表す名前がありません。
+/// 値がこれらのいずれかかどうかを調べるには、値を直接比較してください。例：
 /// ```example
 /// #let val = none
 /// #if val == none [
@@ -55,9 +54,9 @@ use crate::foundations::{
 /// ]
 /// ```
 ///
-/// Note that `type` will return [`content`] for all document elements. To
-/// programmatically determine which kind of content you are dealing with, see
-/// [`content.func`].
+/// `type`は文書の全ての要素に対して[`content`]を返す点に注意してください。
+/// 扱っているコンテンツの種類をプログラム的に判別するには、
+/// [`content.func`]を参照してください。
 #[ty(scope, cast)]
 #[derive(Copy, Clone, Eq, PartialEq, Hash)]
 pub struct Type(Static<NativeTypeData>);
@@ -122,7 +121,7 @@ impl Type {
 
 #[scope]
 impl Type {
-    /// Determines a value's type.
+    /// 値の型を判定します。
     ///
     /// ```example
     /// #type(12) \
@@ -135,7 +134,7 @@ impl Type {
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The value whose type's to determine.
+        /// 型を判定する対象の値。
         value: Value,
     ) -> Type {
         value.ty()
