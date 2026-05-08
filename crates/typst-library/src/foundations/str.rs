@@ -33,26 +33,25 @@ pub use ecow::eco_format;
 #[doc(inline)]
 pub use crate::__format_str as format_str;
 
-/// A sequence of Unicode codepoints.
+/// Unicodeコードポイントの列。
 ///
-/// You can iterate over the grapheme clusters of the string using a [for
-/// loop]($scripting/#loops). Grapheme clusters are basically characters but
-/// keep together things that belong together, e.g. multiple codepoints that
-/// together form a flag emoji. Strings can be added with the `+` operator,
-/// [joined together]($scripting/#blocks) and multiplied with integers.
+/// [forループ]($scripting/#loops)を用いて、文字列の書記素クラスタを反復処理できます。
+/// 書記素クラスタは基本的には文字ですが、まとまっているべきもの
+/// （例えば複数のコードポイントが組み合わさって構成される国旗の絵文字）はまとまったまま保持します。
+/// 文字列は`+`演算子で連結でき、[join]($scripting/#blocks)で結合し、整数で乗算できます。
 ///
-/// Typst provides utility methods for string manipulation. Many of these
-/// methods (e.g., [`split`]($str.split), [`trim`]($str.trim) and
-/// [`replace`]($str.replace)) operate on _patterns:_ A pattern can be either a
-/// string or a [regular expression]($regex). This makes the methods quite
-/// versatile.
+/// Typstは文字列操作のためのユーティリティメソッドを提供しています。
+/// これらのメソッドの多く（例：[`split`]($str.split)、[`trim`]($str.trim)、
+/// [`replace`]($str.replace)）は_パターン_に対して動作します。
+/// パターンは文字列または[regex]($regex)のいずれかにできるため、
+/// これらのメソッドは非常に多用途です。
 ///
-/// All lengths and indices are expressed in terms of UTF-8 bytes. Indices are
-/// zero-based and negative indices wrap around to the end of the string.
+/// 全ての長さとインデックスはUTF-8バイト単位で表されます。
+/// インデックスは0始まりで、負のインデックスは文字列の末尾から数えます。
 ///
-/// You can convert a value to a string with this type's constructor.
+/// この型のコンストラクターを用いて、値を文字列に変換できます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #"hello world!" \
 /// #"\"hello\n  world\"!" \
@@ -62,14 +61,14 @@ pub use crate::__format_str as format_str;
 /// #(regex("\d+") in "10 euros")
 /// ```
 ///
-/// # Escape sequences { #escapes }
-/// Just like in markup, you can escape a few symbols in strings:
-/// - `[\\]` for a backslash
-/// - `[\"]` for a quote
-/// - `[\n]` for a newline
-/// - `[\r]` for a carriage return
-/// - `[\t]` for a tab
-/// - `[\u{1f600}]` for a hexadecimal Unicode escape sequence
+/// # エスケープシーケンス { #escapes }
+/// マークアップと同様に、文字列内ではいくつかの記号をエスケープできます。
+/// - `[\\]`: バックスラッシュ
+/// - `[\"]`: 引用符
+/// - `[\n]`: 改行
+/// - `[\r]`: キャリッジリターン
+/// - `[\t]`: タブ
+/// - `[\u{1f600}]`: 16進数のUnicodeエスケープシーケンス
 #[ty(scope, cast, title = "String")]
 #[derive(Default, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Serialize, Deserialize)]
@@ -127,19 +126,17 @@ impl Str {
 
 #[scope]
 impl Str {
-    /// Converts a value to a string.
+    /// 値を文字列に変換します。
     ///
-    /// - Integers are formatted in base 10. This can be overridden with the
-    ///   optional `base` parameter.
-    /// - Floats are formatted in base 10 and never in exponential notation.
-    /// - Negative integers and floats are formatted with the Unicode minus sign
-    ///   ("−" U+2212) instead of the ASCII minus sign ("-" U+002D).
-    /// - From labels the name is extracted.
-    /// - Bytes are decoded as UTF-8.
+    /// - 整数は10進数で書式設定されます。これは省略可能な`base`引数で上書きできます。
+    /// - 浮動小数点数は10進数で書式設定され、指数表記にはなりません。
+    /// - 負の整数と浮動小数点数はASCIIのマイナス記号（"-" U+002D）ではなく、
+    ///   Unicodeのマイナス記号（"−" U+2212）で書式設定されます。
+    /// - ラベルから名前が抽出されます。
+    /// - バイト列はUTF-8としてデコードされます。
     ///
-    /// If you wish to convert from and to Unicode code points, see the
-    /// [`to-unicode`]($str.to-unicode) and [`from-unicode`]($str.from-unicode)
-    /// functions.
+    /// Unicodeコードポイントとの相互変換が必要な場合は、
+    /// [`to-unicode`]($str.to-unicode)と[`from-unicode`]($str.from-unicode)関数を参照してください。
     ///
     /// ```example
     /// #str(10) \
@@ -150,9 +147,9 @@ impl Str {
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The value that should be converted to a string.
+        /// 文字列に変換する値。
         value: ToStr,
-        /// The base (radix) to display integers in, between 2 and 36.
+        /// 整数を表示する基数（2から36の間）。
         #[named]
         #[default(Spanned::new(10, Span::detached()))]
         base: Spanned<i64>,
@@ -173,20 +170,20 @@ impl Str {
         })
     }
 
-    /// The length of the string in UTF-8 encoded bytes.
+    /// UTF-8でエンコードされた文字列のバイト長。
     #[func(title = "Length")]
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
-    /// Extracts the first grapheme cluster of the string.
+    /// 文字列の最初の書記素クラスタを抽出します。
     ///
-    /// Returns the provided default value if the string is empty or fails with
-    /// an error if no default value was specified.
+    /// 文字列が空の場合、指定されたデフォルト値を返します。
+    /// デフォルト値が指定されていない場合はエラーで失敗します。
     #[func]
     pub fn first(
         &self,
-        /// A default value to return if the string is empty.
+        /// 文字列が空の場合に返すデフォルト値。
         #[named]
         default: Option<Str>,
     ) -> StrResult<Str> {
@@ -198,14 +195,14 @@ impl Str {
             .ok_or_else(string_is_empty)
     }
 
-    /// Extracts the last grapheme cluster of the string.
+    /// 文字列の最後の書記素クラスタを抽出します。
     ///
-    /// Returns the provided default value if the string is empty or fails with
-    /// an error if no default value was specified.
+    /// 文字列が空の場合、指定されたデフォルト値を返します。
+    /// デフォルト値が指定されていない場合はエラーで失敗します。
     #[func]
     pub fn last(
         &self,
-        /// A default value to return if the string is empty.
+        /// 文字列が空の場合に返すデフォルト値。
         #[named]
         default: Option<Str>,
     ) -> StrResult<Str> {
@@ -217,15 +214,15 @@ impl Str {
             .ok_or_else(string_is_empty)
     }
 
-    /// Extracts the first grapheme cluster after the specified index. Returns
-    /// the default value if the index is out of bounds or fails with an error
-    /// if no default value was specified.
+    /// 指定されたインデックス以降の最初の書記素クラスタを抽出します。
+    /// インデックスが範囲外の場合、デフォルト値を返します。
+    /// デフォルト値が指定されていない場合はエラーで失敗します。
     #[func]
     pub fn at(
         &self,
-        /// The byte index. If negative, indexes from the back.
+        /// バイトインデックス。負の場合は末尾から数えます。
         index: i64,
-        /// A default value to return if the index is out of bounds.
+        /// インデックスが範囲外の場合に返すデフォルト値。
         #[named]
         default: Option<Value>,
     ) -> StrResult<Value> {
@@ -236,21 +233,20 @@ impl Str {
             .ok_or_else(|| no_default_and_out_of_bounds(index, len))
     }
 
-    /// Extracts a substring of the string.
-    /// Fails with an error if the start or end index is out of bounds.
+    /// 文字列の部分文字列を抽出します。
+    /// 開始または終了インデックスが範囲外の場合、エラーで失敗します。
     #[func]
     pub fn slice(
         &self,
-        /// The start byte index (inclusive). If negative, indexes from the
-        /// back.
+        /// 開始バイトインデックス（その位置を含む）。負の場合は末尾から数えます。
         start: i64,
-        /// The end byte index (exclusive). If omitted, the whole slice until
-        /// the end of the string is extracted. If negative, indexes from the
-        /// back.
+        /// 終了バイトインデックス（その位置を含まない）。
+        /// 省略された場合、文字列の末尾までのスライス全体が抽出されます。
+        /// 負の場合は末尾から数えます。
         #[default]
         end: Option<i64>,
-        /// The number of bytes to extract. This is equivalent to passing
-        /// `start + count` as the `end` position. Mutually exclusive with `end`.
+        /// 抽出するバイト数。`end`位置として`start + count`を渡すのと同等です。
+        /// `end`と同時には指定できません。
         #[named]
         count: Option<i64>,
     ) -> StrResult<Str> {
@@ -260,19 +256,19 @@ impl Str {
         Ok(self.0[start..end].into())
     }
 
-    /// Returns the grapheme clusters of the string as an array of substrings.
+    /// 文字列の書記素クラスタを部分文字列の配列として返します。
     #[func]
     pub fn clusters(&self) -> Array {
         self.as_str().graphemes(true).map(|s| Value::Str(s.into())).collect()
     }
 
-    /// Returns the Unicode codepoints of the string as an array of substrings.
+    /// 文字列のUnicodeコードポイントを部分文字列の配列として返します。
     #[func]
     pub fn codepoints(&self) -> Array {
         self.chars().map(|c| Value::Str(c.into())).collect()
     }
 
-    /// Converts a character into its corresponding code point.
+    /// 文字を対応するコードポイントに変換します。
     ///
     /// ```example
     /// #"a".to-unicode() \
@@ -282,20 +278,20 @@ impl Str {
     /// ```
     #[func]
     pub fn to_unicode(
-        /// The character that should be converted.
+        /// 変換する文字。
         character: char,
     ) -> u32 {
         character as u32
     }
 
-    /// Converts a unicode code point into its corresponding string.
+    /// Unicodeコードポイントを対応する文字列に変換します。
     ///
     /// ```example
     /// #str.from-unicode(97)
     /// ```
     #[func]
     pub fn from_unicode(
-        /// The code point that should be converted.
+        /// 変換するコードポイント。
         value: u32,
     ) -> StrResult<Str> {
         let c: char = value
@@ -304,10 +300,9 @@ impl Str {
         Ok(c.into())
     }
 
-    /// Normalizes the string to the given Unicode normal form.
+    /// 文字列を指定されたUnicode正規化形式に正規化します。
     ///
-    /// This is useful when manipulating strings containing Unicode combining
-    /// characters.
+    /// Unicodeの結合文字を含む文字列を操作する際に役立ちます。
     ///
     /// ```typ
     /// #assert.eq("é".normalize(form: "nfd"), "e\u{0301}")
@@ -327,14 +322,14 @@ impl Str {
             UnicodeNormalForm::Nfkd => self.nfkd().collect(),
         }
     }
-    /// Whether the string contains the specified pattern.
+    /// 文字列が指定されたパターンを含むかどうか。
     ///
-    /// This method also has dedicated syntax: You can write `{"bc" in "abcd"}`
-    /// instead of `{"abcd".contains("bc")}`.
+    /// このメソッドには専用の構文もあります。`{"abcd".contains("bc")}`の代わりに
+    /// `{"bc" in "abcd"}`と書けます。
     #[func]
     pub fn contains(
         &self,
-        /// The pattern to search for.
+        /// 検索するパターン。
         pattern: StrPattern,
     ) -> bool {
         match pattern {
@@ -343,11 +338,11 @@ impl Str {
         }
     }
 
-    /// Whether the string starts with the specified pattern.
+    /// 文字列が指定されたパターンで始まるかどうか。
     #[func]
     pub fn starts_with(
         &self,
-        /// The pattern the string might start with.
+        /// 文字列の先頭としてあり得るパターン。
         pattern: StrPattern,
     ) -> bool {
         match pattern {
@@ -356,11 +351,11 @@ impl Str {
         }
     }
 
-    /// Whether the string ends with the specified pattern.
+    /// 文字列が指定されたパターンで終わるかどうか。
     #[func]
     pub fn ends_with(
         &self,
-        /// The pattern the string might end with.
+        /// 文字列の末尾としてあり得るパターン。
         pattern: StrPattern,
     ) -> bool {
         match pattern {
@@ -382,12 +377,12 @@ impl Str {
         }
     }
 
-    /// Searches for the specified pattern in the string and returns the first
-    /// match as a string or `{none}` if there is no match.
+    /// 文字列内で指定されたパターンを検索し、最初のマッチを文字列として返します。
+    /// マッチがない場合は`{none}`を返します。
     #[func]
     pub fn find(
         &self,
-        /// The pattern to search for.
+        /// 検索するパターン。
         pattern: StrPattern,
     ) -> Option<Str> {
         match pattern {
@@ -396,12 +391,12 @@ impl Str {
         }
     }
 
-    /// Searches for the specified pattern in the string and returns the index
-    /// of the first match as an integer or `{none}` if there is no match.
+    /// 文字列内で指定されたパターンを検索し、最初のマッチのインデックスを整数として返します。
+    /// マッチがない場合は`{none}`を返します。
     #[func]
     pub fn position(
         &self,
-        /// The pattern to search for.
+        /// 検索するパターン。
         pattern: StrPattern,
     ) -> Option<usize> {
         match pattern {
@@ -410,18 +405,16 @@ impl Str {
         }
     }
 
-    /// Searches for the specified pattern in the string and returns a
-    /// dictionary with details about the first match or `{none}` if there is no
-    /// match.
+    /// 文字列内で指定されたパターンを検索し、最初のマッチに関する詳細を含む辞書を返します。
+    /// マッチがない場合は`{none}`を返します。
     ///
-    /// The returned dictionary has the following keys:
-    /// - `start`: The start offset of the match
-    /// - `end`: The end offset of the match
-    /// - `text`: The text that matched.
-    /// - `captures`: An array containing a string for each matched capturing
-    ///   group. The first item of the array contains the first matched
-    ///   capturing, not the whole match! This is empty unless the `pattern` was
-    ///   a regex with capturing groups.
+    /// 返される辞書には次のキーが含まれます。
+    /// - `start`: マッチの開始オフセット
+    /// - `end`: マッチの終了オフセット
+    /// - `text`: マッチしたテキスト
+    /// - `captures`: マッチした各キャプチャグループに対応する文字列を含む配列。
+    ///   配列の最初の要素は、マッチ全体ではなく最初のキャプチャを含みます。
+    ///   `pattern`がキャプチャグループを持つregexでない限り空になります。
     ///
     /// ```example:"Shape of the returned dictionary"
     /// #let pat = regex("not (a|an) (apple|cat)")
@@ -436,7 +429,7 @@ impl Str {
     #[func]
     pub fn match_(
         &self,
-        /// The pattern to search for.
+        /// 検索するパターン。
         pattern: StrPattern,
     ) -> Option<Dict> {
         match pattern {
@@ -447,9 +440,8 @@ impl Str {
         }
     }
 
-    /// Searches for the specified pattern in the string and returns an array of
-    /// dictionaries with details about all matches. For details about the
-    /// returned dictionaries, see [above]($str.match).
+    /// 文字列内で指定されたパターンを検索し、全てのマッチに関する詳細を含む辞書の配列を返します。
+    /// 返される辞書の詳細については[上記]($str.match)を参照してください。
     ///
     /// ```example
     /// #"Day by Day.".matches("Day")
@@ -457,7 +449,7 @@ impl Str {
     #[func]
     pub fn matches(
         &self,
-        /// The pattern to search for.
+        /// 検索するパターン。
         pattern: StrPattern,
     ) -> Array {
         match pattern {
@@ -475,24 +467,21 @@ impl Str {
         }
     }
 
-    /// Replace at most `count` occurrences of the given pattern with a
-    /// replacement string or function (beginning from the start). If no count
-    /// is given, all occurrences are replaced.
+    /// 与えられたパターンの出現を、（先頭から）最大`count`回まで置換文字列または関数で置換します。
+    /// `count`が与えられない場合、全ての出現が置換されます。
     #[func]
     pub fn replace(
         &self,
         engine: &mut Engine,
         context: Tracked<Context>,
-        /// The pattern to search for.
+        /// 検索するパターン。
         pattern: StrPattern,
-        /// The string to replace the matches with or a function that gets a
-        /// dictionary for each match and can return individual replacement
-        /// strings.
+        /// マッチを置換する文字列、または、各マッチに対応する辞書を受け取り、
+        /// それぞれの置換文字列を返す関数。
         ///
-        /// The dictionary passed to the function has the same shape as the
-        /// dictionary returned by [`match`]($str.match).
+        /// 関数に渡される辞書は[`match`]($str.match)が返す辞書と同じ形式です。
         replacement: Replacement,
-        ///  If given, only the first `count` matches of the pattern are placed.
+        /// 指定された場合、パターンの最初の`count`個のマッチのみが置換されます。
         #[named]
         count: Option<usize>,
     ) -> SourceResult<Str> {
@@ -545,20 +534,20 @@ impl Str {
         Ok(output.into())
     }
 
-    /// Removes matches of a pattern from one or both sides of the string, once or
-    /// repeatedly and returns the resulting string.
+    /// 文字列の片側または両側からパターンのマッチを1回または繰り返し削除し、
+    /// 結果の文字列を返します。
     #[func]
     pub fn trim(
         &self,
-        /// The pattern to search for. If `{none}`, trims white spaces.
+        /// 検索するパターン。`{none}`の場合は空白文字を削除します。
         #[default]
         pattern: Option<StrPattern>,
-        /// Can be `{start}` or `{end}` to only trim the start or end of the
-        /// string. If omitted, both sides are trimmed.
+        /// `{start}`または`{end}`を指定すると、文字列の先頭または末尾のみを削除します。
+        /// 省略した場合、両側を削除します。
         #[named]
         at: Option<StrSide>,
-        /// Whether to repeatedly removes matches of the pattern or just once.
-        /// Defaults to `{true}`.
+        /// パターンのマッチを繰り返し削除するか、一度のみ削除するかを指定します。
+        /// 既定値は`{true}`です。
         #[named]
         #[default(true)]
         repeat: bool,
@@ -630,18 +619,15 @@ impl Str {
         trimmed.into()
     }
 
-    /// Splits a string at matches of a specified pattern and returns an array
-    /// of the resulting parts.
+    /// 指定されたパターンのマッチで文字列を分割し、結果として得られるパーツの配列を返します。
     ///
-    /// When the empty string is used as a separator, it separates every
-    /// character (i.e., Unicode code point) in the string, along with the
-    /// beginning and end of the string. In practice, this means that the
-    /// resulting list of parts will contain the empty string at the start
-    /// and end of the list.
+    /// 空文字列を区切り文字として使うと、文字列内の全ての文字
+    /// （つまりUnicodeコードポイント）と、文字列の先頭および末尾で分割します。
+    /// これは実際には、結果のパーツのリストが先頭と末尾に空文字列を含むことを意味します。
     #[func]
     pub fn split(
         &self,
-        /// The pattern to split at. Defaults to whitespace.
+        /// 分割位置のパターン。既定では空白文字です。
         #[default]
         pattern: Option<StrPattern>,
     ) -> Array {
@@ -657,7 +643,7 @@ impl Str {
         }
     }
 
-    /// Reverse the string.
+    /// 文字列を反転します。
     #[func(title = "Reverse")]
     pub fn rev(&self) -> Str {
         let mut s = EcoString::with_capacity(self.0.len());
@@ -827,11 +813,11 @@ cast! {
     v: Str => v.into(),
 }
 
-/// A value that can be cast to a string.
+/// 文字列にキャスト可能な値。
 pub enum ToStr {
-    /// A string value ready to be used as-is.
+    /// そのまま使える文字列値。
     Str(Str),
-    /// An integer about to be formatted in a given base.
+    /// 与えられた基数で書式設定される整数。
     Int(i64),
 }
 
@@ -847,21 +833,19 @@ cast! {
     v: Str => Self::Str(v),
 }
 
-/// A Unicode normalization form.
+/// Unicode正規化形式。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum UnicodeNormalForm {
-    /// Canonical composition where e.g. accented letters are turned into a
-    /// single Unicode codepoint.
+    /// 正規合成。例えばアクセント付き文字が単一のUnicodeコードポイントに変換されます。
     #[string("nfc")]
     Nfc,
-    /// Canonical decomposition where e.g. accented letters are split into a
-    /// separate base and diacritic.
+    /// 正規分解。例えばアクセント付き文字がベース文字とダイアクリティカルマークに分離されます。
     #[string("nfd")]
     Nfd,
-    /// Like NFC, but using the Unicode compatibility decompositions.
+    /// NFCと同様ですが、Unicode互換分解を用います。
     #[string("nfkc")]
     Nfkc,
-    /// Like NFD, but using the Unicode compatibility decompositions.
+    /// NFDと同様ですが、Unicode互換分解を用います。
     #[string("nfkd")]
     Nfkd,
 }
@@ -994,12 +978,12 @@ impl Hash for Regex {
     }
 }
 
-/// A pattern which can be searched for in a string.
+/// 文字列内で検索可能なパターン。
 #[derive(Debug, Clone)]
 pub enum StrPattern {
-    /// Just a string.
+    /// 単なる文字列。
     Str(Str),
-    /// A regular expression.
+    /// regex。
     Regex(Regex),
 }
 
@@ -1013,13 +997,12 @@ cast! {
     v: Regex => Self::Regex(v),
 }
 
-/// A side of a string.
+/// 文字列の一方の側。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub enum StrSide {
-    /// The logical start of the string, may be left or right depending on the
-    /// language.
+    /// 文字列の論理的な先頭。言語によって左または右のいずれかになります。
     Start,
-    /// The logical end of the string.
+    /// 文字列の論理的な末尾。
     End,
 }
 
@@ -1032,12 +1015,12 @@ cast! {
     },
 }
 
-/// A replacement for a matched [`Str`]
+/// マッチした[`Str`]に対する置換。
 pub enum Replacement {
-    /// A string a match is replaced with.
+    /// マッチを置換する文字列。
     Str(Str),
-    /// Function of type Dict -> Str (see `captures_to_dict` or `match_to_dict`)
-    /// whose output is inserted for the match.
+    /// Dict -> Str型の関数（`captures_to_dict`または`match_to_dict`を参照）。
+    /// その出力がマッチに対して挿入されます。
     Func(Func),
 }
 
