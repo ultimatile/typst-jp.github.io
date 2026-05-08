@@ -2,9 +2,9 @@ use crate::foundations::elem;
 use crate::layout::{Abs, Angle, Axes, Length, Rel};
 use crate::visualize::Stroke;
 
-/// A line from one point to another.
+/// ある点から別の点までの線。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #set page(height: 100pt)
 ///
@@ -17,23 +17,23 @@ use crate::visualize::Stroke;
 /// ```
 #[elem]
 pub struct LineElem {
-    /// The start point of the line.
+    /// 線の始点。
     ///
-    /// Must be an array of exactly two relative lengths.
+    /// ちょうど2つの相対長さからなる配列でなければなりません。
     pub start: Axes<Rel<Length>>,
 
-    /// The point where the line ends.
+    /// 線の終点。
     pub end: Option<Axes<Rel<Length>>>,
 
-    /// The line's length. This is only respected if `end` is `{none}`.
+    /// 線の長さ。これは `end` が `{none}` の場合にのみ反映されます。
     #[default(Abs::pt(30.0).into())]
     pub length: Rel<Length>,
 
-    /// The angle at which the line points away from the origin. This is only
-    /// respected if `end` is `{none}`.
+    /// 線が原点から離れる方向の角度。これは `end` が `{none}` の場合にのみ
+    /// 反映されます。
     pub angle: Angle,
 
-    /// How to [stroke] the line.
+    /// 線の[ストローク]($stroke)の方法。
     ///
     /// ```example
     /// #set line(length: 100%)
