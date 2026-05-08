@@ -10,23 +10,23 @@ use crate::foundations::{
     Bytes, Cast, Decimal, Repr, Str, Value, cast, func, repr, scope, ty,
 };
 
-/// A whole number.
+/// 整数。
 ///
-/// The number can be negative, zero, or positive. As Typst uses 64 bits to
-/// store integers, integers cannot be smaller than `{-9223372036854775808}` or
-/// larger than `{9223372036854775807}`. Integer literals are always positive,
-/// so a negative integer such as `{-1}` is semantically the negation `-` of the
-/// positive literal `1`. A positive integer greater than the maximum value and
-/// a negative integer less than or equal to the minimum value cannot be
-/// represented as an integer literal, and are instead parsed as a `{float}`.
-/// The minimum integer value can still be obtained through integer arithmetic.
+/// この数は負、ゼロ、正のいずれにもなります。
+/// Typstは整数の格納に64ビットを使用しているため、整数は`{-9223372036854775808}`より小さくも、
+/// `{9223372036854775807}`より大きくもなれません。
+/// 整数リテラルは常に正であるため、`{-1}`のような負の整数は、
+/// 意味的には正のリテラル`1`に対する否定`-`の適用です。
+/// 最大値より大きい正の整数や、最小値以下の負の整数は整数リテラルとして表現できず、
+/// 代わりに`{float}`としてパースされます。
+/// 最小の整数値は整数の演算によって得ることもできます。
 ///
-/// The number can also be specified as hexadecimal, octal, or binary by
-/// starting it with a zero followed by either `x`, `o`, or `b`.
+/// この数は、ゼロの後ろに`x`、`o`、`b`のいずれかを続けることで、
+/// 16進数、8進数、2進数として指定することもできます。
 ///
-/// You can convert a value to an integer with this type's constructor.
+/// この型のコンストラクターを用いて、値を整数に変換できます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #(1 + 2) \
 /// #(2 - 5) \
@@ -41,13 +41,12 @@ type i64;
 
 #[scope]
 impl i64 {
-    /// Converts a value to an integer. Raises an error if there is an attempt
-    /// to produce an integer larger than the maximum 64-bit signed integer
-    /// or smaller than the minimum 64-bit signed integer.
+    /// 値を整数に変換します。64ビット符号付き整数の最大値より大きい整数や、
+    /// 最小値より小さい整数を生成しようとした場合はエラーを発生させます。
     ///
-    /// - Booleans are converted to `0` or `1`.
-    /// - Floats and decimals are rounded to the next 64-bit integer towards zero.
-    /// - Strings are parsed in base 10.
+    /// - ブール値は`0`または`1`に変換されます。
+    /// - 浮動小数点数とdecimalはゼロ方向に最も近い64ビット整数に丸められます。
+    /// - 文字列は10進数としてパースされます。
     ///
     /// ```example
     /// #int(false) \
@@ -58,17 +57,17 @@ impl i64 {
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The value that should be converted to an integer.
+        /// 整数に変換する値。
         value: ToInt,
     ) -> i64 {
         value.0
     }
 
-    /// Calculates the sign of an integer.
+    /// 整数の符号を計算します。
     ///
-    /// - If the number is positive, returns `{1}`.
-    /// - If the number is negative, returns `{-1}`.
-    /// - If the number is zero, returns `{0}`.
+    /// - 数が正の場合、`{1}`を返します。
+    /// - 数が負の場合、`{-1}`を返します。
+    /// - 数がゼロの場合、`{0}`を返します。
     ///
     /// ```example
     /// #(5).signum() \
@@ -80,10 +79,9 @@ impl i64 {
         i64::signum(self)
     }
 
-    /// Calculates the bitwise NOT of an integer.
+    /// 整数のビットごとのNOTを計算します。
     ///
-    /// For the purposes of this function, the operand is treated as a signed
-    /// integer of 64 bits.
+    /// この関数では、オペランドは64ビット符号付き整数として扱われます。
     ///
     /// ```example
     /// #4.bit-not() \
@@ -94,10 +92,9 @@ impl i64 {
         !self
     }
 
-    /// Calculates the bitwise AND between two integers.
+    /// 2つの整数のビットごとのANDを計算します。
     ///
-    /// For the purposes of this function, the operands are treated as signed
-    /// integers of 64 bits.
+    /// この関数では、オペランドは64ビット符号付き整数として扱われます。
     ///
     /// ```example
     /// #128.bit-and(192)
@@ -105,16 +102,15 @@ impl i64 {
     #[func(title = "Bitwise AND")]
     pub fn bit_and(
         self,
-        /// The right-hand operand of the bitwise AND.
+        /// ビットごとのANDの右辺オペランド。
         rhs: i64,
     ) -> i64 {
         self & rhs
     }
 
-    /// Calculates the bitwise OR between two integers.
+    /// 2つの整数のビットごとのORを計算します。
     ///
-    /// For the purposes of this function, the operands are treated as signed
-    /// integers of 64 bits.
+    /// この関数では、オペランドは64ビット符号付き整数として扱われます。
     ///
     /// ```example
     /// #64.bit-or(32)
@@ -122,16 +118,15 @@ impl i64 {
     #[func(title = "Bitwise OR")]
     pub fn bit_or(
         self,
-        /// The right-hand operand of the bitwise OR.
+        /// ビットごとのORの右辺オペランド。
         rhs: i64,
     ) -> i64 {
         self | rhs
     }
 
-    /// Calculates the bitwise XOR between two integers.
+    /// 2つの整数のビットごとのXORを計算します。
     ///
-    /// For the purposes of this function, the operands are treated as signed
-    /// integers of 64 bits.
+    /// この関数では、オペランドは64ビット符号付き整数として扱われます。
     ///
     /// ```example
     /// #64.bit-xor(96)
@@ -139,17 +134,16 @@ impl i64 {
     #[func(title = "Bitwise XOR")]
     pub fn bit_xor(
         self,
-        /// The right-hand operand of the bitwise XOR.
+        /// ビットごとのXORの右辺オペランド。
         rhs: i64,
     ) -> i64 {
         self ^ rhs
     }
 
-    /// Shifts the operand's bits to the left by the specified amount.
+    /// オペランドのビットを指定した量だけ左にシフトします。
     ///
-    /// For the purposes of this function, the operand is treated as a signed
-    /// integer of 64 bits. An error will occur if the result is too large to
-    /// fit in a 64-bit integer.
+    /// この関数では、オペランドは64ビット符号付き整数として扱われます。
+    /// 結果が大きすぎて64ビット整数に収まらない場合はエラーになります。
     ///
     /// ```example
     /// #33.bit-lshift(2) \
@@ -158,19 +152,17 @@ impl i64 {
     #[func(title = "Bitwise Left Shift")]
     pub fn bit_lshift(
         self,
-        /// The amount of bits to shift. Must not be negative.
+        /// シフトするビット数。負であってはなりません。
         shift: u32,
     ) -> StrResult<i64> {
         Ok(self.checked_shl(shift).ok_or("the result is too large")?)
     }
 
-    /// Shifts the operand's bits to the right by the specified amount.
-    /// Performs an arithmetic shift by default (extends the sign bit to the left,
-    /// such that negative numbers stay negative), but that can be changed by the
-    /// `logical` parameter.
+    /// オペランドのビットを指定した量だけ右にシフトします。
+    /// 既定では算術シフトを行います（符号ビットを左に拡張するため、負の数は負のままです）。
+    /// この挙動は`logical`引数で変更できます。
     ///
-    /// For the purposes of this function, the operand is treated as a signed
-    /// integer of 64 bits.
+    /// この関数では、オペランドは64ビット符号付き整数として扱われます。
     ///
     /// ```example
     /// #64.bit-rshift(2) \
@@ -180,20 +172,19 @@ impl i64 {
     #[func(title = "Bitwise Right Shift")]
     pub fn bit_rshift(
         self,
-        /// The amount of bits to shift. Must not be negative.
+        /// シフトするビット数。負であってはなりません。
         ///
-        /// Shifts larger than 63 are allowed and will cause the return value to
-        /// saturate. For non-negative numbers, the return value saturates at
-        /// `{0}`, while, for negative numbers, it saturates at `{-1}` if
-        /// `logical` is set to `{false}`, or `{0}` if it is `{true}`. This
-        /// behavior is consistent with just applying this operation multiple
-        /// times. Therefore, the shift will always succeed.
+        /// 63より大きいシフトも許容され、戻り値は飽和します。
+        /// 非負の数では、戻り値は`{0}`に飽和します。
+        /// 負の数では、`logical`が`{false}`の場合は`{-1}`、
+        /// `{true}`の場合は`{0}`に飽和します。
+        /// この挙動は、この演算を複数回適用した場合と一致します。
+        /// したがって、シフトは常に成功します。
         shift: u32,
-        /// Toggles whether a logical (unsigned) right shift should be performed
-        /// instead of arithmetic right shift.
-        /// If this is `{true}`, negative operands will not preserve their sign
-        /// bit, and bits which appear to the left after the shift will be
-        /// `{0}`. This parameter has no effect on non-negative operands.
+        /// 算術右シフトの代わりに論理（符号なし）右シフトを行うかどうかを切り替えます。
+        /// `{true}`の場合、負のオペランドは符号ビットを保持せず、
+        /// シフト後に左側に現れるビットは`{0}`になります。
+        /// この引数は非負のオペランドには影響しません。
         #[named]
         #[default(false)]
         logical: bool,
@@ -225,7 +216,7 @@ impl i64 {
         }
     }
 
-    /// Converts bytes to an integer.
+    /// バイト列を整数に変換します。
     ///
     /// ```example
     /// #int.from-bytes(bytes((0, 0, 0, 0, 0, 0, 0, 1))) \
@@ -233,18 +224,16 @@ impl i64 {
     /// ```
     #[func]
     pub fn from_bytes(
-        /// The bytes that should be converted to an integer.
+        /// 整数に変換するバイト列。
         ///
-        /// Must be of length at most 8 so that the result fits into a 64-bit
-        /// signed integer.
+        /// 結果が64ビット符号付き整数に収まるように、長さは最大で8でなければなりません。
         bytes: Bytes,
-        /// The endianness of the conversion.
+        /// 変換のエンディアン。
         #[named]
         #[default(Endianness::Little)]
         endian: Endianness,
-        /// Whether the bytes should be treated as a signed integer. If this is
-        /// `{true}` and the most significant bit is set, the resulting number
-        /// will negative.
+        /// バイト列を符号付き整数として扱うかどうか。
+        /// `{true}`で最上位ビットが立っている場合、結果の数値は負になります。
         #[named]
         #[default(true)]
         signed: bool,
@@ -291,7 +280,7 @@ impl i64 {
         })
     }
 
-    /// Converts an integer to bytes.
+    /// 整数をバイト列に変換します。
     ///
     /// ```example
     /// #array(10000.to-bytes(endian: "big")) \
@@ -300,22 +289,19 @@ impl i64 {
     #[func]
     pub fn to_bytes(
         self,
-        /// The endianness of the conversion.
+        /// 変換のエンディアン。
         #[named]
         #[default(Endianness::Little)]
         endian: Endianness,
-        /// The size in bytes of the resulting bytes (must be at least zero). If
-        /// the integer is too large to fit in the specified size, the
-        /// conversion will truncate the remaining bytes based on the
-        /// endianness. To keep the same resulting value, if the endianness is
-        /// big-endian, the truncation will happen at the rightmost bytes.
-        /// Otherwise, if the endianness is little-endian, the truncation will
-        /// happen at the leftmost bytes.
+        /// 結果のバイト列のサイズ（バイト単位、ゼロ以上でなければなりません）。
+        /// 整数が指定サイズに収まらないほど大きい場合、変換はエンディアンに基づいて
+        /// 余分なバイトを切り捨てます。同じ結果値を保つため、エンディアンが
+        /// ビッグエンディアンの場合は最右のバイトで切り捨てが起こります。
+        /// 一方、エンディアンがリトルエンディアンの場合は最左のバイトで切り捨てが起こります。
         ///
-        /// Be aware that if the integer is negative and the size is not enough
-        /// to make the number fit, when passing the resulting bytes to
-        /// `int.from-bytes`, the resulting number might be positive, as the
-        /// most significant bit might not be set to 1.
+        /// 整数が負で、数値を収めるのにサイズが不十分な場合、結果のバイト列を
+        /// `int.from-bytes`に渡したときに、最上位ビットが1に設定されない可能性があるため、
+        /// 結果の数値が正になることがある点に注意してください。
         #[named]
         #[default(8)]
         size: usize,
@@ -352,19 +338,16 @@ impl Repr for i64 {
     }
 }
 
-/// Represents the byte order used for converting integers and floats to bytes
-/// and vice versa.
+/// 整数や浮動小数点数をバイト列に変換する際、またはその逆の変換に用いるバイト順を表します。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum Endianness {
-    /// Big-endian byte order: The highest-value byte is at the beginning of the
-    /// bytes.
+    /// ビッグエンディアンのバイト順。最上位のバイトがバイト列の先頭に配置されます。
     Big,
-    /// Little-endian byte order: The lowest-value byte is at the beginning of
-    /// the bytes.
+    /// リトルエンディアンのバイト順。最下位のバイトがバイト列の先頭に配置されます。
     Little,
 }
 
-/// A value that can be cast to an integer.
+/// 整数にキャスト可能な値。
 pub struct ToInt(i64);
 
 cast! {
