@@ -4,9 +4,9 @@ use crate::foundations::{Array, Reflect, Smart, array, cast, elem};
 use crate::layout::{Axes, Length, Rel};
 use crate::visualize::{FillRule, Paint, Stroke};
 
-/// A path through a list of points, connected by Bézier curves.
+/// ベジェ曲線で結ばれた点のリストを通るパス。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #path(
 ///   fill: blue.lighten(80%),
@@ -19,13 +19,13 @@ use crate::visualize::{FillRule, Paint, Stroke};
 /// ```
 #[elem]
 pub struct PathElem {
-    /// How to fill the path.
+    /// パスの塗りつぶし方法。
     ///
-    /// When setting a fill, the default stroke disappears. To create a
-    /// rectangle with both fill and stroke, you have to configure both.
+    /// fillを設定すると、デフォルトのストロークは消えます。塗りつぶしと
+    /// ストロークの両方を持つ矩形を作るには、両方を設定する必要があります。
     pub fill: Option<Paint>,
 
-    /// The drawing rule used to fill the path.
+    /// パスの塗りつぶしに使用する描画規則。
     ///
     /// ```example
     /// // We use `.with` to get a new
@@ -47,39 +47,36 @@ pub struct PathElem {
     #[default]
     pub fill_rule: FillRule,
 
-    /// How to [stroke] the path.
+    /// パスの[ストローク]($stroke)の方法。
     ///
-    /// Can be set to  `{none}` to disable the stroke or to `{auto}` for a
-    /// stroke of `{1pt}` black if and only if no fill is given.
+    /// ストロークを無効にするには `{none}` を設定でき、塗りつぶしが指定されて
+    /// いない場合に限り `{1pt}` の黒のストロークにするには `{auto}` を設定できます。
     #[fold]
     pub stroke: Smart<Option<Stroke>>,
 
-    /// Whether to close this path with one last Bézier curve. This curve will
-    /// take into account the adjacent control points. If you want to close
-    /// with a straight line, simply add one last point that's the same as the
-    /// start point.
+    /// このパスを最後のベジェ曲線で閉じるかどうか。この曲線は隣接する制御点を
+    /// 考慮します。直線で閉じたい場合は、始点と同じ点を最後の点として
+    /// 追加するだけです。
     #[default(false)]
     pub closed: bool,
 
-    /// The vertices of the path.
+    /// パスの頂点。
     ///
-    /// Each vertex can be defined in 3 ways:
+    /// 各頂点は3通りの方法で定義できます。
     ///
-    /// - A regular point, as given to the [`line`] or [`polygon`] function.
-    /// - An array of two points, the first being the vertex and the second
-    ///   being the control point. The control point is expressed relative to
-    ///   the vertex and is mirrored to get the second control point. The given
-    ///   control point is the one that affects the curve coming _into_ this
-    ///   vertex (even for the first point). The mirrored control point affects
-    ///   the curve going out of this vertex.
-    /// - An array of three points, the first being the vertex and the next
-    ///   being the control points (control point for curves coming in and out,
-    ///   respectively).
+    /// - [`line`]関数や[`polygon`]関数に与えるような通常の点。
+    /// - 2つの点からなる配列。1つ目は頂点で、2つ目は制御点です。制御点は頂点
+    ///   からの相対位置で表され、ミラーリングされて2つ目の制御点になります。
+    ///   与えられた制御点は、（最初の点であっても）この頂点に_入ってくる_
+    ///   曲線に影響します。ミラーリングされた制御点はこの頂点から出ていく
+    ///   曲線に影響します。
+    /// - 3つの点からなる配列。1つ目は頂点で、続く2つは制御点（それぞれ入って
+    ///   くる曲線と出ていく曲線の制御点）です。
     #[variadic]
     pub vertices: Vec<PathVertex>,
 }
 
-/// A component used for path creation.
+/// パスの作成に使用されるコンポーネント。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum PathVertex {
     Vertex(Axes<Rel<Length>>),
