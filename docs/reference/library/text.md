@@ -1,3 +1,3 @@
-Text styling.
+テキストのスタイル設定。
 
-The [text function]($text) is of particular interest.
+特に[text関数]($text)が重要です。
