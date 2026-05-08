@@ -6,7 +6,7 @@ use time::ext::NumericalDuration;
 
 use crate::foundations::{Repr, func, repr, scope, ty};
 
-/// Represents a positive or negative span of time.
+/// 正または負の時間の長さを表します。
 #[ty(scope, cast)]
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct Duration(time::Duration);
@@ -35,11 +35,10 @@ impl Duration {
 
 #[scope]
 impl Duration {
-    /// Creates a new duration.
+    /// 新しいdurationを生成します。
     ///
-    /// You can specify the [duration] using weeks, days, hours, minutes and
-    /// seconds. You can also get a duration by subtracting two
-    /// [datetimes]($datetime).
+    /// 週、日、時、分、秒を指定して[duration]を構築できます。
+    /// 2つの[datetime]($datetime)の差からdurationを得ることもできます。
     ///
     /// ```example
     /// #duration(
@@ -49,23 +48,23 @@ impl Duration {
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The number of seconds.
+        /// 秒数。
         #[named]
         #[default(0)]
         seconds: i64,
-        /// The number of minutes.
+        /// 分数。
         #[named]
         #[default(0)]
         minutes: i64,
-        /// The number of hours.
+        /// 時間数。
         #[named]
         #[default(0)]
         hours: i64,
-        /// The number of days.
+        /// 日数。
         #[named]
         #[default(0)]
         days: i64,
-        /// The number of weeks.
+        /// 週数。
         #[named]
         #[default(0)]
         weeks: i64,
@@ -79,46 +78,46 @@ impl Duration {
         )
     }
 
-    /// The duration expressed in seconds.
+    /// 秒で表されたduration。
     ///
-    /// This function returns the total duration represented in seconds as a
-    /// floating-point number rather than the second component of the duration.
+    /// この関数は、durationの秒成分ではなく、duration全体を浮動小数点数の
+    /// 秒数として表したものを返します。
     #[func]
     pub fn seconds(&self) -> f64 {
         self.0.as_seconds_f64()
     }
 
-    /// The duration expressed in minutes.
+    /// 分で表されたduration。
     ///
-    /// This function returns the total duration represented in minutes as a
-    /// floating-point number rather than the second component of the duration.
+    /// この関数は、durationの分成分ではなく、duration全体を浮動小数点数の
+    /// 分数として表したものを返します。
     #[func]
     pub fn minutes(&self) -> f64 {
         self.seconds() / 60.0
     }
 
-    /// The duration expressed in hours.
+    /// 時間で表されたduration。
     ///
-    /// This function returns the total duration represented in hours as a
-    /// floating-point number rather than the second component of the duration.
+    /// この関数は、durationの時間成分ではなく、duration全体を浮動小数点数の
+    /// 時間数として表したものを返します。
     #[func]
     pub fn hours(&self) -> f64 {
         self.seconds() / 3_600.0
     }
 
-    /// The duration expressed in days.
+    /// 日で表されたduration。
     ///
-    /// This function returns the total duration represented in days as a
-    /// floating-point number rather than the second component of the duration.
+    /// この関数は、durationの日成分ではなく、duration全体を浮動小数点数の
+    /// 日数として表したものを返します。
     #[func]
     pub fn days(&self) -> f64 {
         self.seconds() / 86_400.0
     }
 
-    /// The duration expressed in weeks.
+    /// 週で表されたduration。
     ///
-    /// This function returns the total duration represented in weeks as a
-    /// floating-point number rather than the second component of the duration.
+    /// この関数は、durationの週成分ではなく、duration全体を浮動小数点数の
+    /// 週数として表したものを返します。
     #[func]
     pub fn weeks(&self) -> f64 {
         self.seconds() / 604_800.0
