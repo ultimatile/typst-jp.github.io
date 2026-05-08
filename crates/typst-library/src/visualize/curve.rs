@@ -9,26 +9,20 @@ use crate::visualize::{FillRule, Paint, Stroke};
 
 use super::FixedStroke;
 
-/// A curve consisting of movements, lines, and Bézier segments.
+/// 移動、直線、ベジェセグメントから構成される曲線。
 ///
-/// At any point in time, there is a conceptual pen or cursor.
-/// - Move elements move the cursor without drawing.
-/// - Line/Quadratic/Cubic elements draw a segment from the cursor to a new
-///   position, potentially with control point for a Bézier curve.
-/// - Close elements draw a straight or smooth line back to the start of the
-///   curve or the latest preceding move segment.
+/// 任意の時点において、概念的なペンまたはカーソルが存在します。
+/// - moveの要素はカーソルを描画せずに移動させます。
+/// - line/quadratic/cubicの要素は、カーソルから新しい位置までセグメントを描画し、ベジェ曲線の場合は制御点をともないます。
+/// - closeの要素は、曲線の始点または直前のmoveセグメントの位置まで、直線または滑らかな線を描画します。
 ///
-/// For layout purposes, the bounding box of the curve is a tight rectangle
-/// containing all segments as well as the point `{(0pt, 0pt)}`.
+/// レイアウト目的では、曲線のバウンディングボックスは全てのセグメントと点 `{(0pt, 0pt)}` を含むタイトな矩形となります。
 ///
-/// Positions may be specified absolutely (i.e. relatively to `{(0pt, 0pt)}`),
-/// or relative to the current pen/cursor position, that is, the position where
-/// the previous segment ended.
+/// 位置は絶対的に（すなわち `{(0pt, 0pt)}` に対する相対位置として）指定するか、現在のペン/カーソルの位置、つまり直前のセグメントが終わった位置に対する相対位置として指定できます。
 ///
-/// Bézier curve control points can be skipped by passing `{none}` or
-/// automatically mirrored from the preceding segment by passing `{auto}`.
+/// ベジェ曲線の制御点は `{none}` を渡すことでスキップしたり、`{auto}` を渡すことで直前のセグメントから自動的に鏡映させたりできます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #curve(
 ///   fill: blue.lighten(80%),
@@ -41,13 +35,12 @@ use super::FixedStroke;
 /// ```
 #[elem(scope)]
 pub struct CurveElem {
-    /// How to fill the curve.
+    /// 曲線の塗りつぶし方法。
     ///
-    /// When setting a fill, the default stroke disappears. To create a curve
-    /// with both fill and stroke, you have to configure both.
+    /// 塗りつぶしを設定すると、デフォルトのストロークは消えます。塗りつぶしとストロークの両方を持つ曲線を作成するには、両方を設定する必要があります。
     pub fill: Option<Paint>,
 
-    /// The drawing rule used to fill the curve.
+    /// 曲線の塗りつぶしに使用される描画ルール。
     ///
     /// ```example
     /// // We use `.with` to get a new
@@ -69,10 +62,9 @@ pub struct CurveElem {
     #[default]
     pub fill_rule: FillRule,
 
-    /// How to [stroke] the curve.
+    /// 曲線を[ストローク]($stroke)する方法。
     ///
-    /// Can be set to `{none}` to disable the stroke or to `{auto}` for a
-    /// stroke of `{1pt}` black if and only if no fill is given.
+    /// `{none}` に設定するとストロークを無効化できます。`{auto}` に設定すると、塗りつぶしが指定されていない場合に限り、`{1pt}` の黒のストロークになります。
     ///
     /// ```example
     /// #let down = curve.line((40pt, 40pt), relative: true)
@@ -86,8 +78,7 @@ pub struct CurveElem {
     #[fold]
     pub stroke: Smart<Option<Stroke>>,
 
-    /// The components of the curve, in the form of moves, line and Bézier
-    /// segment, and closes.
+    /// 曲線の構成要素。move、lineおよびベジェセグメント、closeの形式で指定します。
     #[variadic]
     pub components: Vec<CurveComponent>,
 }
@@ -110,7 +101,7 @@ impl CurveElem {
     type CurveClose;
 }
 
-/// A component used for curve creation.
+/// 曲線の作成に使用される構成要素。
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub enum CurveComponent {
     Move(Packed<CurveMove>),
@@ -149,10 +140,9 @@ impl TryFrom<Content> for CurveComponent {
     }
 }
 
-/// Starts a new curve component.
+/// 新しい曲線の構成要素を開始します。
 ///
-/// If no `curve.move` element is passed, the curve will start at
-/// `{(0pt, 0pt)}`.
+/// `curve.move` 要素が渡されない場合、曲線は `{(0pt, 0pt)}` から始まります。
 ///
 /// ```example
 /// #curve(
@@ -172,16 +162,16 @@ impl TryFrom<Content> for CurveComponent {
 /// ```
 #[elem(name = "move", title = "Curve Move")]
 pub struct CurveMove {
-    /// The starting point for the new component.
+    /// 新しい構成要素の始点。
     #[required]
     pub start: Axes<Rel<Length>>,
 
-    /// Whether the coordinates are relative to the previous point.
+    /// 座標を直前の点に対する相対位置として扱うかどうか。
     #[default(false)]
     pub relative: bool,
 }
 
-/// Adds a straight line from the current point to a following one.
+/// 現在の点から後続の点までの直線を追加します。
 ///
 /// ```example
 /// #curve(
@@ -195,11 +185,11 @@ pub struct CurveMove {
 /// ```
 #[elem(name = "line", title = "Curve Line")]
 pub struct CurveLine {
-    /// The point at which the line shall end.
+    /// 直線の終点。
     #[required]
     pub end: Axes<Rel<Length>>,
 
-    /// Whether the coordinates are relative to the previous point.
+    /// 座標を直前の点に対する相対位置として扱うかどうか。
     ///
     /// ```example
     /// #curve(
@@ -215,8 +205,7 @@ pub struct CurveLine {
     pub relative: bool,
 }
 
-/// Adds a quadratic Bézier curve segment from the last point to `end`, using
-/// `control` as the control point.
+/// 直前の点から `end` までの2次ベジェ曲線セグメントを、`control` を制御点として追加します。
 ///
 /// ```example
 /// // Function to illustrate where the control point is.
@@ -235,12 +224,10 @@ pub struct CurveLine {
 /// ```
 #[elem(name = "quad", title = "Curve Quadratic Segment")]
 pub struct CurveQuad {
-    /// The control point of the quadratic Bézier curve.
+    /// 2次ベジェ曲線の制御点。
     ///
-    /// - If `{auto}` and this segment follows another quadratic Bézier curve,
-    ///   the previous control point will be mirrored.
-    /// - If `{none}`, the control point defaults to `end`, and the curve will
-    ///   be a straight line.
+    /// - `{auto}` の場合で、このセグメントが別の2次ベジェ曲線に続くときは、直前の制御点が鏡映されます。
+    /// - `{none}` の場合、制御点はデフォルトで `end` となり、曲線は直線になります。
     ///
     /// ```example
     /// #curve(
@@ -252,18 +239,16 @@ pub struct CurveQuad {
     #[required]
     pub control: Smart<Option<Axes<Rel<Length>>>>,
 
-    /// The point at which the segment shall end.
+    /// セグメントの終点。
     #[required]
     pub end: Axes<Rel<Length>>,
 
-    /// Whether the `control` and `end` coordinates are relative to the previous
-    /// point.
+    /// `control` と `end` の座標を直前の点に対する相対位置として扱うかどうか。
     #[default(false)]
     pub relative: bool,
 }
 
-/// Adds a cubic Bézier curve segment from the last point to `end`, using
-/// `control-start` and `control-end` as the control points.
+/// 直前の点から `end` までの3次ベジェ曲線セグメントを、`control-start` と `control-end` を制御点として追加します。
 ///
 /// ```example
 /// // Function to illustrate where the control points are.
@@ -282,14 +267,11 @@ pub struct CurveQuad {
 /// ```
 #[elem(name = "cubic", title = "Curve Cubic Segment")]
 pub struct CurveCubic {
-    /// The control point going out from the start of the curve segment.
+    /// 曲線セグメントの始点から出ていく制御点。
     ///
-    /// - If `{auto}` and this element follows another `curve.cubic` element,
-    ///   the last control point will be mirrored. In SVG terms, this makes
-    ///   `curve.cubic` behave like the `S` operator instead of the `C` operator.
+    /// - `{auto}` の場合で、この要素が別の `curve.cubic` 要素に続くときは、直前の制御点が鏡映されます。SVGの用語で言えば、これは `curve.cubic` を `C` 演算子の代わりに `S` 演算子のように振る舞わせます。
     ///
-    /// - If `{none}`, the curve has no first control point, or equivalently,
-    ///   the control point defaults to the curve's starting point.
+    /// - `{none}` の場合、曲線には最初の制御点がないか、同等に、制御点はデフォルトで曲線の始点となります。
     ///
     /// ```example
     /// #curve(
@@ -326,25 +308,22 @@ pub struct CurveCubic {
     #[required]
     pub control_start: Option<Smart<Axes<Rel<Length>>>>,
 
-    /// The control point going into the end point of the curve segment.
+    /// 曲線セグメントの終点に入る制御点。
     ///
-    /// If set to `{none}`, the curve has no end control point, or equivalently,
-    /// the control point defaults to the curve's end point.
+    /// `{none}` に設定すると、曲線には終点の制御点がないか、同等に、制御点はデフォルトで曲線の終点となります。
     #[required]
     pub control_end: Option<Axes<Rel<Length>>>,
 
-    /// The point at which the curve segment shall end.
+    /// 曲線セグメントの終点。
     #[required]
     pub end: Axes<Rel<Length>>,
 
-    /// Whether the `control-start`, `control-end`, and `end` coordinates are
-    /// relative to the previous point.
+    /// `control-start`、`control-end`、`end` の座標を直前の点に対する相対位置として扱うかどうか。
     #[default(false)]
     pub relative: bool,
 }
 
-/// Closes the curve by adding a segment from the last point to the start of the
-/// curve (or the last preceding `curve.move` point).
+/// 直前の点から曲線の始点（または直前の `curve.move` の点）までのセグメントを追加して、曲線を閉じます。
 ///
 /// ```example
 /// // We define a function to show the same shape with
@@ -363,26 +342,25 @@ pub struct CurveCubic {
 /// ```
 #[elem(name = "close", title = "Curve Close")]
 pub struct CurveClose {
-    /// How to close the curve.
+    /// 曲線を閉じる方法。
     pub mode: CloseMode,
 }
 
-/// How to close a curve.
+/// 曲線を閉じる方法。
 #[derive(Debug, Default, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum CloseMode {
-    /// Closes the curve with a smooth segment that takes into account the
-    /// control point opposite the start point.
+    /// 始点の反対側にある制御点を考慮した滑らかなセグメントで曲線を閉じます。
     #[default]
     Smooth,
-    /// Closes the curve with a straight line.
+    /// 直線で曲線を閉じます。
     Straight,
 }
 
-/// A curve consisting of movements, lines, and Bézier segments.
+/// 移動、直線、ベジェセグメントから構成される曲線。
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
 pub struct Curve(pub Vec<CurveItem>);
 
-/// An item in a curve.
+/// 曲線のアイテム。
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub enum CurveItem {
     Move(Point),
@@ -392,12 +370,12 @@ pub enum CurveItem {
 }
 
 impl Curve {
-    /// Creates an empty curve.
+    /// 空の曲線を作成します。
     pub const fn new() -> Self {
         Self(vec![])
     }
 
-    /// Creates a curve that describes a rectangle.
+    /// 矩形を表す曲線を作成します。
     pub fn rect(size: Size) -> Self {
         let z = Abs::zero();
         let point = Point::new;
@@ -410,7 +388,7 @@ impl Curve {
         curve
     }
 
-    /// Creates a curve that describes an axis-aligned ellipse.
+    /// 軸に沿った楕円を表す曲線を作成します。
     pub fn ellipse(size: Size) -> Self {
         // https://stackoverflow.com/a/2007782
         let z = Abs::zero();
@@ -430,32 +408,32 @@ impl Curve {
         curve
     }
 
-    /// Push a [`Move`](CurveItem::Move) item.
+    /// [`Move`](CurveItem::Move) アイテムを追加します。
     pub fn move_(&mut self, p: Point) {
         self.0.push(CurveItem::Move(p));
     }
 
-    /// Push a [`Line`](CurveItem::Line) item.
+    /// [`Line`](CurveItem::Line) アイテムを追加します。
     pub fn line(&mut self, p: Point) {
         self.0.push(CurveItem::Line(p));
     }
 
-    /// Push a [`Cubic`](CurveItem::Cubic) item.
+    /// [`Cubic`](CurveItem::Cubic) アイテムを追加します。
     pub fn cubic(&mut self, p1: Point, p2: Point, p3: Point) {
         self.0.push(CurveItem::Cubic(p1, p2, p3));
     }
 
-    /// Push a [`Close`](CurveItem::Close) item.
+    /// [`Close`](CurveItem::Close) アイテムを追加します。
     pub fn close(&mut self) {
         self.0.push(CurveItem::Close);
     }
 
-    /// Check if the curve is empty.
+    /// 曲線が空かどうかを判定します。
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 
-    /// Translate all points in this curve by the given offset.
+    /// この曲線の全ての点を指定したオフセットだけ平行移動します。
     pub fn translate(&mut self, offset: Point) {
         if offset.is_zero() {
             return;
@@ -474,7 +452,7 @@ impl Curve {
         }
     }
 
-    /// Computes the bounding box of this curve.
+    /// この曲線のバウンディングボックスを計算します。
     pub fn bbox(&self) -> Rect {
         let mut min = Point::splat(Abs::inf());
         let mut max = Point::splat(-Abs::inf());
@@ -512,7 +490,7 @@ impl Curve {
         Rect::new(min, max)
     }
 
-    /// Computes the size of the bounding box of this curve.
+    /// この曲線のバウンディングボックスのサイズを計算します。
     pub fn bbox_size(&self) -> Size {
         self.bbox().size()
     }
@@ -534,7 +512,7 @@ impl Curve {
         })
     }
 
-    /// When this curve is interpreted as a clip mask, would it contain `point`?
+    /// この曲線をクリップマスクとして解釈した場合、`point` を含むかどうか。
     pub fn contains(&self, fill_rule: FillRule, needle: Point) -> bool {
         let kurbo = kurbo::BezPath::from_vec(self.to_kurbo().collect());
         let windings = kurbo::Shape::winding(&kurbo, point_to_kurbo(needle));
@@ -544,8 +522,7 @@ impl Curve {
         }
     }
 
-    /// When this curve is stroked with `stroke`, would the stroke contain
-    /// `point`?
+    /// この曲線を `stroke` でストロークした場合、そのストロークが `point` を含むかどうか。
     pub fn stroke_contains(&self, stroke: &FixedStroke, needle: Point) -> bool {
         let width = stroke.thickness.to_raw();
         let cap = match stroke.cap {
