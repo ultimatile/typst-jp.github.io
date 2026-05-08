@@ -8,13 +8,13 @@ use crate::foundations::{Str, Value, func};
 /// The Unicode minus sign.
 pub const MINUS_SIGN: &str = "\u{2212}";
 
-/// Returns the string representation of a value.
+/// 値の文字列表現を返します。
 ///
-/// When inserted into content, most values are displayed as this representation
-/// in monospace with syntax-highlighting. The exceptions are `{none}`,
-/// integers, floats, strings, content, and functions.
+/// コンテンツに挿入された場合、ほとんどの値はこの表現でシンタックスハイライトされた
+/// 等幅で表示されます。例外は`{none}`、整数、浮動小数点数、文字列、
+/// コンテンツ、関数です。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #none vs #repr(none) \
 /// #"hello" vs #repr("hello") \
@@ -22,16 +22,15 @@ pub const MINUS_SIGN: &str = "\u{2212}";
 /// #[*Hi*] vs #repr([*Hi*])
 /// ```
 ///
-/// # For debugging purposes only { #debugging-only }
+/// # デバッグ目的のみ { #debugging-only }
 ///
-/// This function is for debugging purposes. Its output should not be considered
-/// stable and may change at any time.
+/// この関数はデバッグ目的のものです。
+/// その出力は安定したものとはみなされず、いつでも変更される可能性があります。
 ///
-/// To be specific, having the same `repr` does not guarantee that values are
-/// equivalent, and `repr` is not a strict inverse of [`eval`]. In the following
-/// example, for readability, the [`length`] is rounded to two significant
-/// digits and the parameter list and body of the
-/// [unnamed `function`]($function/#unnamed) are omitted.
+/// 具体的には、同じ`repr`を持つことが値の同等性を保証するわけではなく、
+/// `repr`は[`eval`]の厳密な逆関数ではありません。以下の例では、
+/// 読みやすさのため、[`length`]は有効数字2桁に丸められ、
+/// [無名`function`]($function/#unnamed)の引数リストと本体は省略されています。
 ///
 /// ```example
 /// #assert(2pt / 3 < 0.67pt)
@@ -41,7 +40,7 @@ pub const MINUS_SIGN: &str = "\u{2212}";
 /// ```
 #[func(title = "Representation")]
 pub fn repr(
-    /// The value whose string representation to produce.
+    /// 文字列表現を生成する対象の値。
     value: Value,
 ) -> Str {
     value.repr().into()
