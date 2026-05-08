@@ -121,19 +121,19 @@ pub(super) fn define(global: &mut Scope, inputs: Dict, features: &Features) {
     global.reset_category();
 }
 
-/// Fails with an error.
+/// エラーで失敗します。
 ///
-/// Arguments are displayed to the user (not rendered in the document) as
-/// strings, converting with `repr` if necessary.
+/// 引数は文字列としてユーザーに表示され（文書には描画されません）、
+/// 必要に応じて`repr`で変換されます。
 ///
-/// # Example
-/// The code below produces the error `panicked with: "this is wrong"`.
+/// # 例
+/// 以下のコードは`panicked with: "this is wrong"`というエラーを生成します。
 /// ```typ
 /// #panic("this is wrong")
 /// ```
 #[func(keywords = ["error"])]
 pub fn panic(
-    /// The values to panic with and display to the user.
+    /// パニックの引き起こしに用いられ、ユーザーに表示される値。
     #[variadic]
     values: Vec<Value>,
 ) -> StrResult<Never> {
