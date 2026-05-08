@@ -7,19 +7,17 @@ use typst_syntax::FileId;
 use crate::diag::{DeprecationSink, StrResult, bail};
 use crate::foundations::{Content, Scope, Value, repr, ty};
 
-/// A collection of variables and functions that are commonly related to
-/// a single theme.
+/// 共通のテーマに関連する変数と関数の集合。
 ///
-/// A module can
-/// - be built-in
-/// - stem from a [file import]($scripting/#modules)
-/// - stem from a [package import]($scripting/#packages) (and thus indirectly
-///   its entrypoint file)
-/// - result from a call to the [plugin]($plugin) function
+/// モジュールは次のいずれかです。
+/// - 組み込み
+/// - [ファイルインポート]($scripting/#modules)に由来
+/// - [パッケージインポート]($scripting/#packages)に由来
+///   （したがって間接的にそのエントリーポイントファイルに由来）
+/// - [plugin]($plugin)関数の呼び出し結果
 ///
-/// You can access definitions from the module using [field access
-/// notation]($scripting/#fields) and interact with it using the [import and
-/// include syntaxes]($scripting/#modules).
+/// モジュール内の定義には[フィールドアクセス記法]($scripting/#fields)でアクセスでき、
+/// [importおよびinclude構文]($scripting/#modules)で操作できます。
 ///
 /// ```example
 /// <<< #import "utils.typ"
@@ -32,19 +30,17 @@ use crate::foundations::{Content, Scope, Value, repr, ty};
 /// >>> #(-3)
 /// ```
 ///
-/// You can check whether a definition is present in a module using the `{in}`
-/// operator, with a string on the left-hand side. This can be useful to
-/// [conditionally access]($category/foundations/std/#conditional-access)
-/// definitions in a module.
+/// モジュール内に定義が存在するかどうかは、左辺に文字列を置いた`{in}`演算子で
+/// 確認できます。これはモジュール内の定義への
+/// [条件付きアクセス]($category/foundations/std/#conditional-access)に役立ちます。
 ///
 /// ```example
 /// #("table" in std) \
 /// #("nope" in std)
 /// ```
 ///
-/// Alternatively, it is possible to convert a module to a dictionary, and
-/// therefore access its contents dynamically, using the [dictionary
-/// constructor]($dictionary/#constructor).
+/// あるいは、[dictionaryコンストラクター]($dictionary/#constructor)を用いて
+/// モジュールを辞書に変換し、その内容に動的にアクセスすることもできます。
 #[ty(cast)]
 #[derive(Clone, Hash)]
 #[allow(clippy::derived_hash_with_manual_eq)]
