@@ -8,18 +8,16 @@ use crate::foundations::{
 };
 use crate::layout::Ratio;
 
-/// A floating-point number.
+/// 浮動小数点数。
 ///
-/// A limited-precision representation of a real number. Typst uses 64 bits to
-/// store floats. Wherever a float is expected, you can also pass an
-/// [integer]($int).
+/// 実数の精度に限りのある表現です。Typstは浮動小数点数を64ビットで保持します。
+/// 浮動小数点数が期待される箇所では、[整数]($int)を渡すこともできます。
 ///
-/// You can convert a value to a float with this type's constructor.
+/// 値はこの型のコンストラクターを使って浮動小数点数に変換できます。
 ///
-/// NaN and positive infinity are available as `{float.nan}` and `{float.inf}`
-/// respectively.
+/// NaNと正の無限大は、それぞれ`{float.nan}`と`{float.inf}`として利用できます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #3.14 \
 /// #1e4 \
@@ -30,22 +28,21 @@ type f64;
 
 #[scope]
 impl f64 {
-    /// Positive infinity.
+    /// 正の無限大。
     const INF: f64 = f64::INFINITY;
 
-    /// A NaN value, as defined by the
-    /// [IEEE 754 standard](https://en.wikipedia.org/wiki/IEEE_754).
+    /// [IEEE 754標準](https://en.wikipedia.org/wiki/IEEE_754)で定義される
+    /// NaN値。
     const NAN: f64 = f64::NAN;
 
-    /// Converts a value to a float.
+    /// 値を浮動小数点数に変換します。
     ///
-    /// - Booleans are converted to `0.0` or `1.0`.
-    /// - Integers are converted to the closest 64-bit float. For integers with
-    ///   absolute value less than `{calc.pow(2, 53)}`, this conversion is
-    ///   exact.
-    /// - Ratios are divided by 100%.
-    /// - Strings are parsed in base 10 to the closest 64-bit float. Exponential
-    ///   notation is supported.
+    /// - ブール値は`0.0`または`1.0`に変換されます。
+    /// - 整数は、最も近い64ビット浮動小数点数に変換されます。絶対値が
+    ///   `{calc.pow(2, 53)}`未満の整数では、この変換は正確です。
+    /// - 比率は100%で除算されます。
+    /// - 文字列は10進数として、最も近い64ビット浮動小数点数にパースされます。
+    ///   指数表記もサポートされます。
     ///
     /// ```example
     /// #float(false) \
@@ -57,16 +54,17 @@ impl f64 {
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The value that should be converted to a float.
+        /// 浮動小数点数に変換する値。
         value: ToFloat,
     ) -> f64 {
         value.0
     }
 
-    /// Checks if a float is not a number.
+    /// 浮動小数点数がNaNかどうかを判定します。
     ///
-    /// In IEEE 754, more than one bit pattern represents a NaN. This function
-    /// returns `true` if the float is any of those bit patterns.
+    /// IEEE 754では、複数のビットパターンがNaNを表します。
+    /// この関数は、浮動小数点数がそれらのビットパターンのいずれかである場合に
+    /// `true`を返します。
     ///
     /// ```example
     /// #float.is-nan(0) \
@@ -78,10 +76,10 @@ impl f64 {
         f64::is_nan(self)
     }
 
-    /// Checks if a float is infinite.
+    /// 浮動小数点数が無限大かどうかを判定します。
     ///
-    /// Floats can represent positive infinity and negative infinity. This
-    /// function returns `{true}` if the float is an infinity.
+    /// 浮動小数点数は正の無限大と負の無限大を表現できます。
+    /// この関数は、浮動小数点数が無限大である場合に`{true}`を返します。
     ///
     /// ```example
     /// #float.is-infinite(0) \
@@ -93,11 +91,11 @@ impl f64 {
         f64::is_infinite(self)
     }
 
-    /// Calculates the sign of a floating point number.
+    /// 浮動小数点数の符号を計算します。
     ///
-    /// - If the number is positive (including `{+0.0}`), returns `{1.0}`.
-    /// - If the number is negative (including `{-0.0}`), returns `{-1.0}`.
-    /// - If the number is NaN, returns `{float.nan}`.
+    /// - 数値が正である場合（`{+0.0}`を含む）、`{1.0}`を返します。
+    /// - 数値が負である場合（`{-0.0}`を含む）、`{-1.0}`を返します。
+    /// - 数値がNaNの場合、`{float.nan}`を返します。
     ///
     /// ```example
     /// #(5.0).signum() \
@@ -110,7 +108,7 @@ impl f64 {
         f64::signum(self)
     }
 
-    /// Interprets bytes as a float.
+    /// バイト列を浮動小数点数として解釈します。
     ///
     /// ```example
     /// #float.from-bytes(bytes((0, 0, 0, 0, 0, 0, 240, 63))) \
@@ -118,14 +116,13 @@ impl f64 {
     /// ```
     #[func]
     pub fn from_bytes(
-        /// The bytes that should be converted to a float.
+        /// 浮動小数点数に変換するバイト列。
         ///
-        /// Must have a length of either 4 or 8. The bytes are then
-        /// interpreted in [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754)'s
-        /// binary32 (single-precision) or binary64 (double-precision) format
-        /// depending on the length of the bytes.
+        /// 長さは4または8でなければなりません。バイト列は、その長さに応じて
+        /// [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754)のbinary32（単精度）
+        /// またはbinary64（倍精度）形式として解釈されます。
         bytes: Bytes,
-        /// The endianness of the conversion.
+        /// 変換のエンディアン。
         #[named]
         #[default(Endianness::Little)]
         endian: Endianness,
@@ -147,7 +144,7 @@ impl f64 {
         bail!("bytes must have a length of 4 or 8");
     }
 
-    /// Converts a float to bytes.
+    /// 浮動小数点数をバイト列に変換します。
     ///
     /// ```example
     /// #array(1.0.to-bytes(endian: "big")) \
@@ -156,17 +153,15 @@ impl f64 {
     #[func]
     pub fn to_bytes(
         self,
-        /// The endianness of the conversion.
+        /// 変換のエンディアン。
         #[named]
         #[default(Endianness::Little)]
         endian: Endianness,
-        /// The size of the resulting bytes.
+        /// 結果のバイト列のサイズ。
         ///
-        /// This must be either 4 or 8. The call will return the
-        /// representation of this float in either
-        /// [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754)'s binary32
-        /// (single-precision) or binary64 (double-precision) format
-        /// depending on the provided size.
+        /// これは4または8でなければなりません。指定されたサイズに応じて、
+        /// 呼び出しは浮動小数点数を[IEEE 754](https://en.wikipedia.org/wiki/IEEE_754)
+        /// のbinary32（単精度）またはbinary64（倍精度）形式で表したものを返します。
         #[named]
         #[default(8)]
         size: u32,
