@@ -179,21 +179,21 @@
   category: foundations
   path: ["sys"]
   details: |
-    Module for system interactions.
+    システムとやり取りするためのモジュール。
 
-    This module defines the following items:
+    このモジュールは以下の項目を定義します。
 
-    - The `sys.version` constant (of type [`version`]) that specifies
-      the currently active Typst compiler version.
+    - `sys.version`定数（[`version`]型）。
+      現在有効なTypstコンパイラーのバージョンを示します。
 
-    - The `sys.inputs` [dictionary], which makes external inputs
-      available to the project. An input specified in the command line as
-      `--input key=value` becomes available under `sys.inputs.key` as
-      `{"value"}`. To include spaces in the value, it may be enclosed with
-      single or double quotes.
+    - `sys.inputs`[dictionary]。
+      外部入力をプロジェクトで利用できるようにします。
+      コマンドラインで`--input key=value`として指定した入力は、
+      `sys.inputs.key`から`{"value"}`として取得できます。
+      値に空白を含めるには、シングルクォートまたはダブルクォートで囲みます。
 
-      The value is always of type [string]($str). More complex data
-      may be parsed manually using functions like [`json`]($json).
+      値の型は常に[文字列]($str)です。
+      より複雑なデータは、[`json`]($json)などの関数を使って手動でパースできます。
 
 - name: sym
   title: General
