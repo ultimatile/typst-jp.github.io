@@ -8,15 +8,14 @@ use crate::foundations::{
     CastInfo, FromValue, IntoValue, Reflect, Repr, Type, Value, cast, ty,
 };
 
-/// A value that indicates the absence of any other value.
+/// 他の値が存在しないことを示す値。
 ///
-/// The none type has exactly one value: `{none}`.
+/// none型は`{none}`という1つの値だけを持ちます。
 ///
-/// When inserted into the document, it is not visible. This is also the value
-/// that is produced by empty code blocks. It can be
-/// [joined]($scripting/#blocks) with any value, yielding the other value.
+/// 文書に挿入されても表示されません。これは空のコードブロックが生成する値でもあります。
+/// 任意の値と[結合]($scripting/#blocks)でき、結合結果は他方の値となります。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// Not visible: #none
 /// ```
