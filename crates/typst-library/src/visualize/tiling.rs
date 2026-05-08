@@ -13,15 +13,15 @@ use crate::introspection::Locator;
 use crate::layout::{Abs, Axes, Frame, Length, Region, Size};
 use crate::visualize::RelativeTo;
 
-/// A repeating tiling fill.
+/// 繰り返しのタイリング塗りつぶし。
 ///
-/// Typst supports the most common type of tilings, where a pattern is repeated
-/// in a grid-like fashion, covering the entire area of an element that is
-/// filled or stroked. The pattern is defined by a tile size and a body defining
-/// the content of each cell. You can also add horizontal or vertical spacing
-/// between the cells of the tiling.
+/// Typstは、塗りつぶされたりストロークされたりする要素の領域全体を覆うように
+/// パターンが格子状に繰り返される最も一般的なタイプのタイリングをサポートして
+/// います。パターンはタイルサイズと、各セルの内容を定義するbodyによって
+/// 定義されます。タイリングのセルの間に水平方向や垂直方向の間隔を追加する
+/// こともできます。
 ///
-/// # Examples
+/// # 例
 ///
 /// ```example
 /// #let pat = tiling(size: (30pt, 30pt))[
@@ -32,11 +32,11 @@ use crate::visualize::RelativeTo;
 /// #rect(fill: pat, width: 100%, height: 60pt, stroke: 1pt)
 /// ```
 ///
-/// Tilings are also supported on text, but only when setting the
-/// [relativeness]($tiling.relative) to either `{auto}` (the default value) or
-/// `{"parent"}`. To create word-by-word or glyph-by-glyph tilings, you can
-/// wrap the words or characters of your text in [boxes]($box) manually or
-/// through a [show rule]($styling/#show-rules).
+/// タイリングは文章に対してもサポートされていますが、[相対性]($tiling.relative)
+/// を `{auto}`（デフォルト値）または `{"parent"}` に設定した場合に限ります。
+/// 単語ごとまたはグリフごとのタイリングを作成するには、文章の単語や文字を
+/// 手動で、もしくは[showルール]($styling/#show-rules)によって
+/// [ボックス]($box)で包むことができます。
 ///
 /// ```example
 /// #let pat = tiling(
@@ -53,11 +53,10 @@ use crate::visualize::RelativeTo;
 /// #lorem(10)
 /// ```
 ///
-/// You can also space the elements further or closer apart using the
-/// [`spacing`]($tiling.spacing) feature of the tiling. If the spacing
-/// is lower than the size of the tiling, the tiling will overlap.
-/// If it is higher, the tiling will have gaps of the same color as the
-/// background of the tiling.
+/// タイリングの[`spacing`]($tiling.spacing)機能を使うことで、要素同士を
+/// より広く、あるいはより近く配置することもできます。spacingがタイリングの
+/// サイズよりも小さい場合、タイリングは重なります。大きい場合、タイリングは
+/// タイリングの背景と同じ色の隙間ができます。
 ///
 /// ```example
 /// #let pat = tiling(
@@ -78,26 +77,24 @@ use crate::visualize::RelativeTo;
 /// )
 /// ```
 ///
-/// # Relativeness
-/// The location of the starting point of the tiling is dependent on the
-/// dimensions of a container. This container can either be the shape that it is
-/// being painted on, or the closest surrounding container. This is controlled
-/// by the `relative` argument of a tiling constructor. By default, tilings
-/// are relative to the shape they are being painted on, unless the tiling is
-/// applied on text, in which case they are relative to the closest ancestor
-/// container.
+/// # 相対性
+/// タイリングの開始点の位置はコンテナの寸法に依存します。このコンテナは、
+/// 描画対象の図形そのものか、最も近い周囲のコンテナのいずれかです。これは
+/// タイリングコンストラクターの `relative` 引数で制御します。デフォルトでは、
+/// タイリングは描画対象の図形に対して相対的です。ただし、タイリングが文章に
+/// 適用される場合は、最も近い祖先のコンテナに対して相対的になります。
 ///
-/// Typst determines the ancestor container as follows:
-/// - For shapes that are placed at the root/top level of the document, the
-///   closest ancestor is the page itself.
-/// - For other shapes, the ancestor is the innermost [`block`] or [`box`] that
-///   contains the shape. This includes the boxes and blocks that are implicitly
-///   created by show rules and elements. For example, a [`rotate`] will not
-///   affect the parent of a gradient, but a [`grid`] will.
+/// Typstは祖先のコンテナを以下のように決定します。
+/// - 文書のルート/最上位レベルに配置された図形の場合、最も近い祖先はページ
+///   自体です。
+/// - その他の図形の場合、祖先はその図形を含む最も内側の[`block`]または
+///   [`box`]です。これには、showルールや要素によって暗黙的に作成された
+///   ボックスやブロックも含まれます。例えば、[`rotate`]はグラデーションの
+///   親に影響しませんが、[`grid`]は影響します。
 ///
-/// # Compatibility
-/// This type used to be called `pattern`. The name remains as an alias, but is
-/// deprecated since Typst 0.13.
+/// # 互換性
+/// この型は以前 `pattern` と呼ばれていました。エイリアスとして名前は残って
+/// いますが、Typst 0.13以降は廃止予定です。
 #[ty(scope, cast, keywords = ["pattern"])]
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct Tiling(Arc<Repr>);
@@ -117,7 +114,7 @@ struct Repr {
 
 #[scope]
 impl Tiling {
-    /// Construct a new tiling.
+    /// 新しいタイリングを構築します。
     ///
     /// ```example
     /// #let pat = tiling(
@@ -139,24 +136,23 @@ impl Tiling {
     pub fn construct(
         engine: &mut Engine,
         span: Span,
-        /// The bounding box of each cell of the tiling.
+        /// タイリングの各セルのバウンディングボックス。
         #[named]
         #[default(Spanned::new(Smart::Auto, Span::detached()))]
         size: Spanned<Smart<Axes<Length>>>,
-        /// The spacing between cells of the tiling.
+        /// タイリングのセル間の間隔。
         #[named]
         #[default(Spanned::new(Axes::splat(Length::zero()), Span::detached()))]
         spacing: Spanned<Axes<Length>>,
-        /// The [relative placement](#relativeness) of the tiling.
+        /// タイリングの[相対配置](#relativeness)。
         ///
-        /// For an element placed at the root/top level of the document, the
-        /// parent is the page itself. For other elements, the parent is the
-        /// innermost block, box, column, grid, or stack that contains the
-        /// element.
+        /// 文書のルート/最上位レベルに配置された要素の場合、親はページ自体
+        /// です。その他の要素の場合、親はその要素を含む最も内側のblock、box、
+        /// column、grid、またはstackです。
         #[named]
         #[default(Smart::Auto)]
         relative: Smart<RelativeTo>,
-        /// The content of each cell of the tiling.
+        /// タイリングの各セルの内容。
         body: Content,
     ) -> SourceResult<Tiling> {
         let size_span = size.span;
