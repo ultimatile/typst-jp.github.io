@@ -9,13 +9,11 @@ use crate::foundations::{
 use crate::layout::{Abs, Length};
 use crate::visualize::{Color, Gradient, Paint, Tiling};
 
-/// Defines how to draw a line.
+/// 線を描画する方法を定義します。
 ///
-/// A stroke has a _paint_ (a solid color or gradient), a _thickness,_ a line
-/// _cap,_ a line _join,_ a _miter limit,_ and a _dash_ pattern. All of these
-/// values are optional and have sensible defaults.
+/// ストロークには、_paint_（単色またはグラデーション）、_thickness（線の太さ）_、線の_cap（端の形状）_、線の_join（接合の形状）_、_miter limit（マイター制限）_、および_dash_パターンがあります。これらの値は全てオプションであり、適切なデフォルト値が設定されています。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #set line(length: 100%)
 /// #stack(
@@ -27,46 +25,36 @@ use crate::visualize::{Color, Gradient, Paint, Tiling};
 /// )
 /// ```
 ///
-/// # Simple strokes
-/// You can create a simple solid stroke from a color, a thickness, or a
-/// combination of the two. Specifically, wherever a stroke is expected you can
-/// pass any of the following values:
+/// # シンプルなストローク
+/// 色、太さ、またはその両方の組み合わせから、シンプルな単色のストロークを作成できます。具体的には、ストロークが期待される場所であればどこでも、以下のいずれかの値を渡せます。
 ///
-/// - A length specifying the stroke's thickness. The color is inherited,
-///   defaulting to black.
-/// - A color to use for the stroke. The thickness is inherited, defaulting to
-///   `{1pt}`.
-/// - A stroke combined from color and thickness using the `+` operator as in
-///   `{2pt + red}`.
+/// - ストロークの太さを指定する長さ。色は継承され、デフォルトは黒です。
+/// - ストロークに使用する色。太さは継承され、デフォルトは `{1pt}` です。
+/// - `{2pt + red}` のように `+` 演算子を使って色と太さを組み合わせたストローク。
 ///
-/// For full control, you can also provide a [dictionary] or a `{stroke}` object
-/// to any function that expects a stroke. The dictionary's keys may include any
-/// of the parameters for the constructor function, shown below.
+/// 完全に制御するには、ストロークが期待される任意の関数に[辞書]($dictionary)または `{stroke}` オブジェクトを渡すこともできます。辞書のキーには、以下に示すコンストラクター関数のパラメーターのいずれかを含められます。
 ///
-/// # Fields
-/// On a stroke object, you can access any of the fields listed in the
-/// constructor function. For example, `{(2pt + blue).thickness}` is `{2pt}`.
-/// Meanwhile, `{stroke(red).cap}` is `{auto}` because it's unspecified. Fields
-/// set to `{auto}` are inherited.
+/// # フィールド
+/// ストロークオブジェクトでは、コンストラクター関数に列挙されている任意のフィールドにアクセスできます。例えば、`{(2pt + blue).thickness}` は `{2pt}` となります。一方、`{stroke(red).cap}` は指定されていないため `{auto}` となります。`{auto}` に設定されたフィールドは継承されます。
 #[ty(scope, cast)]
 #[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
 pub struct Stroke<T: Numeric = Length> {
-    /// The stroke's paint.
+    /// ストロークのpaint。
     pub paint: Smart<Paint>,
-    /// The stroke's thickness.
+    /// ストロークの太さ。
     pub thickness: Smart<T>,
-    /// The stroke's line cap.
+    /// ストロークの線端の形状。
     pub cap: Smart<LineCap>,
-    /// The stroke's line join.
+    /// ストロークの線の接合形状。
     pub join: Smart<LineJoin>,
-    /// The stroke's line dash pattern.
+    /// ストロークの破線パターン。
     pub dash: Smart<Option<DashPattern<T>>>,
-    /// The miter limit.
+    /// マイター制限。
     pub miter_limit: Smart<Scalar>,
 }
 
 impl Stroke {
-    /// Create a stroke from a paint and a thickness.
+    /// paintと太さからストロークを作成します。
     pub fn from_pair(paint: impl Into<Paint>, thickness: Length) -> Self {
         Self {
             paint: Smart::Custom(paint.into()),
@@ -78,13 +66,9 @@ impl Stroke {
 
 #[scope]
 impl Stroke {
-    /// Converts a value to a stroke or constructs a stroke with the given
-    /// parameters.
+    /// 値をストロークに変換するか、指定されたパラメーターでストロークを構築します。
     ///
-    /// Note that in most cases you do not need to convert values to strokes in
-    /// order to use them, as they will be converted automatically. However,
-    /// this constructor can be useful to ensure a value has all the fields of a
-    /// stroke.
+    /// ほとんどの場合、値を使用するためにストロークに変換する必要はありません。これは自動的に変換されるためです。ただし、このコンストラクターは値がストロークの全てのフィールドを持つことを保証するのに有用です。
     ///
     /// ```example
     /// #let my-func(x) = {
@@ -99,34 +83,34 @@ impl Stroke {
     pub fn construct(
         args: &mut Args,
 
-        /// The color or gradient to use for the stroke.
+        /// ストロークに使用する色またはグラデーション。
         ///
-        /// If set to `{auto}`, the value is inherited, defaulting to `{black}`.
+        /// `{auto}` に設定された場合、値は継承され、デフォルトは `{black}` です。
         #[external]
         paint: Smart<Paint>,
 
-        /// The stroke's thickness.
+        /// ストロークの太さ。
         ///
-        /// If set to `{auto}`, the value is inherited, defaulting to `{1pt}`.
+        /// `{auto}` に設定された場合、値は継承され、デフォルトは `{1pt}` です。
         #[external]
         thickness: Smart<Length>,
 
-        /// How the ends of the stroke are rendered.
+        /// ストロークの両端をどのように描画するか。
         ///
-        /// If set to `{auto}`, the value is inherited, defaulting to `{"butt"}`.
+        /// `{auto}` に設定された場合、値は継承され、デフォルトは `{"butt"}` です。
         #[external]
         cap: Smart<LineCap>,
 
-        /// How sharp turns are rendered.
+        /// 鋭く曲がった部分をどのように描画するか。
         ///
-        /// If set to `{auto}`, the value is inherited, defaulting to `{"miter"}`.
+        /// `{auto}` に設定された場合、値は継承され、デフォルトは `{"miter"}` です。
         #[external]
         join: Smart<LineJoin>,
 
-        /// The dash pattern to use. This can be:
+        /// 使用する破線パターン。次のいずれかにできます。
         ///
-        /// - One of the predefined patterns:
-        ///   - `{"solid"}` or `{none}`
+        /// - 定義済みのパターンの一つ：
+        ///   - `{"solid"}` または `{none}`
         ///   - `{"dotted"}`
         ///   - `{"densely-dotted"}`
         ///   - `{"loosely-dotted"}`
@@ -136,14 +120,10 @@ impl Stroke {
         ///   - `{"dash-dotted"}`
         ///   - `{"densely-dash-dotted"}`
         ///   - `{"loosely-dash-dotted"}`
-        /// - An [array] with alternating lengths for dashes and gaps. You can
-        ///   also use the string `{"dot"}` for a length equal to the line
-        ///   thickness.
-        /// - A [dictionary] with the keys `array` (same as the array above),
-        ///   and `phase` (of type [length]), which defines where in the pattern
-        ///   to start drawing.
+        /// - 線分と間隔の長さを交互に並べた[配列]($array)。線の太さに等しい長さを表すために、文字列 `{"dot"}` も使用できます。
+        /// - キー `array`（上記の配列と同じ）と `phase`（[長さ]($length)型、パターンの描画開始位置を定義）を持つ[辞書]($dictionary)。
         ///
-        /// If set to `{auto}`, the value is inherited, defaulting to `{none}`.
+        /// `{auto}` に設定された場合、値は継承され、デフォルトは `{none}` です。
         ///
         /// ```example
         /// #set line(length: 100%, stroke: 2pt)
@@ -157,15 +137,11 @@ impl Stroke {
         #[external]
         dash: Smart<Option<DashPattern>>,
 
-        /// Number at which protruding sharp bends are rendered with a bevel
-        /// instead or a miter join. The higher the number, the sharper an angle
-        /// can be before it is bevelled. Only applicable if `join` is
-        /// `{"miter"}`.
+        /// 突き出した鋭角の曲がりがマイター結合ではなくベベルで描画される閾値。値が大きいほど、ベベル化される前により鋭い角度を許容します。`join` が `{"miter"}` の場合のみ適用されます。
         ///
-        /// Specifically, the miter limit is the maximum ratio between the
-        /// corner's protrusion length and the stroke's thickness.
+        /// 具体的には、マイター制限は角の突出長とストロークの太さとの最大比率です。
         ///
-        /// If set to `{auto}`, the value is inherited, defaulting to `{4.0}`.
+        /// `{auto}` に設定された場合、値は継承され、デフォルトは `{4.0}` です。
         ///
         /// ```example
         /// #let items = (
@@ -207,7 +183,7 @@ impl Stroke {
 }
 
 impl<T: Numeric> Stroke<T> {
-    /// Map the contained lengths with `f`.
+    /// 含まれる長さを `f` でマッピングします。
     pub fn map<F, U: Numeric>(self, f: F) -> Stroke<U>
     where
         F: Fn(T) -> U,
@@ -236,7 +212,7 @@ impl<T: Numeric> Stroke<T> {
 }
 
 impl Stroke<Abs> {
-    /// Unpack the stroke, filling missing fields from the `default`.
+    /// ストロークを展開し、不足しているフィールドを `default` から補完します。
     pub fn unwrap_or(self, default: FixedStroke) -> FixedStroke {
         let thickness = self.thickness.unwrap_or(default.thickness);
         let dash = self
@@ -259,7 +235,7 @@ impl Stroke<Abs> {
         }
     }
 
-    /// Unpack the stroke, filling missing fields with the default values.
+    /// ストロークを展開し、不足しているフィールドをデフォルト値で補完します。
     pub fn unwrap_or_default(self) -> FixedStroke {
         // we want to do this; the Clippy lint is not type-aware
         #[allow(clippy::unwrap_or_default)]
@@ -407,14 +383,14 @@ cast! {
     self => self.map(Length::from).into_value(),
 }
 
-/// The line cap of a stroke
+/// ストロークの線端の形状
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum LineCap {
-    /// Square stroke cap with the edge at the stroke's end point.
+    /// ストロークの終点に端を持つ正方形の線端。
     Butt,
-    /// Circular stroke cap centered at the stroke's end point.
+    /// ストロークの終点を中心とする円形の線端。
     Round,
-    /// Square stroke cap centered at the stroke's end point.
+    /// ストロークの終点を中心とする正方形の線端。
     Square,
 }
 
@@ -428,16 +404,14 @@ impl Repr for LineCap {
     }
 }
 
-/// The line join of a stroke
+/// ストロークの線の接合形状
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum LineJoin {
-    /// Segments are joined with sharp edges. Sharp bends exceeding the miter
-    /// limit are bevelled instead.
+    /// セグメントは鋭い角で接合されます。マイター制限を超える鋭い曲がりは、代わりにベベルで接合されます。
     Miter,
-    /// Segments are joined with circular corners.
+    /// セグメントは円形の角で接合されます。
     Round,
-    /// Segments are joined with a bevel (a straight edge connecting the butts
-    /// of the joined segments).
+    /// セグメントはベベル（接合されるセグメントの端を結ぶ直線の縁）で接合されます。
     Bevel,
 }
 
@@ -451,12 +425,12 @@ impl Repr for LineJoin {
     }
 }
 
-/// A line dash pattern.
+/// 破線パターン。
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct DashPattern<T: Numeric = Length, DT = DashLength<T>> {
-    /// The dash array.
+    /// 破線の配列。
     pub array: Vec<DT>,
-    /// The dash phase.
+    /// 破線の位相。
     pub phase: T,
 }
 
@@ -523,7 +497,7 @@ cast! {
     },
 }
 
-/// The length of a dash in a line dash pattern.
+/// 破線パターンにおける線分の長さ。
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub enum DashLength<T: Numeric = Length> {
     LineWidth,
@@ -575,25 +549,25 @@ cast! {
     v: Length => Self::Length(v),
 }
 
-/// A fully specified stroke of a geometric shape.
+/// 幾何学的形状の完全に指定されたストローク。
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct FixedStroke {
-    /// The stroke's paint.
+    /// ストロークのpaint。
     pub paint: Paint,
-    /// The stroke's thickness.
+    /// ストロークの太さ。
     pub thickness: Abs,
-    /// The stroke's line cap.
+    /// ストロークの線端の形状。
     pub cap: LineCap,
-    /// The stroke's line join.
+    /// ストロークの線の接合形状。
     pub join: LineJoin,
-    /// The stroke's line dash pattern.
+    /// ストロークの破線パターン。
     pub dash: Option<DashPattern<Abs, Abs>>,
-    /// The miter limit. Defaults to 4.0, same as `tiny-skia`.
+    /// マイター制限。デフォルトは `tiny-skia` と同じ 4.0 です。
     pub miter_limit: Scalar,
 }
 
 impl FixedStroke {
-    /// Create a stroke from a paint and a thickness.
+    /// paintと太さからストロークを作成します。
     pub fn from_pair(paint: impl Into<Paint>, thickness: Abs) -> Self {
         Self {
             paint: paint.into(),
