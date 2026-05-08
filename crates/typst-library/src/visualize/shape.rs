@@ -253,9 +253,9 @@ pub struct EllipseElem {
     pub body: Option<Content>,
 }
 
-/// A circle with optional content.
+/// オプションでコンテンツを含められる円。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// // Without content.
 /// #circle(radius: 25pt)
@@ -269,16 +269,13 @@ pub struct EllipseElem {
 /// ```
 #[elem]
 pub struct CircleElem {
-    /// The circle's radius. This is mutually exclusive with `width` and
-    /// `height`.
+    /// 円の半径。`width`および`height`とは排他です。
     #[external]
     pub radius: Length,
 
-    /// The circle's width. This is mutually exclusive with `radius` and
-    /// `height`.
+    /// 円の幅。`radius`および`height`とは排他です。
     ///
-    /// In contrast to `radius`, this can be relative to the parent container's
-    /// width.
+    /// `radius`とは異なり、こちらは親コンテナーの幅に対する相対指定が可能です。
     #[parse(
         let size = args
             .named::<Smart<Length>>("radius")?
@@ -290,40 +287,38 @@ pub struct CircleElem {
     )]
     pub width: Smart<Rel<Length>>,
 
-    /// The circle's height. This is mutually exclusive with `radius` and
-    /// `width`.
+    /// 円の高さ。`radius`および`width`とは排他です。
     ///
-    /// In contrast to `radius`, this can be relative to the parent container's
-    /// height.
+    /// `radius`とは異なり、こちらは親コンテナーの高さに対する相対指定が可能です。
     #[parse(match size {
         None => args.named("height")?,
         size => size.map(Into::into),
     })]
     pub height: Sizing,
 
-    /// How to fill the circle. See the [rectangle's documentation]($rect.fill)
-    /// for more details.
+    /// 円の塗りつぶし方。
+    /// 詳細は[rectangleのドキュメント]($rect.fill)を参照してください。
     pub fill: Option<Paint>,
 
-    /// How to stroke the circle. See the
-    /// [rectangle's documentation]($rect.stroke) for more details.
+    /// 円のストロークの設定方法。
+    /// 詳細は[rectangleのドキュメント]($rect.stroke)を参照してください。
     #[fold]
     #[default(Smart::Auto)]
     pub stroke: Smart<Option<Stroke>>,
 
-    /// How much to pad the circle's content. See the
-    /// [box's documentation]($box.inset) for more details.
+    /// 円のコンテンツのパディング量。
+    /// 詳細は[boxのドキュメント]($box.inset)を参照してください。
     #[fold]
     #[default(Sides::splat(Some(Abs::pt(5.0).into())))]
     pub inset: Sides<Option<Rel<Length>>>,
 
-    /// How much to expand the circle's size without affecting the layout. See
-    /// the [box's documentation]($box.outset) for more details.
+    /// レイアウトに影響を与えずに円の大きさを拡大する量。
+    /// 詳細は[boxのドキュメント]($box.outset)を参照してください。
     #[fold]
     pub outset: Sides<Option<Rel<Length>>>,
 
-    /// The content to place into the circle. The circle expands to fit this
-    /// content, keeping the 1-1 aspect ratio.
+    /// 円に配置するコンテンツ。
+    /// 円はこのコンテンツにあわせて、1:1のアスペクト比を保ったまま拡大します。
     #[positional]
     pub body: Option<Content>,
 }
