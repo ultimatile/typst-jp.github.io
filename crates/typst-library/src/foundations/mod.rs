@@ -150,23 +150,22 @@ pub fn panic(
     Err(msg)
 }
 
-/// Ensures that a condition is fulfilled.
+/// 条件が満たされていることを保証します。
 ///
-/// Fails with an error if the condition is not fulfilled. Does not
-/// produce any output in the document.
+/// 条件が満たされていない場合はエラーになります。文書には何も出力しません。
 ///
-/// If you wish to test equality between two values, see [`assert.eq`] and
-/// [`assert.ne`].
+/// 2つの値が等しいかどうかをテストしたい場合は、[`assert.eq`]と[`assert.ne`]を
+/// 参照してください。
 ///
-/// # Example
+/// # 例
 /// ```typ
 /// #assert(1 < 2, message: "math broke")
 /// ```
 #[func(scope)]
 pub fn assert(
-    /// The condition that must be true for the assertion to pass.
+    /// アサーションが通るために真でなければならない条件。
     condition: bool,
-    /// The error message when the assertion fails.
+    /// アサーションが失敗したときのエラーメッセージ。
     #[named]
     message: Option<EcoString>,
 ) -> StrResult<NoneValue> {
@@ -182,22 +181,21 @@ pub fn assert(
 
 #[scope]
 impl assert {
-    /// Ensures that two values are equal.
+    /// 2つの値が等しいことを確認します。
     ///
-    /// Fails with an error if the first value is not equal to the second. Does not
-    /// produce any output in the document.
+    /// 1つ目の値が2つ目の値と等しくない場合、エラーで失敗します。
+    /// 文書には何も出力しません。
     ///
     /// ```typ
     /// #assert.eq(10, 10)
     /// ```
     #[func(title = "Assert Equal")]
     pub fn eq(
-        /// The first value to compare.
+        /// 比較する1つ目の値。
         left: Value,
-        /// The second value to compare.
+        /// 比較する2つ目の値。
         right: Value,
-        /// An optional message to display on error instead of the representations
-        /// of the compared values.
+        /// エラー時に比較対象の値の表現の代わりに表示する任意のメッセージ。
         #[named]
         message: Option<EcoString>,
     ) -> StrResult<NoneValue> {
@@ -215,22 +213,21 @@ impl assert {
         Ok(NoneValue)
     }
 
-    /// Ensures that two values are not equal.
+    /// 2つの値が等しくないことを確認します。
     ///
-    /// Fails with an error if the first value is equal to the second. Does not
-    /// produce any output in the document.
+    /// 1つ目の値が2つ目の値と等しい場合、エラーで失敗します。
+    /// 文書には何も出力しません。
     ///
     /// ```typ
     /// #assert.ne(3, 4)
     /// ```
     #[func(title = "Assert Not Equal")]
     pub fn ne(
-        /// The first value to compare.
+        /// 比較する1つ目の値。
         left: Value,
-        /// The second value to compare.
+        /// 比較する2つ目の値。
         right: Value,
-        /// An optional message to display on error instead of the representations
-        /// of the compared values.
+        /// エラー時に比較対象の値の表現の代わりに表示する任意のメッセージ。
         #[named]
         message: Option<EcoString>,
     ) -> StrResult<NoneValue> {
