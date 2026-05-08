@@ -918,15 +918,15 @@ fn string_is_empty() -> EcoString {
     "string is empty".into()
 }
 
-/// A regular expression.
+/// 正規表現（regex）。
 ///
-/// Can be used as a [show rule selector]($styling/#show-rules) and with
-/// [string methods]($str) like `find`, `split`, and `replace`.
+/// [showルールのセレクター]($styling/#show-rules)として使えるほか、
+/// `find`、`split`、`replace`などの[文字列メソッド]($str)で使えます。
 ///
-/// [See here](https://docs.rs/regex/latest/regex/#syntax) for a specification
-/// of the supported syntax.
+/// サポートされる構文の仕様については[こちら](https://docs.rs/regex/latest/regex/#syntax)を
+/// 参照してください。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// // Works with string methods.
 /// #"a,b;c".split(regex("[,;]"))
@@ -949,19 +949,20 @@ impl Regex {
 
 #[scope]
 impl Regex {
-    /// Create a regular expression from a string.
+    /// 文字列からregexを生成します。
     #[func(constructor)]
     pub fn construct(
-        /// The regular expression as a string.
+        /// 文字列としてのregex。
         ///
-        /// Most regex escape sequences just work because they are not valid Typst
-        /// escape sequences. To produce regex escape sequences that are also valid in
-        /// Typst (e.g. `[\\]`), you need to escape twice. Thus, to match a verbatim
-        /// backslash, you would need to write `{regex("\\\\")}`.
+        /// regexのほとんどのエスケープシーケンスは、Typstの有効なエスケープシーケンスではないため、
+        /// そのまま機能します。Typstでも有効なregexエスケープシーケンス（例：`[\\]`）を
+        /// 生成するには、二重にエスケープする必要があります。
+        /// したがって、文字通りのバックスラッシュにマッチさせるには、
+        /// `{regex("\\\\")}`と書く必要があります。
         ///
-        /// If you need many escape sequences, you can also create a raw element
-        /// and extract its text to use it for your regular expressions:
-        /// ```{regex(`\d+\.\d+\.\d+`.text)}```.
+        /// 多くのエスケープシーケンスが必要な場合、rawの要素を生成し、そのテキストを抽出して
+        /// regexに使うこともできます。
+        /// ```{regex(`\d+\.\d+\.\d+`.text)}```
         regex: Spanned<Str>,
     ) -> SourceResult<Regex> {
         Self::new(&regex.v).at(regex.span)
