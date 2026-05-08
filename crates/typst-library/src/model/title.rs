@@ -5,20 +5,16 @@ use crate::layout::{BlockElem, Em};
 use crate::model::DocumentElem;
 use crate::text::{FontWeight, TextElem, TextSize};
 
-/// A document title.
+/// 文書のタイトル。
 ///
-/// This should be used to display the main title of the whole document and
-/// should occur only once per document. In contrast, level 1
-/// [headings]($heading) are intended to be used for the top-level sections of
-/// the document.
+/// 文書全体のメインタイトルを表示するために使用し、1つの文書につき1度だけ登場すべきです。
+/// 一方、レベル1の[見出し]($heading)は、文書の最上位のセクションに使用することを意図しています。
 ///
-/// Note that additional frontmatter (like an author list) that should appear
-/// together with the title does not belong in its body.
+/// タイトルとともに表示される追加のフロントマター（著者リストなど）は、本文には含めないでください。
 ///
-/// In HTML export, this shows as a `h1` element while level 1 headings show
-/// as `h2` elements.
+/// HTMLエクスポートでは、これは`h1`要素として表示され、レベル1の見出しは`h2`要素として表示されます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #set document(
 ///   title: [Interstellar Mail Delivery]
@@ -31,11 +27,10 @@ use crate::text::{FontWeight, TextElem, TextSize};
 /// ```
 #[elem(Locatable, Tagged, ShowSet)]
 pub struct TitleElem {
-    /// The content of the title.
+    /// タイトルの内容。
     ///
-    /// When omitted (or `{auto}`), this will default to [`document.title`]. In
-    /// this case, a document title must have been previously set with
-    /// `{set document(title: [..])}`.
+    /// 省略された場合（または`{auto}`の場合）、これは[`document.title`]がデフォルトとなります。
+    /// この場合、`{set document(title: [..])}`によって事前に文書のタイトルが設定されている必要があります。
     ///
     /// ```example
     /// #set document(title: "Course ABC, Homework 1")
