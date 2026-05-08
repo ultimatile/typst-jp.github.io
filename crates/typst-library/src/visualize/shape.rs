@@ -2,9 +2,9 @@ use crate::foundations::{Cast, Content, Smart, elem};
 use crate::layout::{Abs, Corners, Length, Point, Rect, Rel, Sides, Size, Sizing};
 use crate::visualize::{Curve, FixedStroke, Paint, Stroke};
 
-/// A rectangle with optional content.
+/// オプションでコンテンツを含められる長方形。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// // Without content.
 /// #rect(width: 35%, height: 30pt)
@@ -17,45 +17,43 @@ use crate::visualize::{Curve, FixedStroke, Paint, Stroke};
 /// ```
 #[elem(title = "Rectangle")]
 pub struct RectElem {
-    /// The rectangle's width, relative to its parent container.
+    /// 長方形の幅。親コンテナーに対する相対指定です。
     pub width: Smart<Rel<Length>>,
 
-    /// The rectangle's height, relative to its parent container.
+    /// 長方形の高さ。親コンテナーに対する相対指定です。
     pub height: Sizing,
 
-    /// How to fill the rectangle.
+    /// 長方形の塗りつぶし方。
     ///
-    /// When setting a fill, the default stroke disappears. To create a
-    /// rectangle with both fill and stroke, you have to configure both.
+    /// 塗りつぶしを設定すると、デフォルトのストロークは消えます。
+    /// 塗りつぶしとストロークの両方を持つ長方形を作成するには、両方を設定する必要があります。
     ///
     /// ```example
     /// #rect(fill: blue)
     /// ```
     pub fill: Option<Paint>,
 
-    /// How to stroke the rectangle. This can be:
+    /// 長方形のストロークの設定方法。以下のいずれかを指定できます。
     ///
-    /// - `{none}` to disable stroking
+    /// - `{none}`：ストロークを無効化します。
     ///
-    /// - `{auto}` for a stroke of `{1pt + black}` if and only if no fill is
-    ///   given.
+    /// - `{auto}`：塗りつぶしが指定されていない場合に限り、`{1pt + black}`のストロークになります。
     ///
-    /// - Any kind of [stroke]
+    /// - 任意の[ストローク]($stroke)
     ///
-    /// - A dictionary describing the stroke for each side individually. The
-    ///   dictionary can contain the following keys in order of precedence:
+    /// - 各辺ごとのストロークを記述した辞書。
+    ///   この辞書には、優先順位の高い順に以下のキーを含めることができます。
     ///
-    ///   - `top`: The top stroke.
-    ///   - `right`: The right stroke.
-    ///   - `bottom`: The bottom stroke.
-    ///   - `left`: The left stroke.
-    ///   - `x`: The horizontal stroke.
-    ///   - `y`: The vertical stroke.
-    ///   - `rest`: The stroke on all sides except those for which the
-    ///     dictionary explicitly sets a size.
+    ///   - `top`：上辺のストローク。
+    ///   - `right`：右辺のストローク。
+    ///   - `bottom`：下辺のストローク。
+    ///   - `left`：左辺のストローク。
+    ///   - `x`：水平方向のストローク。
+    ///   - `y`：垂直方向のストローク。
+    ///   - `rest`：辞書でサイズが明示的に設定されていない全ての辺のストローク。
     ///
-    ///   All keys are optional; omitted keys will use their previously set
-    ///   value, or the default stroke if never set.
+    ///   全てのキーは任意で、省略されたキーには以前に設定された値、
+    ///   一度も設定されていない場合はデフォルトのストロークが使用されます。
     ///
     /// ```example
     /// #stack(
@@ -69,24 +67,22 @@ pub struct RectElem {
     #[fold]
     pub stroke: Smart<Sides<Option<Option<Stroke>>>>,
 
-    /// How much to round the rectangle's corners, relative to the minimum of
-    /// the width and height divided by two. This can be:
+    /// 長方形の角をどの程度丸めるか。幅と高さの最小値の半分に対する相対値で指定します。
+    /// 以下のいずれかを指定できます。
     ///
-    /// - A relative length for a uniform corner radius.
+    /// - 相対長：全ての角に対して一律の角丸半径を指定します。
     ///
-    /// - A dictionary: With a dictionary, the stroke for each side can be set
-    ///   individually. The dictionary can contain the following keys in order
-    ///   of precedence:
-    ///   - `top-left`: The top-left corner radius.
-    ///   - `top-right`: The top-right corner radius.
-    ///   - `bottom-right`: The bottom-right corner radius.
-    ///   - `bottom-left`: The bottom-left corner radius.
-    ///   - `left`: The top-left and bottom-left corner radii.
-    ///   - `top`: The top-left and top-right corner radii.
-    ///   - `right`: The top-right and bottom-right corner radii.
-    ///   - `bottom`: The bottom-left and bottom-right corner radii.
-    ///   - `rest`: The radii for all corners except those for which the
-    ///     dictionary explicitly sets a size.
+    /// - 辞書：辞書を用いると、各辺の角丸を個別に設定できます。
+    ///   この辞書には、優先順位の高い順に以下のキーを含めることができます。
+    ///   - `top-left`：左上の角丸半径。
+    ///   - `top-right`：右上の角丸半径。
+    ///   - `bottom-right`：右下の角丸半径。
+    ///   - `bottom-left`：左下の角丸半径。
+    ///   - `left`：左上と左下の角丸半径。
+    ///   - `top`：左上と右上の角丸半径。
+    ///   - `right`：右上と右下の角丸半径。
+    ///   - `bottom`：左下と右下の角丸半径。
+    ///   - `rest`：辞書でサイズが明示的に設定されていない全ての角の角丸半径。
     ///
     /// ```example
     /// #set rect(stroke: 4pt)
@@ -107,21 +103,20 @@ pub struct RectElem {
     #[fold]
     pub radius: Corners<Option<Rel<Length>>>,
 
-    /// How much to pad the rectangle's content.
-    /// See the [box's documentation]($box.inset) for more details.
+    /// 長方形のコンテンツのパディング量。
+    /// 詳細は[boxのドキュメント]($box.inset)を参照してください。
     #[fold]
     #[default(Sides::splat(Some(Abs::pt(5.0).into())))]
     pub inset: Sides<Option<Rel<Length>>>,
 
-    /// How much to expand the rectangle's size without affecting the layout.
-    /// See the [box's documentation]($box.outset) for more details.
+    /// レイアウトに影響を与えずに長方形の大きさを拡大する量。
+    /// 詳細は[boxのドキュメント]($box.outset)を参照してください。
     #[fold]
     pub outset: Sides<Option<Rel<Length>>>,
 
-    /// The content to place into the rectangle.
+    /// 長方形に配置するコンテンツ。
     ///
-    /// When this is omitted, the rectangle takes on a default size of at most
-    /// `{45pt}` by `{30pt}`.
+    /// 省略された場合、長方形は最大で`{45pt}` × `{30pt}`のデフォルトサイズになります。
     #[positional]
     pub body: Option<Content>,
 }
