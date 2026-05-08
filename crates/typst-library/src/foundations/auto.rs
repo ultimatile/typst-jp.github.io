@@ -8,14 +8,14 @@ use crate::foundations::{
     Value, ty,
 };
 
-/// A value that indicates a smart default.
+/// スマートなデフォルトを示す値。
 ///
-/// The auto type has exactly one value: `{auto}`.
+/// auto型はちょうど1つの値`{auto}`を持ちます。
 ///
-/// Parameters that support the `{auto}` value have some smart default or
-/// contextual behaviour. A good example is the [text direction]($text.dir)
-/// parameter. Setting it to `{auto}` lets Typst automatically determine the
-/// direction from the [text language]($text.lang).
+/// `{auto}`値をサポートする引数には、何らかのスマートなデフォルト動作や
+/// コンテキストに応じた動作があります。良い例として
+/// [テキストの方向]($text.dir)引数があります。これを`{auto}`に設定すると、
+/// Typstは[テキストの言語]($text.lang)から方向を自動的に決定します。
 #[ty(cast, name = "auto")]
 #[derive(Default, Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 pub struct AutoValue;
