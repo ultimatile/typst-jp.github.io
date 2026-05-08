@@ -27,17 +27,15 @@ pub type Hsl = palette::hsl::Hsla<encoding::Srgb, f32>;
 pub type Hsv = palette::hsv::Hsva<encoding::Srgb, f32>;
 pub type Luma = palette::luma::Lumaa<encoding::Srgb, f32>;
 
-/// The ICC profile used to convert from CMYK to RGB.
+/// CMYKからRGBへの変換に使用されるICCプロファイル。
 ///
-/// This is a minimal CMYK profile that only contains the necessary information
-/// to convert from CMYK to RGB. It is based on the CGATS TR 001-1995
-/// specification. See
-/// <https://github.com/saucecontrol/Compact-ICC-Profiles#cmyk>.
+/// これはCMYKからRGBへの変換に必要な情報のみを含む最小限のCMYKプロファイルです。CGATS TR 001-1995仕様に基づいています。
+/// <https://github.com/saucecontrol/Compact-ICC-Profiles#cmyk> を参照してください。
 static CMYK_TO_XYZ: LazyLock<Box<Profile>> = LazyLock::new(|| {
     Profile::new_from_slice(typst_assets::icc::CMYK_TO_XYZ, false).unwrap()
 });
 
-/// The target sRGB profile.
+/// 変換先のsRGBプロファイル。
 static SRGB_PROFILE: LazyLock<Box<Profile>> = LazyLock::new(|| {
     let mut out = Profile::new_sRGB();
     out.precache_output_transform();
@@ -56,29 +54,29 @@ static TO_SRGB: LazyLock<qcms::Transform> = LazyLock::new(|| {
     .unwrap()
 });
 
-/// A color in a specific color space.
+/// 特定の色空間における色。
 ///
-/// Typst supports:
-/// - sRGB through the [`rgb` function]($color.rgb)
-/// - Device CMYK through the [`cmyk` function]($color.cmyk)
-/// - D65 Gray through the [`luma` function]($color.luma)
-/// - Oklab through the [`oklab` function]($color.oklab)
-/// - Oklch through the [`oklch` function]($color.oklch)
-/// - Linear RGB through the [`color.linear-rgb` function]($color.linear-rgb)
-/// - HSL through the [`color.hsl` function]($color.hsl)
-/// - HSV through the [`color.hsv` function]($color.hsv)
+/// Typstは以下をサポートします。
+/// - [`rgb`関数]($color.rgb)によるsRGB
+/// - [`cmyk`関数]($color.cmyk)によるDevice CMYK
+/// - [`luma`関数]($color.luma)によるD65グレー
+/// - [`oklab`関数]($color.oklab)によるOklab
+/// - [`oklch`関数]($color.oklch)によるOklch
+/// - [`color.linear-rgb`関数]($color.linear-rgb)による線形RGB
+/// - [`color.hsl`関数]($color.hsl)によるHSL
+/// - [`color.hsv`関数]($color.hsv)によるHSV
 ///
 ///
-/// # Example
+/// # 例
 ///
 /// ```example
 /// #rect(fill: aqua)
 /// ```
 ///
-/// # Predefined colors
-/// Typst defines the following built-in colors:
+/// # 定義済みの色
+/// Typstは以下のビルトインの色を定義しています。
 ///
-/// | Color     | Definition         |
+/// | 色        | 定義               |
 /// |-----------|:-------------------|
 /// | `black`   | `{luma(0)}`        |
 /// | `gray`    | `{luma(170)}`      |
@@ -99,9 +97,7 @@ static TO_SRGB: LazyLock<qcms::Transform> = LazyLock::new(|| {
 /// | `green`   | `{rgb("#2ecc40")}` |
 /// | `lime`    | `{rgb("#01ff70")}` |
 ///
-/// The predefined colors and the most important color constructors are
-/// available globally and also in the color type's scope, so you can write
-/// either `color.red` or just `red`.
+/// 定義済みの色と最も重要な色のコンストラクターは、グローバルに利用可能であり、color型のスコープ内でも利用できます。そのため、`color.red` でも単に `red` でも記述できます。
 ///
 /// ```preview
 /// #let colors = (
@@ -128,37 +124,31 @@ static TO_SRGB: LazyLock<qcms::Transform> = LazyLock::new(|| {
 /// )
 /// ```
 ///
-/// # Predefined color maps
-/// Typst also includes a number of preset color maps that can be used for
-/// [gradients]($gradient/#stops). These are simply arrays of colors defined in
-/// the module `color.map`.
+/// # 定義済みのカラーマップ
+/// Typstには[グラデーション]($gradient/#stops)に使用できる多数のプリセットカラーマップも含まれています。これらは単に `color.map` モジュールで定義された色の配列です。
 ///
 /// ```example
 /// #circle(fill: gradient.linear(..color.map.crest))
 /// ```
 ///
-/// | Map        | Details                                                     |
+/// | マップ     | 詳細                                                        |
 /// |------------|:------------------------------------------------------------|
-/// | `turbo`    | A perceptually uniform rainbow-like color map. Read [this blog post](https://ai.googleblog.com/2019/08/turbo-improved-rainbow-colormap-for.html) for more details. |
-/// | `cividis`  | A blue to gray to yellow color map. See [this blog post](https://bids.github.io/colormap/) for more details. |
-/// | `rainbow`  | Cycles through the full color spectrum. This color map is best used by setting the interpolation color space to [HSL]($color.hsl). The rainbow gradient is **not suitable** for data visualization because it is not perceptually uniform, so the differences between values become unclear to your readers. It should only be used for decorative purposes. |
-/// | `spectral` | Red to yellow to blue color map.                            |
-/// | `viridis`  | A purple to teal to yellow color map.                       |
-/// | `inferno`  | A black to red to yellow color map.                         |
-/// | `magma`    | A black to purple to yellow color map.                      |
-/// | `plasma`   | A purple to pink to yellow color map.                       |
-/// | `rocket`   | A black to red to white color map.                          |
-/// | `mako`     | A black to teal to white color map.                         |
-/// | `vlag`     | A light blue to white to red color map.                     |
-/// | `icefire`  | A light teal to black to orange color map.                  |
-/// | `flare`    | A orange to purple color map that is perceptually uniform.  |
-/// | `crest`    | A light green to blue color map.                            |
+/// | `turbo`    | 知覚的に均一な虹のようなカラーマップ。詳細は[このブログ記事](https://ai.googleblog.com/2019/08/turbo-improved-rainbow-colormap-for.html)を参照。 |
+/// | `cividis`  | 青からグレー、黄色へのカラーマップ。詳細は[このブログ記事](https://bids.github.io/colormap/)を参照。 |
+/// | `rainbow`  | 色のスペクトル全体を循環します。このカラーマップは、補間色空間を[HSL]($color.hsl)に設定して使用するのが最適です。虹のグラデーションは知覚的に均一ではなく、値間の違いが読者にわかりにくくなるため、データ視覚化には**適していません**。装飾目的にのみ使用すべきです。 |
+/// | `spectral` | 赤から黄色、青へのカラーマップ。                            |
+/// | `viridis`  | 紫からティール、黄色へのカラーマップ。                      |
+/// | `inferno`  | 黒から赤、黄色へのカラーマップ。                            |
+/// | `magma`    | 黒から紫、黄色へのカラーマップ。                            |
+/// | `plasma`   | 紫からピンク、黄色へのカラーマップ。                        |
+/// | `rocket`   | 黒から赤、白へのカラーマップ。                              |
+/// | `mako`     | 黒からティール、白へのカラーマップ。                        |
+/// | `vlag`     | 薄い青から白、赤へのカラーマップ。                          |
+/// | `icefire`  | 薄いティールから黒、オレンジへのカラーマップ。              |
+/// | `flare`    | 知覚的に均一なオレンジから紫へのカラーマップ。              |
+/// | `crest`    | 薄い緑から青へのカラーマップ。                              |
 ///
-/// Some popular presets are not included because they are not available under a
-/// free licence. Others, like
-/// [Jet](https://jakevdp.github.io/blog/2014/10/16/how-bad-is-your-colormap/),
-/// are not included because they are not color blind friendly. Feel free to use
-/// or create a package with other presets that are useful to you!
+/// 一部の有名なプリセットは、フリーライセンスで利用できないため含まれていません。[Jet](https://jakevdp.github.io/blog/2014/10/16/how-bad-is-your-colormap/)などは、色覚多様性に配慮していないため含まれていません。他の有用なプリセットを含むパッケージを使用したり作成したりしてください。
 ///
 /// ```preview
 /// #set page(width: auto, height: auto)
@@ -191,27 +181,27 @@ static TO_SRGB: LazyLock<qcms::Transform> = LazyLock::new(|| {
 #[ty(scope, cast)]
 #[derive(Copy, Clone)]
 pub enum Color {
-    /// A 32-bit luma color.
+    /// 32ビットのルマ色。
     Luma(Luma),
-    /// A 32-bit L\*a\*b\* color in the Oklab color space.
+    /// Oklab色空間の32ビットL\*a\*b\*色。
     Oklab(Oklab),
-    /// A 32-bit LCh color in the Oklab color space.
+    /// Oklab色空間の32ビットLCh色。
     Oklch(Oklch),
-    /// A 32-bit RGB color.
+    /// 32ビットRGB色。
     Rgb(Rgb),
-    /// A 32-bit linear RGB color.
+    /// 32ビット線形RGB色。
     LinearRgb(LinearRgb),
-    /// A 32-bit CMYK color.
+    /// 32ビットCMYK色。
     Cmyk(Cmyk),
-    /// A 32-bit HSL color.
+    /// 32ビットHSL色。
     Hsl(Hsl),
-    /// A 32-bit HSV color.
+    /// 32ビットHSV色。
     Hsv(Hsv),
 }
 
 #[scope]
 impl Color {
-    /// The module of preset color maps.
+    /// プリセットカラーマップのモジュール。
     pub const MAP: fn() -> Module = || typst_utils::singleton!(Module, map()).clone();
 
     pub const BLACK: Self = Self::Luma(Luma::new(0.0, 1.0));
@@ -233,13 +223,11 @@ impl Color {
     pub const GREEN: Self = Self::Rgb(Rgb::new(0.1803922, 0.8, 0.2509804, 1.0));
     pub const LIME: Self = Self::Rgb(Rgb::new(0.0039216, 1.0, 0.4392157, 1.0));
 
-    /// Create a grayscale color.
+    /// グレースケール色を作成します。
     ///
-    /// A grayscale color is represented internally by a single `lightness`
-    /// component.
+    /// グレースケール色は内部的に単一の `lightness` コンポーネントで表現されます。
     ///
-    /// These components are also available using the
-    /// [`components`]($color.components) method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
     /// ```example
     /// #for x in range(250, step: 50) {
@@ -249,15 +237,15 @@ impl Color {
     #[func]
     pub fn luma(
         args: &mut Args,
-        /// The lightness component.
+        /// 明度コンポーネント。
         #[external]
         lightness: Component,
-        /// The alpha component.
+        /// アルファコンポーネント。
         #[external]
         alpha: RatioComponent,
-        /// Alternatively: The color to convert to grayscale.
+        /// 代替として、グレースケールに変換する色。
         ///
-        /// If this is given, the `lightness` should not be given.
+        /// これが指定されている場合、`lightness` は指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -272,24 +260,20 @@ impl Color {
         })
     }
 
-    /// Create an [Oklab](https://bottosson.github.io/posts/oklab/) color.
+    /// [Oklab](https://bottosson.github.io/posts/oklab/)色を作成します。
     ///
-    /// This color space is well suited for the following use cases:
-    /// - Color manipulation such as saturating while keeping perceived hue
-    /// - Creating grayscale images with uniform perceived lightness
-    /// - Creating smooth and uniform color transition and gradients
+    /// この色空間は以下のユースケースに適しています。
+    /// - 知覚される色相を保ちながら彩度を変化させるなどの色操作
+    /// - 知覚される明度が均一なグレースケール画像の作成
+    /// - 滑らかで均一な色遷移とグラデーションの作成
     ///
-    /// A linear Oklab color is represented internally by an array of four
-    /// components:
-    /// - lightness ([`ratio`])
-    /// - a ([`float`] or [`ratio`].
-    ///   Ratios are relative to `{0.4}`; meaning `{50%}` is equal to `{0.2}`)
-    /// - b ([`float`] or [`ratio`].
-    ///   Ratios are relative to `{0.4}`; meaning `{50%}` is equal to `{0.2}`)
-    /// - alpha ([`ratio`])
+    /// 線形Oklab色は内部的に4つのコンポーネントの配列で表現されます。
+    /// - 明度（[`ratio`]($ratio)）
+    /// - a（[`float`]($float)または[`ratio`]($ratio)。比率は `{0.4}` に対する相対値、つまり `{50%}` は `{0.2}` に等しい）
+    /// - b（[`float`]($float)または[`ratio`]($ratio)。比率は `{0.4}` に対する相対値、つまり `{50%}` は `{0.2}` に等しい）
+    /// - アルファ（[`ratio`]($ratio)）
     ///
-    /// These components are also available using the
-    /// [`components`]($color.components) method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
     /// ```example
     /// #square(
@@ -299,21 +283,21 @@ impl Color {
     #[func]
     pub fn oklab(
         args: &mut Args,
-        /// The lightness component.
+        /// 明度コンポーネント。
         #[external]
         lightness: RatioComponent,
-        /// The a ("green/red") component.
+        /// a（「緑/赤」）コンポーネント。
         #[external]
         a: ChromaComponent,
-        /// The b ("blue/yellow") component.
+        /// b（「青/黄」）コンポーネント。
         #[external]
         b: ChromaComponent,
-        /// The alpha component.
+        /// アルファコンポーネント。
         #[external]
         alpha: RatioComponent,
-        /// Alternatively: The color to convert to Oklab.
+        /// 代替として、Oklabに変換する色。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -329,23 +313,20 @@ impl Color {
         })
     }
 
-    /// Create an [Oklch](https://bottosson.github.io/posts/oklab/) color.
+    /// [Oklch](https://bottosson.github.io/posts/oklab/)色を作成します。
     ///
-    /// This color space is well suited for the following use cases:
-    /// - Color manipulation involving lightness, chroma, and hue
-    /// - Creating grayscale images with uniform perceived lightness
-    /// - Creating smooth and uniform color transition and gradients
+    /// この色空間は以下のユースケースに適しています。
+    /// - 明度、彩度、色相を含む色操作
+    /// - 知覚される明度が均一なグレースケール画像の作成
+    /// - 滑らかで均一な色遷移とグラデーションの作成
     ///
-    /// A linear Oklch color is represented internally by an array of four
-    /// components:
-    /// - lightness ([`ratio`])
-    /// - chroma ([`float`] or [`ratio`].
-    ///   Ratios are relative to `{0.4}`; meaning `{50%}` is equal to `{0.2}`)
-    /// - hue ([`angle`])
-    /// - alpha ([`ratio`])
+    /// 線形Oklch色は内部的に4つのコンポーネントの配列で表現されます。
+    /// - 明度（[`ratio`]($ratio)）
+    /// - 彩度（[`float`]($float)または[`ratio`]($ratio)。比率は `{0.4}` に対する相対値、つまり `{50%}` は `{0.2}` に等しい）
+    /// - 色相（[`angle`]($angle)）
+    /// - アルファ（[`ratio`]($ratio)）
     ///
-    /// These components are also available using the
-    /// [`components`]($color.components) method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
     /// ```example
     /// #square(
@@ -355,21 +336,21 @@ impl Color {
     #[func]
     pub fn oklch(
         args: &mut Args,
-        /// The lightness component.
+        /// 明度コンポーネント。
         #[external]
         lightness: RatioComponent,
-        /// The chroma component.
+        /// 彩度コンポーネント。
         #[external]
         chroma: ChromaComponent,
-        /// The hue component.
+        /// 色相コンポーネント。
         #[external]
         hue: Angle,
-        /// The alpha component.
+        /// アルファコンポーネント。
         #[external]
         alpha: RatioComponent,
-        /// Alternatively: The color to convert to Oklch.
+        /// 代替として、Oklchに変換する色。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -390,22 +371,17 @@ impl Color {
         })
     }
 
-    /// Create an RGB(A) color with linear luma.
+    /// 線形ルマを持つRGB(A)色を作成します。
     ///
-    /// This color space is similar to sRGB, but with the distinction that the
-    /// color component are not gamma corrected. This makes it easier to perform
-    /// color operations such as blending and interpolation. Although, you
-    /// should prefer to use the [`oklab` function]($color.oklab) for these.
+    /// この色空間はsRGBに似ていますが、色コンポーネントがガンマ補正されていない点が異なります。これにより、ブレンディングや補間などの色操作を容易に実行できます。ただし、これらの用途には[`oklab`関数]($color.oklab)の使用が推奨されます。
     ///
-    /// A linear RGB(A) color is represented internally by an array of four
-    /// components:
-    /// - red ([`ratio`])
-    /// - green ([`ratio`])
-    /// - blue ([`ratio`])
-    /// - alpha ([`ratio`])
+    /// 線形RGB(A)色は内部的に4つのコンポーネントの配列で表現されます。
+    /// - 赤（[`ratio`]($ratio)）
+    /// - 緑（[`ratio`]($ratio)）
+    /// - 青（[`ratio`]($ratio)）
+    /// - アルファ（[`ratio`]($ratio)）
     ///
-    /// These components are also available using the
-    /// [`components`]($color.components) method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
     /// ```example
     /// #square(fill: color.linear-rgb(
@@ -415,21 +391,21 @@ impl Color {
     #[func(title = "Linear RGB")]
     pub fn linear_rgb(
         args: &mut Args,
-        /// The red component.
+        /// 赤コンポーネント。
         #[external]
         red: Component,
-        /// The green component.
+        /// 緑コンポーネント。
         #[external]
         green: Component,
-        /// The blue component.
+        /// 青コンポーネント。
         #[external]
         blue: Component,
-        /// The alpha component.
+        /// アルファコンポーネント。
         #[external]
         alpha: Component,
-        /// Alternatively: The color to convert to linear RGB(A).
+        /// 代替として、線形RGB(A)に変換する色。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -449,18 +425,17 @@ impl Color {
         })
     }
 
-    /// Create an RGB(A) color.
+    /// RGB(A)色を作成します。
     ///
-    /// The color is specified in the sRGB color space.
+    /// 色はsRGB色空間で指定されます。
     ///
-    /// An RGB(A) color is represented internally by an array of four components:
-    /// - red ([`ratio`])
-    /// - green ([`ratio`])
-    /// - blue ([`ratio`])
-    /// - alpha ([`ratio`])
+    /// RGB(A)色は内部的に4つのコンポーネントの配列で表現されます。
+    /// - 赤（[`ratio`]($ratio)）
+    /// - 緑（[`ratio`]($ratio)）
+    /// - 青（[`ratio`]($ratio)）
+    /// - アルファ（[`ratio`]($ratio)）
     ///
-    /// These components are also available using the [`components`]($color.components)
-    /// method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
     /// ```example
     /// #square(fill: rgb("#b1f2eb"))
@@ -470,24 +445,23 @@ impl Color {
     #[func(title = "RGB")]
     pub fn rgb(
         args: &mut Args,
-        /// The red component.
+        /// 赤コンポーネント。
         #[external]
         red: Component,
-        /// The green component.
+        /// 緑コンポーネント。
         #[external]
         green: Component,
-        /// The blue component.
+        /// 青コンポーネント。
         #[external]
         blue: Component,
-        /// The alpha component.
+        /// アルファコンポーネント。
         #[external]
         alpha: Component,
-        /// Alternatively: The color in hexadecimal notation.
+        /// 代替として、16進数表記の色。
         ///
-        /// Accepts three, four, six or eight hexadecimal digits and optionally
-        /// a leading hash.
+        /// 3桁、4桁、6桁、または8桁の16進数を、先頭のハッシュ記号を任意で付けて受け付けます。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         ///
         /// ```example
         /// #text(16pt, rgb("#239dad"))[
@@ -496,9 +470,9 @@ impl Color {
         /// ```
         #[external]
         hex: Str,
-        /// Alternatively: The color to convert to RGB(a).
+        /// 代替として、RGB(a)に変換する色。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -520,23 +494,19 @@ impl Color {
         })
     }
 
-    /// Create a CMYK color.
+    /// CMYK色を作成します。
     ///
-    /// This is useful if you want to target a specific printer. The conversion
-    /// to RGB for display preview might differ from how your printer reproduces
-    /// the color.
+    /// これは特定のプリンターをターゲットにする場合に有用です。表示プレビュー用のRGBへの変換結果は、プリンターによる色の再現とは異なる場合があります。
     ///
-    /// A CMYK color is represented internally by an array of four components:
-    /// - cyan ([`ratio`])
-    /// - magenta ([`ratio`])
-    /// - yellow ([`ratio`])
-    /// - key ([`ratio`])
+    /// CMYK色は内部的に4つのコンポーネントの配列で表現されます。
+    /// - シアン（[`ratio`]($ratio)）
+    /// - マゼンタ（[`ratio`]($ratio)）
+    /// - イエロー（[`ratio`]($ratio)）
+    /// - キー（[`ratio`]($ratio)）
     ///
-    /// These components are also available using the
-    /// [`components`]($color.components) method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
-    /// Note that CMYK colors are not currently supported when PDF/A output is
-    /// enabled.
+    /// 現在、PDF/A出力が有効な場合、CMYK色はサポートされていない点に注意してください。
     ///
     /// ```example
     /// #square(
@@ -546,21 +516,21 @@ impl Color {
     #[func(title = "CMYK")]
     pub fn cmyk(
         args: &mut Args,
-        /// The cyan component.
+        /// シアンコンポーネント。
         #[external]
         cyan: RatioComponent,
-        /// The magenta component.
+        /// マゼンタコンポーネント。
         #[external]
         magenta: RatioComponent,
-        /// The yellow component.
+        /// イエローコンポーネント。
         #[external]
         yellow: RatioComponent,
-        /// The key component.
+        /// キーコンポーネント。
         #[external]
         key: RatioComponent,
-        /// Alternatively: The color to convert to CMYK.
+        /// 代替として、CMYKに変換する色。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -580,20 +550,17 @@ impl Color {
         })
     }
 
-    /// Create an HSL color.
+    /// HSL色を作成します。
     ///
-    /// This color space is useful for specifying colors by hue, saturation and
-    /// lightness. It is also useful for color manipulation, such as saturating
-    /// while keeping perceived hue.
+    /// この色空間は色相、彩度、明度で色を指定する場合に有用です。また、知覚される色相を保ちながら彩度を変化させるなどの色操作にも有用です。
     ///
-    /// An HSL color is represented internally by an array of four components:
-    /// - hue ([`angle`])
-    /// - saturation ([`ratio`])
-    /// - lightness ([`ratio`])
-    /// - alpha ([`ratio`])
+    /// HSL色は内部的に4つのコンポーネントの配列で表現されます。
+    /// - 色相（[`angle`]($angle)）
+    /// - 彩度（[`ratio`]($ratio)）
+    /// - 明度（[`ratio`]($ratio)）
+    /// - アルファ（[`ratio`]($ratio)）
     ///
-    /// These components are also available using the
-    /// [`components`]($color.components) method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
     /// ```example
     /// #square(
@@ -603,21 +570,21 @@ impl Color {
     #[func(title = "HSL")]
     pub fn hsl(
         args: &mut Args,
-        /// The hue angle.
+        /// 色相の角度。
         #[external]
         hue: Angle,
-        /// The saturation component.
+        /// 彩度コンポーネント。
         #[external]
         saturation: Component,
-        /// The lightness component.
+        /// 明度コンポーネント。
         #[external]
         lightness: Component,
-        /// The alpha component.
+        /// アルファコンポーネント。
         #[external]
         alpha: Component,
-        /// Alternatively: The color to convert to HSL.
+        /// 代替として、HSLに変換する色。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -637,20 +604,17 @@ impl Color {
         })
     }
 
-    /// Create an HSV color.
+    /// HSV色を作成します。
     ///
-    /// This color space is useful for specifying colors by hue, saturation and
-    /// value. It is also useful for color manipulation, such as saturating
-    /// while keeping perceived hue.
+    /// この色空間は色相、彩度、明度（value）で色を指定する場合に有用です。また、知覚される色相を保ちながら彩度を変化させるなどの色操作にも有用です。
     ///
-    /// An HSV color is represented internally by an array of four components:
-    /// - hue ([`angle`])
-    /// - saturation ([`ratio`])
-    /// - value ([`ratio`])
-    /// - alpha ([`ratio`])
+    /// HSV色は内部的に4つのコンポーネントの配列で表現されます。
+    /// - 色相（[`angle`]($angle)）
+    /// - 彩度（[`ratio`]($ratio)）
+    /// - 明度（[`ratio`]($ratio)）
+    /// - アルファ（[`ratio`]($ratio)）
     ///
-    /// These components are also available using the
-    /// [`components`]($color.components) method.
+    /// これらのコンポーネントは [`components`]($color.components) メソッドからも取得できます。
     ///
     /// ```example
     /// #square(
@@ -660,21 +624,21 @@ impl Color {
     #[func(title = "HSV")]
     pub fn hsv(
         args: &mut Args,
-        /// The hue angle.
+        /// 色相の角度。
         #[external]
         hue: Angle,
-        /// The saturation component.
+        /// 彩度コンポーネント。
         #[external]
         saturation: Component,
-        /// The value component.
+        /// 明度コンポーネント。
         #[external]
         value: Component,
-        /// The alpha component.
+        /// アルファコンポーネント。
         #[external]
         alpha: Component,
-        /// Alternatively: The color to convert to HSL.
+        /// 代替として、HSLに変換する色。
         ///
-        /// If this is given, the individual components should not be given.
+        /// これが指定されている場合、個別のコンポーネントは指定すべきではありません。
         #[external]
         color: Color,
     ) -> SourceResult<Color> {
@@ -694,28 +658,22 @@ impl Color {
         })
     }
 
-    /// Extracts the components of this color.
+    /// この色のコンポーネントを抽出します。
     ///
-    /// The size and values of this array depends on the color space. You can
-    /// obtain the color space using [`space`]($color.space). Below is a table
-    /// of the color spaces and their components:
+    /// この配列のサイズと値は色空間に依存します。色空間は [`space`]($color.space) メソッドで取得できます。以下は色空間とそのコンポーネントの一覧です。
     ///
-    /// |       Color space       |     C1    |     C2     |     C3    |   C4   |
+    /// |        色空間           |     C1    |     C2     |     C3    |   C4   |
     /// |-------------------------|-----------|------------|-----------|--------|
-    /// | [`luma`]($color.luma)   | Lightness |            |           |        |
-    /// | [`oklab`]($color.oklab) | Lightness |    `a`     |    `b`    |  Alpha |
-    /// | [`oklch`]($color.oklch) | Lightness |   Chroma   |    Hue    |  Alpha |
-    /// | [`linear-rgb`]($color.linear-rgb) | Red  |   Green |    Blue |  Alpha |
-    /// | [`rgb`]($color.rgb)     |    Red    |   Green    |    Blue   |  Alpha |
-    /// | [`cmyk`]($color.cmyk)   |    Cyan   |   Magenta  |   Yellow  |  Key   |
-    /// | [`hsl`]($color.hsl)     |     Hue   | Saturation | Lightness |  Alpha |
-    /// | [`hsv`]($color.hsv)     |     Hue   | Saturation |   Value   |  Alpha |
+    /// | [`luma`]($color.luma)   |   明度    |            |           |        |
+    /// | [`oklab`]($color.oklab) |   明度    |    `a`     |    `b`    | アルファ |
+    /// | [`oklch`]($color.oklch) |   明度    |   彩度     |   色相    | アルファ |
+    /// | [`linear-rgb`]($color.linear-rgb) |   赤    |   緑   |    青   | アルファ |
+    /// | [`rgb`]($color.rgb)     |    赤     |    緑      |    青     | アルファ |
+    /// | [`cmyk`]($color.cmyk)   |  シアン   | マゼンタ   |  イエロー |  キー  |
+    /// | [`hsl`]($color.hsl)     |   色相    |   彩度     |    明度   | アルファ |
+    /// | [`hsv`]($color.hsv)     |   色相    |   彩度     |    明度   | アルファ |
     ///
-    /// For the meaning and type of each individual value, see the documentation
-    /// of the corresponding color space. The alpha component is optional and
-    /// only included if the `alpha` argument is `true`. The length of the
-    /// returned array depends on the number of components and whether the alpha
-    /// component is included.
+    /// 各値の意味と型については、対応する色空間のドキュメントを参照してください。アルファコンポーネントはオプションで、`alpha` 引数が `true` の場合のみ含まれます。返される配列の長さはコンポーネントの数とアルファコンポーネントが含まれるかどうかに依存します。
     ///
     /// ```example
     /// // note that the alpha component is included by default
@@ -724,7 +682,7 @@ impl Color {
     #[func]
     pub fn components(
         self,
-        /// Whether to include the alpha component.
+        /// アルファコンポーネントを含めるかどうか。
         #[named]
         #[default(true)]
         alpha: bool,
@@ -797,9 +755,9 @@ impl Color {
         components
     }
 
-    /// Returns the constructor function for this color's space.
+    /// この色の色空間のコンストラクター関数を返します。
     ///
-    /// Returns one of:
+    /// 以下のいずれかを返します。
     /// - [`luma`]($color.luma)
     /// - [`oklab`]($color.oklab)
     /// - [`oklch`]($color.oklch)
@@ -827,9 +785,7 @@ impl Color {
         }
     }
 
-    /// Returns the color's RGB(A) hex representation (such as `#ffaa32` or
-    /// `#020304fe`). The alpha component (last two digits in `#020304fe`) is
-    /// omitted if it is equal to `ff` (255 / 100%).
+    /// この色のRGB(A)16進数表現（`#ffaa32` や `#020304fe` など）を返します。アルファコンポーネント（`#020304fe` の末尾2桁）は、`ff`（255 / 100%）と等しい場合は省略されます。
     #[func]
     pub fn to_hex(self) -> EcoString {
         let (r, g, b, a) = self.to_rgb().into_format::<u8, u8>().into_components();
@@ -840,11 +796,11 @@ impl Color {
         }
     }
 
-    /// Lightens a color by a given factor.
+    /// 指定された係数で色を明るくします。
     #[func]
     pub fn lighten(
         self,
-        /// The factor to lighten the color by.
+        /// 色を明るくする係数。
         factor: Ratio,
     ) -> Color {
         let factor = factor.get() as f32;
@@ -860,11 +816,11 @@ impl Color {
         }
     }
 
-    /// Darkens a color by a given factor.
+    /// 指定された係数で色を暗くします。
     #[func]
     pub fn darken(
         self,
-        /// The factor to darken the color by.
+        /// 色を暗くする係数。
         factor: Ratio,
     ) -> Color {
         let factor = factor.get() as f32;
@@ -880,12 +836,12 @@ impl Color {
         }
     }
 
-    /// Increases the saturation of a color by a given factor.
+    /// 指定された係数で色の彩度を上げます。
     #[func]
     pub fn saturate(
         self,
         span: Span,
-        /// The factor to saturate the color by.
+        /// 色の彩度を上げる係数。
         factor: Ratio,
     ) -> SourceResult<Color> {
         let f = factor.get() as f32;
@@ -906,12 +862,12 @@ impl Color {
         })
     }
 
-    /// Decreases the saturation of a color by a given factor.
+    /// 指定された係数で色の彩度を下げます。
     #[func]
     pub fn desaturate(
         self,
         span: Span,
-        /// The factor to desaturate the color by.
+        /// 色の彩度を下げる係数。
         factor: Ratio,
     ) -> SourceResult<Color> {
         let f = factor.get() as f32;
@@ -932,8 +888,7 @@ impl Color {
         })
     }
 
-    /// Produces the complementary color using a provided color space.
-    /// You can think of it as the opposite side on a color wheel.
+    /// 指定された色空間を使用して補色を生成します。色相環の反対側として考えることができます。
     ///
     /// ```example
     /// #square(fill: yellow)
@@ -943,7 +898,7 @@ impl Color {
     #[func]
     pub fn negate(
         self,
-        /// The color space used for the transformation. By default, a perceptual color space is used.
+        /// 変換に使用される色空間。デフォルトでは知覚的な色空間が使用されます。
         #[named]
         #[default(ColorSpace::Oklab)]
         space: ColorSpace,
@@ -983,15 +938,14 @@ impl Color {
         result.to_space(self.space())
     }
 
-    /// Rotates the hue of the color by a given angle.
+    /// 指定された角度で色相を回転させます。
     #[func]
     pub fn rotate(
         self,
         span: Span,
-        /// The angle to rotate the hue by.
+        /// 色相を回転させる角度。
         angle: Angle,
-        /// The color space used to rotate. By default, this happens in a perceptual
-        /// color space ([`oklch`]($color.oklch)).
+        /// 回転に使用される色空間。デフォルトでは知覚的な色空間（[`oklch`]($color.oklch)）で実行されます。
         #[named]
         #[default(ColorSpace::Oklch)]
         space: ColorSpace,
@@ -1016,11 +970,9 @@ impl Color {
         })
     }
 
-    /// Create a color by mixing two or more colors.
+    /// 2つ以上の色を混合して色を作成します。
     ///
-    /// In color spaces with a hue component (hsl, hsv, oklch), only two colors
-    /// can be mixed at once. Mixing more than two colors in such a space will
-    /// result in an error!
+    /// 色相コンポーネントを持つ色空間（hsl、hsv、oklch）では、一度に2色のみ混合できます。そのような色空間で2色を超えて混合するとエラーになります。
     ///
     /// ```example
     /// #set block(height: 20pt, width: 100%)
@@ -1031,15 +983,12 @@ impl Color {
     /// ```
     #[func]
     pub fn mix(
-        /// The colors, optionally with weights, specified as a pair (array of
-        /// length two) of color and weight (float or ratio).
+        /// 色、オプションで重みを伴うもの。色と重み（floatまたはratio）のペア（長さ2の配列）として指定します。
         ///
-        /// The weights do not need to add to `{100%}`, they are relative to the
-        /// sum of all weights.
+        /// 重みの合計が `{100%}` になる必要はありません。重みは全ての重みの合計に対する相対値です。
         #[variadic]
         colors: Vec<WeightedColor>,
-        /// The color space to mix in. By default, this happens in a perceptual
-        /// color space ([`oklab`]($color.oklab)).
+        /// 混合する色空間。デフォルトでは知覚的な色空間（[`oklab`]($color.oklab)）で実行されます。
         #[named]
         #[default(ColorSpace::Oklab)]
         space: ColorSpace,
@@ -1047,11 +996,9 @@ impl Color {
         Self::mix_iter(colors, space)
     }
 
-    /// Makes a color more transparent by a given factor.
+    /// 指定された係数で色をより透明にします。
     ///
-    /// This method is relative to the existing alpha value.
-    /// If the scale is positive, calculates `alpha - alpha * scale`.
-    /// Negative scales behave like `color.opacify(-scale)`.
+    /// このメソッドは既存のアルファ値に対する相対値です。スケールが正の場合は `alpha - alpha * scale` を計算します。負のスケールは `color.opacify(-scale)` のように振る舞います。
     ///
     /// ```example
     /// #block(fill: red)[opaque]
@@ -1061,17 +1008,15 @@ impl Color {
     #[func]
     pub fn transparentize(
         self,
-        /// The factor to change the alpha value by.
+        /// アルファ値を変化させる係数。
         scale: Ratio,
     ) -> StrResult<Color> {
         self.scale_alpha(-scale)
     }
 
-    /// Makes a color more opaque by a given scale.
+    /// 指定されたスケールで色をより不透明にします。
     ///
-    /// This method is relative to the existing alpha value.
-    /// If the scale is positive, calculates `alpha + scale - alpha * scale`.
-    /// Negative scales behave like `color.transparentize(-scale)`.
+    /// このメソッドは既存のアルファ値に対する相対値です。スケールが正の場合は `alpha + scale - alpha * scale` を計算します。負のスケールは `color.transparentize(-scale)` のように振る舞います。
     ///
     /// ```example
     /// #let half-red = red.transparentize(50%)
@@ -1082,7 +1027,7 @@ impl Color {
     #[func]
     pub fn opacify(
         self,
-        /// The scale to change the alpha value by.
+        /// アルファ値を変化させるスケール。
         scale: Ratio,
     ) -> StrResult<Color> {
         self.scale_alpha(scale)
@@ -1090,7 +1035,7 @@ impl Color {
 }
 
 impl Color {
-    /// Same as [`Color::mix`], but takes an iterator instead of a vector.
+    /// [`Color::mix`] と同じですが、ベクタの代わりにイテレータを受け取ります。
     pub fn mix_iter(
         colors: impl IntoIterator<
             Item = WeightedColor,
@@ -1174,7 +1119,7 @@ impl Color {
         })
     }
 
-    /// Construct a new RGBA color from 8-bit values.
+    /// 8ビット値から新しいRGBA色を構築します。
     pub fn from_u8(r: u8, g: u8, b: u8, a: u8) -> Self {
         Self::Rgb(Rgb::new(
             f32::from(r) / 255.0,
@@ -1184,7 +1129,7 @@ impl Color {
         ))
     }
 
-    /// Converts a 32-bit integer to an RGBA color.
+    /// 32ビット整数をRGBA色に変換します。
     pub fn from_u32(color: u32) -> Self {
         Self::from_u8(
             ((color >> 24) & 0xFF) as u8,
@@ -1194,7 +1139,7 @@ impl Color {
         )
     }
 
-    /// Returns the alpha channel of the color, if it has one.
+    /// 色のアルファチャンネルを返します（持っている場合）。
     pub fn alpha(&self) -> Option<f32> {
         match self {
             Color::Cmyk(_) => None,
@@ -1208,7 +1153,7 @@ impl Color {
         }
     }
 
-    /// Sets the alpha channel of the color, if it has one.
+    /// 色のアルファチャンネルを設定します（持っている場合）。
     pub fn with_alpha(mut self, alpha: f32) -> Self {
         match &mut self {
             Color::Cmyk(_) => {}
@@ -1224,10 +1169,10 @@ impl Color {
         self
     }
 
-    /// Scales the alpha value of a color by a given amount.
+    /// 色のアルファ値を指定された量でスケーリングします。
     ///
-    /// For positive scales, computes `alpha + scale - alpha * scale`.
-    /// For non-positive scales, computes `alpha + alpha * scale`.
+    /// 正のスケールの場合、`alpha + scale - alpha * scale` を計算します。
+    /// 非正のスケールの場合、`alpha + alpha * scale` を計算します。
     fn scale_alpha(self, scale: Ratio) -> StrResult<Color> {
         #[inline]
         fn transform<C>(mut color: Alpha<C, f32>, scale: Ratio) -> Alpha<C, f32> {
@@ -1249,7 +1194,7 @@ impl Color {
         })
     }
 
-    /// Converts the color to a vec of four floats.
+    /// 色を4つのfloatのベクタに変換します。
     pub fn to_vec4(&self) -> [f32; 4] {
         match self {
             Color::Luma(c) => [c.luma, c.luma, c.luma, c.alpha],
@@ -1272,7 +1217,7 @@ impl Color {
         }
     }
 
-    /// Converts the color to a vec of four [`u8`]s.
+    /// 色を4つの [`u8`] のベクタに変換します。
     pub fn to_vec4_u8(&self) -> [u8; 4] {
         self.to_vec4().map(|x| (x * 255.0).round() as u8)
     }
@@ -1595,12 +1540,12 @@ impl Hash for Color {
 impl FromStr for Color {
     type Err = &'static str;
 
-    /// Constructs a new color from hex strings like the following:
-    /// - `#aef` (shorthand, with leading hash),
-    /// - `7a03c2` (without alpha),
-    /// - `abcdefff` (with alpha).
+    /// 以下のような16進数文字列から新しい色を構築します。
+    /// - `#aef`（短縮形、先頭にハッシュ付き）、
+    /// - `7a03c2`（アルファなし）、
+    /// - `abcdefff`（アルファ付き）。
     ///
-    /// The hash is optional and both lower and upper case are fine.
+    /// ハッシュはオプションで、大文字小文字のいずれも有効です。
     fn from_str(hex_str: &str) -> Result<Self, Self::Err> {
         let hex_str = hex_str.strip_prefix('#').unwrap_or(hex_str);
         if hex_str.chars().any(|c| !c.is_ascii_hexdigit()) {
@@ -1681,16 +1626,16 @@ impl From<Hsv> for Color {
     }
 }
 
-/// An 8-bit CMYK color.
+/// 8ビットCMYK色。
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Cmyk {
-    /// The cyan component.
+    /// シアンコンポーネント。
     pub c: f32,
-    /// The magenta component.
+    /// マゼンタコンポーネント。
     pub m: f32,
-    /// The yellow component.
+    /// イエローコンポーネント。
     pub y: f32,
-    /// The key (black) component.
+    /// キー（黒）コンポーネント。
     pub k: f32,
 }
 
@@ -1754,14 +1699,14 @@ impl Cmyk {
     }
 }
 
-/// A color with a weight.
+/// 重み付きの色。
 pub struct WeightedColor {
     color: Color,
     weight: f64,
 }
 
 impl WeightedColor {
-    /// Create a new weighted color.
+    /// 新しい重み付き色を作成します。
     pub const fn new(color: Color, weight: f64) -> Self {
         Self { color, weight }
     }
@@ -1783,7 +1728,7 @@ cast! {
     }
 }
 
-/// A weight for color mixing.
+/// 色の混合用の重み。
 struct Weight(f64);
 
 cast! {
@@ -1792,30 +1737,29 @@ cast! {
     v: Ratio => Self(v.get()),
 }
 
-/// A color space for color manipulation.
+/// 色操作用の色空間。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub enum ColorSpace {
-    /// The perceptual Oklab color space.
+    /// 知覚的Oklab色空間。
     Oklab,
-    /// The perceptual Oklch color space.
+    /// 知覚的Oklch色空間。
     Oklch,
-    /// The standard RGB color space.
+    /// 標準RGB色空間。
     Srgb,
-    /// The D65-gray color space.
+    /// D65グレー色空間。
     D65Gray,
-    /// The linear RGB color space.
+    /// 線形RGB色空間。
     LinearRgb,
-    /// The HSL color space.
+    /// HSL色空間。
     Hsl,
-    /// The HSV color space.
+    /// HSV色空間。
     Hsv,
-    /// The CMYK color space.
+    /// CMYK色空間。
     Cmyk,
 }
 
 impl ColorSpace {
-    /// Returns the index of the hue component in this color space, if it has
-    /// one.
+    /// この色空間の色相コンポーネントのインデックスを返します（持っている場合）。
     pub fn hue_index(&self) -> Option<usize> {
         match self {
             Self::Hsl | Self::Hsv => Some(0),
@@ -1867,7 +1811,7 @@ cast! {
     },
 }
 
-/// A component that must be a ratio.
+/// 比率でなければならないコンポーネント。
 pub struct RatioComponent(Ratio);
 
 cast! {
@@ -1880,11 +1824,11 @@ cast! {
     },
 }
 
-/// A chroma color component.
+/// 彩度の色コンポーネント。
 ///
-/// Must either be:
-/// - a ratio, in which case it is relative to 0.4.
-/// - a float, in which case it is taken literally.
+/// 以下のいずれかでなければなりません。
+/// - 比率の場合、0.4に対する相対値として扱われます。
+/// - floatの場合、文字通りに扱われます。
 pub struct ChromaComponent(f32);
 
 cast! {
@@ -1893,7 +1837,7 @@ cast! {
     v: Ratio => Self((v.get() * 0.4) as f32),
 }
 
-/// An integer or ratio component.
+/// 整数または比率のコンポーネント。
 pub struct Component(Ratio);
 
 cast! {
@@ -1910,7 +1854,7 @@ cast! {
     },
 }
 
-/// A module with all preset color maps.
+/// 全てのプリセットカラーマップを含むモジュール。
 fn map() -> Module {
     let mut scope = Scope::new();
     scope.define("turbo", turbo());
@@ -1930,7 +1874,7 @@ fn map() -> Module {
     Module::new("map", scope)
 }
 
-/// Defines a gradient preset as a series of colors expressed as u32s.
+/// u32として表現された一連の色からなるグラデーションプリセットを定義します。
 macro_rules! preset {
     ($name:ident; $($colors:literal),* $(,)*) => {
         fn $name() -> Array {
