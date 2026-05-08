@@ -2,12 +2,12 @@ use ecow::EcoString;
 
 use crate::foundations::{Repr, ty};
 
-/// A type with two states.
+/// 2つの状態を持つ型。
 ///
-/// The boolean type has two values: `{true}` and `{false}`. It denotes whether
-/// something is active or enabled.
+/// ブール型は`{true}`と`{false}`の2つの値を持ちます。
+/// 何かが有効であるか、または有効化されているかを示します。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #false \
 /// #true \
