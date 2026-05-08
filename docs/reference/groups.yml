@@ -130,13 +130,13 @@
   category: foundations
   path: ["std"]
   details: |
-    A module that contains all globally accessible items.
+    グローバルにアクセス可能な全ての項目を含むモジュール。
 
-    # Using "shadowed" definitions
-    The `std` module is useful whenever you overrode a name from the global
-    scope (this is called _shadowing_). For instance, you might have used the
-    name `text` for a parameter. To still access the `text` element, write
-    `std.text`.
+    # 「シャドウされた」定義の利用
+    `std`モジュールは、グローバルスコープの名前を上書きしたとき
+    （これを_シャドウイング_といいます）に役立ちます。例えば、
+    `text`という名前を引数に使ったかもしれません。それでも`text`要素に
+    アクセスするには、`std.text`と書きます。
 
     ```example
     >>> #set page(margin: (left: 3em))
@@ -152,21 +152,23 @@
     #lorem(10)
     ```
 
-    # Conditional access
-    You can also use this in combination with the [dictionary
-    constructor]($dictionary) to conditionally access global definitions. This
-    can, for instance, be useful to use new or experimental functionality when
-    it is available, while falling back to an alternative implementation if
-    used on an older Typst version. In particular, this allows us to create
-    [polyfills](https://en.wikipedia.org/wiki/Polyfill_(programming)).
+    # 条件付きアクセス
+    [dictionaryコンストラクター]($dictionary)と組み合わせて使うことで、
+    グローバルな定義に条件付きでアクセスすることもできます。例えば、
+    新しい機能や実験的な機能が利用可能なときにはそれを使い、
+    古いバージョンのTypstで使われたときには代替の実装にフォールバックする、
+    といった用途に役立ちます。特に、これによって
+    [ポリフィル](https://en.wikipedia.org/wiki/Polyfill_(programming))を
+    作成できます。
 
-    This can be as simple as creating an alias to prevent warning messages, for
-    example, conditionally using `pattern` in Typst version 0.12, but using
-    [`tiling`] in newer versions. Since the parameters accepted by the `tiling`
-    function match those of the older `pattern` function, using the `tiling`
-    function when available and falling back to `pattern` otherwise will unify
-    the usage across all versions. Note that, when creating a polyfill,
-    [`sys.version`]($category/foundations/sys) can also be very useful.
+    例えば、警告メッセージを防ぐためのエイリアスを作成するといった、
+    単純な用途も考えられます。具体例として、Typstバージョン0.12では
+    `pattern`を、より新しいバージョンでは[`tiling`]を条件付きで使うことが挙げられます。
+    `tiling`関数が受け付ける引数は古い`pattern`関数のものと一致するため、
+    `tiling`関数が利用できるときはそれを使い、そうでないときは`pattern`に
+    フォールバックすることで、全てのバージョンを通して使い方を統一できます。
+    ポリフィルを作成する際には、[`sys.version`]($category/foundations/sys)も
+    非常に役立つ点に注意してください。
 
     ```typ
     #let tiling = if "tiling" in std { tiling } else { pattern }
