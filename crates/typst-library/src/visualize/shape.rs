@@ -126,9 +126,9 @@ pub struct RectElem {
     pub body: Option<Content>,
 }
 
-/// A square with optional content.
+/// オプションでコンテンツを含められる正方形。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// // Without content.
 /// #square(size: 40pt)
@@ -141,15 +141,13 @@ pub struct RectElem {
 /// ```
 #[elem]
 pub struct SquareElem {
-    /// The square's side length. This is mutually exclusive with `width` and
-    /// `height`.
+    /// 正方形の一辺の長さ。`width`および`height`とは排他です。
     #[external]
     pub size: Smart<Length>,
 
-    /// The square's width. This is mutually exclusive with `size` and `height`.
+    /// 正方形の幅。`size`および`height`とは排他です。
     ///
-    /// In contrast to `size`, this can be relative to the parent container's
-    /// width.
+    /// `size`とは異なり、こちらは親コンテナーの幅に対する相対指定が可能です。
     #[parse(
         let size = args.named::<Smart<Length>>("size")?.map(|s| s.map(Rel::from));
         match size {
@@ -159,46 +157,44 @@ pub struct SquareElem {
     )]
     pub width: Smart<Rel<Length>>,
 
-    /// The square's height. This is mutually exclusive with `size` and `width`.
+    /// 正方形の高さ。`size`および`width`とは排他です。
     ///
-    /// In contrast to `size`, this can be relative to the parent container's
-    /// height.
+    /// `size`とは異なり、こちらは親コンテナーの高さに対する相対指定が可能です。
     #[parse(match size {
         None => args.named("height")?,
         size => size.map(Into::into),
     })]
     pub height: Sizing,
 
-    /// How to fill the square. See the [rectangle's documentation]($rect.fill)
-    /// for more details.
+    /// 正方形の塗りつぶし方。
+    /// 詳細は[rectangleのドキュメント]($rect.fill)を参照してください。
     pub fill: Option<Paint>,
 
-    /// How to stroke the square. See the
-    /// [rectangle's documentation]($rect.stroke) for more details.
+    /// 正方形のストロークの設定方法。
+    /// 詳細は[rectangleのドキュメント]($rect.stroke)を参照してください。
     #[fold]
     pub stroke: Smart<Sides<Option<Option<Stroke>>>>,
 
-    /// How much to round the square's corners. See the
-    /// [rectangle's documentation]($rect.radius) for more details.
+    /// 正方形の角をどの程度丸めるか。
+    /// 詳細は[rectangleのドキュメント]($rect.radius)を参照してください。
     #[fold]
     pub radius: Corners<Option<Rel<Length>>>,
 
-    /// How much to pad the square's content. See the
-    /// [box's documentation]($box.inset) for more details.
+    /// 正方形のコンテンツのパディング量。
+    /// 詳細は[boxのドキュメント]($box.inset)を参照してください。
     #[fold]
     #[default(Sides::splat(Some(Abs::pt(5.0).into())))]
     pub inset: Sides<Option<Rel<Length>>>,
 
-    /// How much to expand the square's size without affecting the layout. See
-    /// the [box's documentation]($box.outset) for more details.
+    /// レイアウトに影響を与えずに正方形の大きさを拡大する量。
+    /// 詳細は[boxのドキュメント]($box.outset)を参照してください。
     #[fold]
     pub outset: Sides<Option<Rel<Length>>>,
 
-    /// The content to place into the square. The square expands to fit this
-    /// content, keeping the 1-1 aspect ratio.
+    /// 正方形に配置するコンテンツ。
+    /// 正方形はこのコンテンツにあわせて、1:1のアスペクト比を保ったまま拡大します。
     ///
-    /// When this is omitted, the square takes on a default size of at most
-    /// `{30pt}`.
+    /// 省略された場合、正方形は最大で`{30pt}`のデフォルトサイズになります。
     #[positional]
     pub body: Option<Content>,
 }
