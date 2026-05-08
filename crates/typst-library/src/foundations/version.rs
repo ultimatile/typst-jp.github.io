@@ -8,20 +8,19 @@ use ecow::{EcoString, EcoVec, eco_format};
 use crate::diag::{StrResult, bail};
 use crate::foundations::{Repr, cast, func, repr, scope, ty};
 
-/// A version with an arbitrary number of components.
+/// 任意の数の構成要素を持つバージョン。
 ///
-/// The first three components have names that can be used as fields: `major`,
-/// `minor`, `patch`. All following components do not have names.
+/// 最初の3つの構成要素には名前があり、フィールドとして利用できます。
+/// `major`、`minor`、`patch`の3つです。それ以降の構成要素には名前がありません。
 ///
-/// The list of components is semantically extended by an infinite list of
-/// zeros. This means that, for example, `0.8` is the same as `0.8.0`. As a
-/// special case, the empty version (that has no components at all) is the same
-/// as `0`, `0.0`, `0.0.0`, and so on.
+/// 構成要素のリストは、意味的には無限に続くゼロのリストで拡張されています。
+/// 例えば、`0.8`は`0.8.0`と同じです。特殊な場合として、
+/// 構成要素を全く持たない空のバージョンは`0`、`0.0`、`0.0.0`などと同じです。
 ///
-/// The current version of the Typst compiler is available as `sys.version`.
+/// Typstコンパイラーの現在のバージョンは`sys.version`として利用できます。
 ///
-/// You can convert a version to an array of explicitly given components using
-/// the [`array`] constructor.
+/// [`array`]コンストラクターを用いると、バージョンを明示的に与えられた構成要素の
+/// 配列に変換できます。
 #[ty(scope, cast)]
 #[derive(Debug, Default, Clone, Hash)]
 #[allow(clippy::derived_hash_with_manual_eq)]
@@ -61,9 +60,9 @@ impl Version {
 
 #[scope]
 impl Version {
-    /// Creates a new version.
+    /// 新しいバージョンを生成します。
     ///
-    /// It can have any number of components (even zero).
+    /// 構成要素はいくつでも持てます（ゼロでも構いません）。
     ///
     /// ```example
     /// #version() \
@@ -74,7 +73,7 @@ impl Version {
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The components of the version (array arguments are flattened)
+        /// バージョンの構成要素（配列引数は平坦化されます）。
         #[variadic]
         components: Vec<VersionComponents>,
     ) -> Version {
@@ -92,15 +91,15 @@ impl Version {
         version
     }
 
-    /// Retrieves a component of a version.
+    /// バージョンの構成要素を取得します。
     ///
-    /// The returned integer is always non-negative. Returns `0` if the version
-    /// isn't specified to the necessary length.
+    /// 返される整数は常に非負です。バージョンが必要な長さまで指定されていない場合は
+    /// `0`を返します。
     #[func]
     pub fn at(
         &self,
-        /// The index at which to retrieve the component. If negative, indexes
-        /// from the back of the explicitly given components.
+        /// 構成要素を取得するインデックス。負の値の場合は、明示的に与えられた
+        /// 構成要素の末尾からのインデックスとなります。
         index: i64,
     ) -> StrResult<i64> {
         let mut index = index;
