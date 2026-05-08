@@ -30,30 +30,27 @@ macro_rules! __dict {
 #[doc(inline)]
 pub use crate::__dict as dict;
 
-/// A map from string keys to values.
+/// 文字列キーから値へのマップ。
 ///
-/// You can construct a dictionary by enclosing comma-separated `key: value`
-/// pairs in parentheses. The values do not have to be of the same type. Since
-/// empty parentheses already yield an empty array, you have to use the special
-/// `(:)` syntax to create an empty dictionary.
+/// `key: value`のペアをカンマで区切って括弧で囲むことで辞書を構築できます。
+/// 値は同じ型でなくても構いません。空の括弧はすでに空の配列を表すため、
+/// 空の辞書を作るには専用の構文`(:)`を使う必要があります。
 ///
-/// A dictionary is conceptually similar to an [array], but it is indexed by
-/// strings instead of integers. You can access and create dictionary entries
-/// with the `.at()` method. If you know the key statically, you can
-/// alternatively use [field access notation]($scripting/#fields) (`.key`) to
-/// access the value. To check whether a key is present in the dictionary, use
-/// the `in` keyword.
+/// 辞書は概念的には[配列]($array)に似ていますが、整数の代わりに文字列でインデックスされます。
+/// `.at()`メソッドで辞書のエントリにアクセスしたり作成したりできます。
+/// キーが静的に分かっている場合は、代わりに[フィールドアクセス記法]($scripting/#fields)
+/// （`.key`）で値にアクセスすることもできます。辞書にキーが含まれているかを
+/// 確認するには、`in`キーワードを使います。
 ///
-/// You can iterate over the pairs in a dictionary using a [for
-/// loop]($scripting/#loops). This will iterate in the order the pairs were
-/// inserted / declared initially.
+/// 辞書のペアは[forループ]($scripting/#loops)で反復処理できます。
+/// ペアは最初に挿入または宣言された順に反復処理されます。
 ///
-/// Dictionaries can be added with the `+` operator and [joined together]($scripting/#blocks).
-/// They can also be [spread]($arguments/#spreading) into a function call or
-/// another dictionary[^1] with the `..spread` operator. In each case, if a
-/// key appears multiple times, the last value will override the others.
+/// 辞書は`+`演算子で加算したり[結合]($scripting/#blocks)したりできます。
+/// `..spread`演算子で関数呼び出しや別の辞書[^1]に
+/// [スプレッド]($arguments/#spreading)することもできます。
+/// いずれの場合も、キーが複数回現れた場合は、最後の値が他を上書きします。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #let dict = (
 ///   name: "Typst",
@@ -70,9 +67,8 @@ pub use crate::__dict as dict;
 /// #("name" in dict)
 /// ```
 ///
-/// [^1]: When spreading into a dictionary, if all items between the parentheses
-/// are spread, you have to use the special `(:..spread)` syntax. Otherwise, it
-/// will spread into an array.
+/// [^1]: 辞書にスプレッドする際、括弧内の全ての項目がスプレッドである場合は、
+/// 専用の構文`(:..spread)`を使う必要があります。そうでなければ配列にスプレッドされます。
 #[ty(scope, cast, name = "dictionary")]
 #[derive(Default, Clone, PartialEq)]
 pub struct Dict(Arc<IndexMap<Str, Value, FxBuildHasher>>);
@@ -169,40 +165,38 @@ impl Dict {
 
 #[scope]
 impl Dict {
-    /// Converts a value into a dictionary.
+    /// 値を辞書に変換します。
     ///
-    /// Note that this function is only intended for conversion of a
-    /// dictionary-like value to a dictionary, not for creation of a dictionary
-    /// from individual pairs. Use the dictionary syntax `(key: value)` instead.
+    /// この関数は辞書のような値を辞書に変換するためだけのものであり、
+    /// 個別のペアから辞書を作成するためのものではない点に注意してください。
+    /// その用途には辞書構文`(key: value)`を使ってください。
     ///
     /// ```example
     /// #dictionary(sys).at("version")
     /// ```
     #[func(constructor)]
     pub fn construct(
-        /// The value that should be converted to a dictionary.
+        /// 辞書に変換する値。
         value: ToDict,
     ) -> Dict {
         value.0
     }
 
-    /// The number of pairs in the dictionary.
+    /// 辞書のペアの数。
     #[func(title = "Length")]
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
-    /// Returns the value associated with the specified key in the dictionary.
-    /// May be used on the left-hand side of an assignment if the key is already
-    /// present in the dictionary. Returns the default value if the key is not
-    /// part of the dictionary or fails with an error if no default value was
-    /// specified.
+    /// 辞書内の指定したキーに対応付けられた値を返します。キーがすでに辞書に存在する場合は、
+    /// 代入の左辺としても利用できます。キーが辞書にない場合はデフォルト値を返し、
+    /// デフォルト値が指定されていなければエラーになります。
     #[func]
     pub fn at(
         &self,
-        /// The key at which to retrieve the item.
+        /// 項目を取得するキー。
         key: Str,
-        /// A default value to return if the key is not part of the dictionary.
+        /// キーが辞書にない場合に返すデフォルト値。
         #[named]
         default: Option<Value>,
     ) -> StrResult<Value> {
@@ -213,29 +207,28 @@ impl Dict {
             .ok_or_else(|| missing_key_no_default(&key))
     }
 
-    /// Inserts a new pair into the dictionary. If the dictionary already
-    /// contains this key, the value is updated.
+    /// 辞書に新しいペアを挿入します。辞書がすでにこのキーを持っている場合、
+    /// 値は更新されます。
     ///
-    /// To insert multiple pairs at once, you can just alternatively another
-    /// dictionary with the `+=` operator.
+    /// 複数のペアを一度に挿入するには、`+=`演算子で別の辞書を加えるだけです。
     #[func]
     pub fn insert(
         &mut self,
-        /// The key of the pair that should be inserted.
+        /// 挿入するペアのキー。
         key: Str,
-        /// The value of the pair that should be inserted.
+        /// 挿入するペアの値。
         value: Value,
     ) {
         Arc::make_mut(&mut self.0).insert(key, value);
     }
 
-    /// Removes a pair from the dictionary by key and return the value.
+    /// キーで指定したペアを辞書から削除し、その値を返します。
     #[func]
     pub fn remove(
         &mut self,
-        /// The key of the pair to remove.
+        /// 削除するペアのキー。
         key: Str,
-        /// A default value to return if the key does not exist.
+        /// キーが存在しない場合に返すデフォルト値。
         #[named]
         default: Option<Value>,
     ) -> StrResult<Value> {
@@ -245,20 +238,19 @@ impl Dict {
             .ok_or_else(|| missing_key(&key))
     }
 
-    /// Returns the keys of the dictionary as an array in insertion order.
+    /// 辞書のキーを挿入順の配列として返します。
     #[func]
     pub fn keys(&self) -> Array {
         self.0.keys().cloned().map(Value::Str).collect()
     }
 
-    /// Returns the values of the dictionary as an array in insertion order.
+    /// 辞書の値を挿入順の配列として返します。
     #[func]
     pub fn values(&self) -> Array {
         self.0.values().cloned().collect()
     }
 
-    /// Returns the keys and values of the dictionary as an array of pairs. Each
-    /// pair is represented as an array of length two.
+    /// 辞書のキーと値をペアの配列として返します。各ペアは長さ2の配列として表されます。
     #[func]
     pub fn pairs(&self) -> Array {
         self.0
