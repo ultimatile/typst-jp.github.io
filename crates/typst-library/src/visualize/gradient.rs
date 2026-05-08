@@ -14,24 +14,21 @@ use crate::foundations::{
 use crate::layout::{Angle, Axes, Dir, Quadrant, Ratio};
 use crate::visualize::{Color, ColorSpace, WeightedColor};
 
-/// A color gradient.
+/// 色のグラデーション。
 ///
-/// Typst supports linear gradients through the
-/// [`gradient.linear` function]($gradient.linear), radial gradients through
-/// the [`gradient.radial` function]($gradient.radial), and conic gradients
-/// through the [`gradient.conic` function]($gradient.conic).
+/// Typstは[`gradient.linear`関数]($gradient.linear)による線形グラデーション、[`gradient.radial`関数]($gradient.radial)による放射状グラデーション、[`gradient.conic`関数]($gradient.conic)による円錐状グラデーションをサポートしています。
 ///
-/// A gradient can be used for the following purposes:
-/// - As a fill to paint the interior of a shape:
+/// グラデーションは以下の用途に使用できます。
+/// - 図形の内部を塗りつぶす塗り：
 ///   `{rect(fill: gradient.linear(..))}`
-/// - As a stroke to paint the outline of a shape:
+/// - 図形の輪郭を描画するストローク：
 ///   `{rect(stroke: 1pt + gradient.linear(..))}`
-/// - As the fill of text:
+/// - テキストの塗り：
 ///   `{set text(fill: gradient.linear(..))}`
-/// - As a color map you can [sample]($gradient.sample) from:
+/// - [サンプル]($gradient.sample)を取得できるカラーマップ：
 ///   `{gradient.linear(..).sample(50%)}`
 ///
-/// # Examples
+/// # 例
 /// ```example
 /// >>> #set square(size: 50pt)
 /// #stack(
@@ -43,11 +40,7 @@ use crate::visualize::{Color, ColorSpace, WeightedColor};
 /// )
 /// ```
 ///
-/// Gradients are also supported on text, but only when setting the
-/// [relativeness]($gradient.relative) to either `{auto}` (the default value) or
-/// `{"parent"}`. To create word-by-word or glyph-by-glyph gradients, you can
-/// wrap the words or characters of your text in [boxes]($box) manually or
-/// through a [show rule]($styling/#show-rules).
+/// グラデーションはテキストにも適用できますが、[相対配置]($gradient.relative)が `{auto}`（デフォルト値）または `{"parent"}` に設定されている場合に限ります。単語ごとやグリフごとのグラデーションを作成するには、テキストの単語や文字を手動で、または[showルール]($styling/#show-rules)を介して[ボックス]($box)で囲むことができます。
 ///
 /// ```example
 /// >>> #set page(width: auto, height: auto, margin: 12pt)
@@ -61,58 +54,33 @@ use crate::visualize::{Color, ColorSpace, WeightedColor};
 /// This is a gradient on text, but with a #rainbow[twist]!
 /// ```
 ///
-/// # Stops
-/// A gradient is composed of a series of stops. Each of these stops has a color
-/// and an offset. The offset is a [ratio]($ratio) between `{0%}` and `{100%}` or
-/// an angle between `{0deg}` and `{360deg}`. The offset is a relative position
-/// that determines how far along the gradient the stop is located. The stop's
-/// color is the color of the gradient at that position. You can choose to omit
-/// the offsets when defining a gradient. In this case, Typst will space all
-/// stops evenly.
+/// # ストップ
+/// グラデーションは一連のストップから構成されます。各ストップには色とオフセットがあります。オフセットは `{0%}` から `{100%}` までの[比率]($ratio)、または `{0deg}` から `{360deg}` までの角度です。オフセットは、ストップがグラデーション上のどの位置にあるかを決定する相対位置です。ストップの色は、その位置でのグラデーションの色です。グラデーションを定義する際にオフセットを省略することもできます。その場合、Typstは全てのストップを等間隔に配置します。
 ///
-/// Typst predefines color maps that you can use as stops. See the
-/// [`color`]($color/#predefined-color-maps) documentation for more details.
+/// Typstはストップとして使用できるカラーマップを事前定義しています。詳細は[`color`]($color/#predefined-color-maps)のドキュメントを参照してください。
 ///
-/// # Relativeness
-/// The location of the `{0%}` and `{100%}` stops depends on the dimensions
-/// of a container. This container can either be the shape that it is being
-/// painted on, or the closest surrounding container. This is controlled by the
-/// `relative` argument of a gradient constructor. By default, gradients are
-/// relative to the shape they are being painted on, unless the gradient is
-/// applied on text, in which case they are relative to the closest ancestor
-/// container.
+/// # 相対配置
+/// `{0%}` と `{100%}` のストップの位置はコンテナの寸法に依存します。このコンテナは、塗りつぶされる図形そのものか、最も近い周囲のコンテナのいずれかになります。これはグラデーションのコンストラクターの `relative` 引数によって制御されます。デフォルトでは、グラデーションは塗りつぶされる図形に対して相対的です。ただし、グラデーションがテキストに適用されている場合は、最も近い祖先のコンテナに対して相対的になります。
 ///
-/// Typst determines the ancestor container as follows:
-/// - For shapes that are placed at the root/top level of the document, the
-///   closest ancestor is the page itself.
-/// - For other shapes, the ancestor is the innermost [`block`] or [`box`] that
-///   contains the shape. This includes the boxes and blocks that are implicitly
-///   created by show rules and elements. For example, a [`rotate`] will not
-///   affect the parent of a gradient, but a [`grid`] will.
+/// Typstは祖先コンテナを以下のように決定します。
+/// - 文書のルート/最上位レベルに配置された図形の場合、最も近い祖先はページ自体です。
+/// - その他の図形の場合、祖先は図形を含む最も内側の[`block`]($block)または[`box`]($box)です。これにはshowルールや要素によって暗黙的に作成されたボックスやブロックも含まれます。例えば、[`rotate`]($rotate)はグラデーションの親に影響しませんが、[`grid`]($grid)は影響します。
 ///
-/// # Color spaces and interpolation
-/// Gradients can be interpolated in any color space. By default, gradients are
-/// interpolated in the [Oklab]($color.oklab) color space, which is a
-/// [perceptually uniform](https://programmingdesignsystems.com/color/perceptually-uniform-color-spaces/index.html)
-/// color space. This means that the gradient will be perceived as having a
-/// smooth progression of colors. This is particularly useful for data
-/// visualization.
+/// # 色空間と補間
+/// グラデーションは任意の色空間で補間できます。デフォルトでは、グラデーションは[Oklab]($color.oklab)色空間で補間されます。これは[知覚的に均一](https://programmingdesignsystems.com/color/perceptually-uniform-color-spaces/index.html)な色空間です。これは、グラデーションが滑らかな色の遷移として知覚されることを意味します。これは特にデータの視覚化に有用です。
 ///
-/// However, you can choose to interpolate the gradient in any supported color
-/// space you want, but beware that some color spaces are not suitable for
-/// perceptually interpolating between colors. Consult the table below when
-/// choosing an interpolation space.
+/// ただし、サポートされている任意の色空間でグラデーションを補間することを選べますが、一部の色空間は色の間を知覚的に補間するのに適していないことに注意してください。補間空間を選ぶ際は、以下の表を参照してください。
 ///
-/// |           Color space           | Perceptually uniform? |
+/// |           色空間                | 知覚的に均一？        |
 /// | ------------------------------- |-----------------------|
-/// | [Oklab]($color.oklab)           | *Yes*                 |
-/// | [Oklch]($color.oklch)           | *Yes*                 |
-/// | [sRGB]($color.rgb)              | *No*                  |
-/// | [linear-RGB]($color.linear-rgb) | *Yes*                 |
-/// | [CMYK]($color.cmyk)             | *No*                  |
-/// | [Grayscale]($color.luma)        | *Yes*                 |
-/// | [HSL]($color.hsl)               | *No*                  |
-/// | [HSV]($color.hsv)               | *No*                  |
+/// | [Oklab]($color.oklab)           | *はい*                |
+/// | [Oklch]($color.oklch)           | *はい*                |
+/// | [sRGB]($color.rgb)              | *いいえ*              |
+/// | [linear-RGB]($color.linear-rgb) | *はい*                |
+/// | [CMYK]($color.cmyk)             | *いいえ*              |
+/// | [Grayscale]($color.luma)        | *はい*                |
+/// | [HSL]($color.hsl)               | *いいえ*              |
+/// | [HSV]($color.hsv)               | *いいえ*              |
 ///
 /// ```preview
 /// >>> #set text(fill: white, font: "IBM Plex Sans", 8pt)
@@ -142,11 +110,8 @@ use crate::visualize::{Color, ColorSpace, WeightedColor};
 /// }
 /// ```
 ///
-/// # Direction
-/// Some gradients are sensitive to direction. For example, a linear gradient
-/// has an angle that determines its direction. Typst uses a clockwise angle,
-/// with 0° being from left to right, 90° from top to bottom, 180° from right to
-/// left, and 270° from bottom to top.
+/// # 方向
+/// 一部のグラデーションは方向に敏感です。例えば、線形グラデーションには方向を決定する角度があります。Typstは時計回りの角度を使用します。0°は左から右、90°は上から下、180°は右から左、270°は下から上です。
 ///
 /// ```example
 /// >>> #set square(size: 50pt)
@@ -160,19 +125,11 @@ use crate::visualize::{Color, ColorSpace, WeightedColor};
 /// )
 /// ```
 ///
-/// # Note on file sizes
+/// # ファイルサイズに関する注意
 ///
-/// Gradients can be quite large, especially if they have many stops. This is
-/// because gradients are stored as a list of colors and offsets, which can
-/// take up a lot of space. If you are concerned about file sizes, you should
-/// consider the following:
-/// - SVG gradients are currently inefficiently encoded. This will be improved
-///   in the future.
-/// - PDF gradients in the [`color.oklab`], [`color.hsv`], [`color.hsl`], and
-///   [`color.oklch`] color spaces are stored as a list of [`color.rgb`] colors
-///   with extra stops in between. This avoids needing to encode these color
-///   spaces in your PDF file, but it does add extra stops to your gradient,
-///   which can increase the file size.
+/// グラデーションは、特にストップが多い場合、かなり大きくなることがあります。これはグラデーションが色とオフセットのリストとして保存されるためで、多くの容量を占有することがあります。ファイルサイズが気になる場合は、以下を考慮すべきです。
+/// - SVGグラデーションは現在、非効率的にエンコードされています。これは将来改善される予定です。
+/// - [`color.oklab`]、[`color.hsv`]、[`color.hsl`]、[`color.oklch`]色空間のPDFグラデーションは、間に追加のストップを挿入した[`color.rgb`]色のリストとして保存されます。これによりPDFファイルでこれらの色空間をエンコードする必要がなくなりますが、グラデーションに追加のストップが加わるため、ファイルサイズが増える可能性があります。
 #[ty(scope, cast)]
 #[derive(Clone, Eq, PartialEq, Hash)]
 pub enum Gradient {
@@ -184,8 +141,7 @@ pub enum Gradient {
 #[scope]
 #[allow(clippy::too_many_arguments)]
 impl Gradient {
-    /// Creates a new linear gradient, in which colors transition along a
-    /// straight line.
+    /// 色が直線に沿って遷移する新しい線形グラデーションを作成します。
     ///
     /// ```example
     /// #rect(
@@ -200,30 +156,26 @@ impl Gradient {
     pub fn linear(
         args: &mut Args,
         span: Span,
-        /// The color [stops](#stops) of the gradient.
+        /// グラデーションの色の[ストップ](#stops)。
         #[variadic]
         stops: Vec<Spanned<GradientStop>>,
-        /// The color space in which to interpolate the gradient.
+        /// グラデーションを補間する色空間。
         ///
-        /// Defaults to a perceptually uniform color space called
-        /// [Oklab]($color.oklab).
+        /// デフォルトは[Oklab]($color.oklab)と呼ばれる知覚的に均一な色空間です。
         #[named]
         #[default(ColorSpace::Oklab)]
         space: ColorSpace,
-        /// The [relative placement](#relativeness) of the gradient.
+        /// グラデーションの[相対配置](#relativeness)。
         ///
-        /// For an element placed at the root/top level of the document, the
-        /// parent is the page itself. For other elements, the parent is the
-        /// innermost block, box, column, grid, or stack that contains the
-        /// element.
+        /// 文書のルート/最上位レベルに配置された要素の場合、親はページ自体です。その他の要素の場合、親は要素を含む最も内側のblock、box、column、grid、またはstackです。
         #[named]
         #[default(Smart::Auto)]
         relative: Smart<RelativeTo>,
-        /// The direction of the gradient.
+        /// グラデーションの方向。
         #[external]
         #[default(Dir::LTR)]
         dir: Dir,
-        /// The angle of the gradient.
+        /// グラデーションの角度。
         #[external]
         angle: Angle,
     ) -> SourceResult<Gradient> {
@@ -256,20 +208,11 @@ impl Gradient {
         })))
     }
 
-    /// Creates a new radial gradient, in which colors radiate away from an
-    /// origin.
+    /// 色が原点から放射状に広がる新しい放射状グラデーションを作成します。
     ///
-    /// The gradient is defined by two circles: the focal circle and the end
-    /// circle. The focal circle is a circle with center `focal-center` and
-    /// radius `focal-radius`, that defines the points at which the gradient
-    /// starts and has the color of the first stop. The end circle is a circle
-    /// with center `center` and radius `radius`, that defines the points at
-    /// which the gradient ends and has the color of the last stop. The gradient
-    /// is then interpolated between these two circles.
+    /// グラデーションは2つの円、すなわち焦点円と終端円によって定義されます。焦点円は中心 `focal-center` と半径 `focal-radius` を持つ円で、グラデーションが開始する点を定義し、最初のストップの色を持ちます。終端円は中心 `center` と半径 `radius` を持つ円で、グラデーションが終了する点を定義し、最後のストップの色を持ちます。グラデーションはこれら2つの円の間で補間されます。
     ///
-    /// Using these four values, also called the focal point for the starting
-    /// circle and the center and radius for the end circle, we can define a
-    /// gradient with more interesting properties than a basic radial gradient.
+    /// これら4つの値（始点円の焦点と終端円の中心と半径とも呼ばれる）を使用すると、基本的な放射状グラデーションよりも興味深い特性を持つグラデーションを定義できます。
     ///
     /// ```example
     /// >>> #set circle(radius: 30pt)
@@ -289,55 +232,48 @@ impl Gradient {
     #[func(title = "Radial Gradient")]
     fn radial(
         span: Span,
-        /// The color [stops](#stops) of the gradient.
+        /// グラデーションの色の[ストップ](#stops)。
         #[variadic]
         stops: Vec<Spanned<GradientStop>>,
-        /// The color space in which to interpolate the gradient.
+        /// グラデーションを補間する色空間。
         ///
-        /// Defaults to a perceptually uniform color space called
-        /// [Oklab]($color.oklab).
+        /// デフォルトは[Oklab]($color.oklab)と呼ばれる知覚的に均一な色空間です。
         #[named]
         #[default(ColorSpace::Oklab)]
         space: ColorSpace,
-        /// The [relative placement](#relativeness) of the gradient.
+        /// グラデーションの[相対配置](#relativeness)。
         ///
-        /// For an element placed at the root/top level of the document, the parent
-        /// is the page itself. For other elements, the parent is the innermost block,
-        /// box, column, grid, or stack that contains the element.
+        /// 文書のルート/最上位レベルに配置された要素の場合、親はページ自体です。その他の要素の場合、親は要素を含む最も内側のblock、box、column、grid、またはstackです。
         #[named]
         #[default(Smart::Auto)]
         relative: Smart<RelativeTo>,
-        /// The center of the end circle of the gradient.
+        /// グラデーションの終端円の中心。
         ///
-        /// A value of `{(50%, 50%)}` means that the end circle is
-        /// centered inside of its container.
+        /// 値 `{(50%, 50%)}` は、終端円がコンテナの内側中央に配置されることを意味します。
         #[named]
         #[default(Axes::splat(Ratio::new(0.5)))]
         center: Axes<Ratio>,
-        /// The radius of the end circle of the gradient.
+        /// グラデーションの終端円の半径。
         ///
-        /// By default, it is set to `{50%}`. The ending radius must be bigger
-        /// than the focal radius.
+        /// デフォルトでは `{50%}` に設定されています。終端半径は焦点半径より大きくなければなりません。
         #[named]
         #[default(Spanned::new(Ratio::new(0.5), Span::detached()))]
         radius: Spanned<Ratio>,
-        /// The center of the focal circle of the gradient.
+        /// グラデーションの焦点円の中心。
         ///
-        /// The focal center must be inside of the end circle.
+        /// 焦点中心は終端円の内側になければなりません。
         ///
-        /// A value of `{(50%, 50%)}` means that the focal circle is
-        /// centered inside of its container.
+        /// 値 `{(50%, 50%)}` は、焦点円がコンテナの内側中央に配置されることを意味します。
         ///
-        /// By default it is set to the same as the center of the last circle.
+        /// デフォルトでは終端円の中心と同じに設定されます。
         #[named]
         #[default(Smart::Auto)]
         focal_center: Smart<Axes<Ratio>>,
-        /// The radius of the focal circle of the gradient.
+        /// グラデーションの焦点円の半径。
         ///
-        /// The focal center must be inside of the end circle.
+        /// 焦点中心は終端円の内側になければなりません。
         ///
-        /// By default, it is set to `{0%}`. The focal radius must be smaller
-        /// than the ending radius`.
+        /// デフォルトでは `{0%}` に設定されています。焦点半径は終端半径より小さくなければなりません。
         #[named]
         #[default(Spanned::new(Ratio::new(0.0), Span::detached()))]
         focal_radius: Spanned<Ratio>,
@@ -380,11 +316,9 @@ impl Gradient {
         })))
     }
 
-    /// Creates a new conic gradient, in which colors change radially around a
-    /// center point.
+    /// 色が中心点を中心に放射状に変化する新しい円錐状グラデーションを作成します。
     ///
-    /// You can control the center point of the gradient by using the `center`
-    /// argument. By default, the center point is the center of the shape.
+    /// `center` 引数を使用することで、グラデーションの中心点を制御できます。デフォルトでは、中心点は図形の中心です。
     ///
     /// ```example
     /// >>> #set circle(radius: 30pt)
@@ -403,32 +337,28 @@ impl Gradient {
     #[func(title = "Conic Gradient")]
     pub fn conic(
         span: Span,
-        /// The color [stops](#stops) of the gradient.
+        /// グラデーションの色の[ストップ](#stops)。
         #[variadic]
         stops: Vec<Spanned<GradientStop>>,
-        /// The angle of the gradient.
+        /// グラデーションの角度。
         #[named]
         #[default(Angle::zero())]
         angle: Angle,
-        /// The color space in which to interpolate the gradient.
+        /// グラデーションを補間する色空間。
         ///
-        /// Defaults to a perceptually uniform color space called
-        /// [Oklab]($color.oklab).
+        /// デフォルトは[Oklab]($color.oklab)と呼ばれる知覚的に均一な色空間です。
         #[named]
         #[default(ColorSpace::Oklab)]
         space: ColorSpace,
-        /// The [relative placement](#relativeness) of the gradient.
+        /// グラデーションの[相対配置](#relativeness)。
         ///
-        /// For an element placed at the root/top level of the document, the parent
-        /// is the page itself. For other elements, the parent is the innermost block,
-        /// box, column, grid, or stack that contains the element.
+        /// 文書のルート/最上位レベルに配置された要素の場合、親はページ自体です。その他の要素の場合、親は要素を含む最も内側のblock、box、column、grid、またはstackです。
         #[named]
         #[default(Smart::Auto)]
         relative: Smart<RelativeTo>,
-        /// The center of the circle of the gradient.
+        /// グラデーションの円の中心。
         ///
-        /// A value of `{(50%, 50%)}` means that the circle is centered inside
-        /// of its container.
+        /// 値 `{(50%, 50%)}` は、円がコンテナの内側中央に配置されることを意味します。
         #[named]
         #[default(Axes::splat(Ratio::new(0.5)))]
         center: Axes<Ratio>,
@@ -450,11 +380,9 @@ impl Gradient {
         })))
     }
 
-    /// Creates a sharp version of this gradient.
+    /// このグラデーションのシャープ版を作成します。
     ///
-    /// Sharp gradients have discrete jumps between colors, instead of a
-    /// smooth transition. They are particularly useful for creating color
-    /// lists for a preset gradient.
+    /// シャープグラデーションは、滑らかな遷移ではなく色の間に離散的なジャンプがあります。プリセットグラデーション用の色リストを作成する際に特に有用です。
     ///
     /// ```example
     /// #set rect(width: 100%, height: 20pt)
@@ -466,9 +394,9 @@ impl Gradient {
     #[func]
     pub fn sharp(
         &self,
-        /// The number of stops in the gradient.
+        /// グラデーションのストップ数。
         steps: Spanned<usize>,
-        /// How much to smooth the gradient.
+        /// グラデーションを平滑化する度合い。
         #[named]
         #[default(Spanned::new(Ratio::zero(), Span::detached()))]
         smoothness: Spanned<Ratio>,
@@ -547,8 +475,7 @@ impl Gradient {
         })
     }
 
-    /// Repeats this gradient a given number of times, optionally mirroring it
-    /// at every second repetition.
+    /// このグラデーションを指定された回数繰り返します。オプションで、2回目ごとに鏡映できます。
     ///
     /// ```example
     /// #circle(
@@ -561,10 +488,9 @@ impl Gradient {
     #[func]
     pub fn repeat(
         &self,
-        /// The number of times to repeat the gradient.
+        /// グラデーションを繰り返す回数。
         repetitions: Spanned<usize>,
-        /// Whether to mirror the gradient at every second repetition, i.e.,
-        /// the first instance (and all odd ones) stays unchanged.
+        /// 2回目ごとにグラデーションを鏡映するかどうか。すなわち、最初のインスタンス（および全ての奇数番目）は変更されません。
         ///
         /// ```example
         /// #circle(
@@ -637,7 +563,7 @@ impl Gradient {
         })
     }
 
-    /// Returns the kind of this gradient.
+    /// このグラデーションの種類を返します。
     #[func]
     pub fn kind(&self) -> Func {
         match self {
@@ -647,7 +573,7 @@ impl Gradient {
         }
     }
 
-    /// Returns the stops of this gradient.
+    /// このグラデーションのストップを返します。
     #[func]
     pub fn stops(&self) -> Vec<GradientStop> {
         match self {
@@ -678,7 +604,7 @@ impl Gradient {
         }
     }
 
-    /// Returns the mixing space of this gradient.
+    /// このグラデーションの混合色空間を返します。
     #[func]
     pub fn space(&self) -> ColorSpace {
         match self {
@@ -688,7 +614,7 @@ impl Gradient {
         }
     }
 
-    /// Returns the relative placement of this gradient.
+    /// このグラデーションの相対配置を返します。
     #[func]
     pub fn relative(&self) -> Smart<RelativeTo> {
         match self {
@@ -698,9 +624,9 @@ impl Gradient {
         }
     }
 
-    /// Returns the angle of this gradient.
+    /// このグラデーションの角度を返します。
     ///
-    /// Returns `{none}` if the gradient is neither linear nor conic.
+    /// グラデーションが線形でも円錐状でもない場合、`{none}` を返します。
     #[func]
     pub fn angle(&self) -> Option<Angle> {
         match self {
@@ -710,9 +636,9 @@ impl Gradient {
         }
     }
 
-    /// Returns the center of this gradient.
+    /// このグラデーションの中心を返します。
     ///
-    /// Returns `{none}` if the gradient is neither radial nor conic.
+    /// グラデーションが放射状でも円錐状でもない場合、`{none}` を返します。
     #[func]
     pub fn center(&self) -> Option<Axes<Ratio>> {
         match self {
@@ -722,9 +648,9 @@ impl Gradient {
         }
     }
 
-    /// Returns the radius of this gradient.
+    /// このグラデーションの半径を返します。
     ///
-    /// Returns `{none}` if the gradient is not radial.
+    /// グラデーションが放射状でない場合、`{none}` を返します。
     #[func]
     pub fn radius(&self) -> Option<Ratio> {
         match self {
@@ -734,9 +660,9 @@ impl Gradient {
         }
     }
 
-    /// Returns the focal-center of this gradient.
+    /// このグラデーションの焦点中心を返します。
     ///
-    /// Returns `{none}` if the gradient is not radial.
+    /// グラデーションが放射状でない場合、`{none}` を返します。
     #[func]
     pub fn focal_center(&self) -> Option<Axes<Ratio>> {
         match self {
@@ -746,9 +672,9 @@ impl Gradient {
         }
     }
 
-    /// Returns the focal-radius of this gradient.
+    /// このグラデーションの焦点半径を返します。
     ///
-    /// Returns `{none}` if the gradient is not radial.
+    /// グラデーションが放射状でない場合、`{none}` を返します。
     #[func]
     pub fn focal_radius(&self) -> Option<Ratio> {
         match self {
@@ -758,15 +684,13 @@ impl Gradient {
         }
     }
 
-    /// Sample the gradient at a given position.
+    /// 指定された位置でグラデーションをサンプリングします。
     ///
-    /// The position is either a position along the gradient (a [ratio] between
-    /// `{0%}` and `{100%}`) or an [angle]. Any value outside of this range will
-    /// be clamped.
+    /// 位置は、グラデーションに沿った位置（`{0%}` から `{100%}` までの[比率]($ratio)）または[角度]($angle)のいずれかです。この範囲外の値は範囲内に丸められます。
     #[func]
     pub fn sample(
         &self,
-        /// The position at which to sample the gradient.
+        /// グラデーションをサンプリングする位置。
         t: RatioOrAngle,
     ) -> Color {
         let value: f64 = t.to_ratio().get();
@@ -778,12 +702,11 @@ impl Gradient {
         }
     }
 
-    /// Samples the gradient at multiple positions at once and returns the
-    /// results as an array.
+    /// グラデーションを複数の位置で一度にサンプリングし、結果を配列として返します。
     #[func]
     pub fn samples(
         &self,
-        /// The positions at which to sample the gradient.
+        /// グラデーションをサンプリングする位置。
         #[variadic]
         ts: Vec<RatioOrAngle>,
     ) -> Array {
@@ -792,7 +715,7 @@ impl Gradient {
 }
 
 impl Gradient {
-    /// Clones this gradient, but with a different relative placement.
+    /// このグラデーションを複製しますが、異なる相対配置を持ちます。
     pub fn with_relative(mut self, relative: RelativeTo) -> Self {
         match &mut self {
             Self::Linear(linear) => {
@@ -808,7 +731,7 @@ impl Gradient {
 
         self
     }
-    /// Returns a reference to the stops of this gradient.
+    /// このグラデーションのストップへの参照を返します。
     pub fn stops_ref(&self) -> &[(Color, Ratio)] {
         match self {
             Gradient::Linear(linear) => &linear.stops,
@@ -817,8 +740,8 @@ impl Gradient {
         }
     }
 
-    /// Samples the gradient at a given position, in the given container.
-    /// Handles the aspect ratio and angle directly.
+    /// 指定されたコンテナ内の指定された位置でグラデーションをサンプリングします。
+    /// アスペクト比と角度を直接処理します。
     pub fn sample_at(&self, (x, y): (f32, f32), (width, height): (f32, f32)) -> Color {
         // Normalize the coordinates.
         let (mut x, mut y) = (x / width, y / height);
@@ -879,7 +802,7 @@ impl Gradient {
         self.sample(RatioOrAngle::Ratio(Ratio::new(t.clamp(0.0, 1.0))))
     }
 
-    /// Does this gradient need to be anti-aliased?
+    /// このグラデーションをアンチエイリアスする必要があるか。
     pub fn anti_alias(&self) -> bool {
         match self {
             Self::Linear(linear) => linear.anti_alias,
@@ -888,17 +811,16 @@ impl Gradient {
         }
     }
 
-    /// Returns the relative placement of this gradient, handling
-    /// the special case of `auto`.
+    /// このグラデーションの相対配置を返します。`auto` の特別なケースを処理します。
     pub fn unwrap_relative(&self, on_text: bool) -> RelativeTo {
         self.relative().unwrap_or_else(|| {
             if on_text { RelativeTo::Parent } else { RelativeTo::Self_ }
         })
     }
 
-    /// Corrects this angle for the aspect ratio of a gradient.
+    /// グラデーションのアスペクト比に応じてこの角度を補正します。
     ///
-    /// This is used specifically for gradients.
+    /// これは特にグラデーション用に使用されます。
     pub fn correct_aspect_ratio(angle: Angle, aspect_ratio: Ratio) -> Angle {
         let rad = (angle.to_rad().rem_euclid(TAU).tan() / aspect_ratio.get()).atan();
         let rad = match angle.quadrant() {
@@ -931,18 +853,18 @@ impl Repr for Gradient {
     }
 }
 
-/// A gradient that interpolates between two colors along an axis.
+/// 軸に沿って2色間を補間するグラデーション。
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct LinearGradient {
-    /// The color stops of this gradient.
+    /// このグラデーションの色のストップ。
     pub stops: Vec<(Color, Ratio)>,
-    /// The direction of this gradient.
+    /// このグラデーションの方向。
     pub angle: Angle,
-    /// The color space in which to interpolate the gradient.
+    /// グラデーションを補間する色空間。
     pub space: ColorSpace,
-    /// The relative placement of the gradient.
+    /// グラデーションの相対配置。
     pub relative: Smart<RelativeTo>,
-    /// Whether to anti-alias the gradient (used for sharp gradients).
+    /// グラデーションをアンチエイリアスするかどうか（シャープグラデーションに使用）。
     pub anti_alias: bool,
 }
 
@@ -993,24 +915,24 @@ impl Repr for LinearGradient {
     }
 }
 
-/// A gradient that interpolates between two colors along a circle.
+/// 円に沿って2色間を補間するグラデーション。
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct RadialGradient {
-    /// The color stops of this gradient.
+    /// このグラデーションの色のストップ。
     pub stops: Vec<(Color, Ratio)>,
-    /// The center of last circle of this gradient.
+    /// このグラデーションの終端円の中心。
     pub center: Axes<Ratio>,
-    /// The radius of last circle of this gradient.
+    /// このグラデーションの終端円の半径。
     pub radius: Ratio,
-    /// The center of first circle of this gradient.
+    /// このグラデーションの始点円の中心。
     pub focal_center: Axes<Ratio>,
-    /// The radius of first circle of this gradient.
+    /// このグラデーションの始点円の半径。
     pub focal_radius: Ratio,
-    /// The color space in which to interpolate the gradient.
+    /// グラデーションを補間する色空間。
     pub space: ColorSpace,
-    /// The relative placement of the gradient.
+    /// グラデーションの相対配置。
     pub relative: Smart<RelativeTo>,
-    /// Whether to anti-alias the gradient (used for sharp gradients).
+    /// グラデーションをアンチエイリアスするかどうか（シャープグラデーションに使用）。
     pub anti_alias: bool,
 }
 
@@ -1074,21 +996,20 @@ impl Repr for RadialGradient {
     }
 }
 
-/// A gradient that interpolates between two colors radially
-/// around a center point.
+/// 中心点を中心に放射状に2色間を補間するグラデーション。
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 pub struct ConicGradient {
-    /// The color stops of this gradient.
+    /// このグラデーションの色のストップ。
     pub stops: Vec<(Color, Ratio)>,
-    /// The direction of this gradient.
+    /// このグラデーションの方向。
     pub angle: Angle,
-    /// The center of circle of this gradient.
+    /// このグラデーションの円の中心。
     pub center: Axes<Ratio>,
-    /// The color space in which to interpolate the gradient.
+    /// グラデーションを補間する色空間。
     pub space: ColorSpace,
-    /// The relative placement of the gradient.
+    /// グラデーションの相対配置。
     pub relative: Smart<RelativeTo>,
-    /// Whether to anti-alias the gradient (used for sharp gradients).
+    /// グラデーションをアンチエイリアスするかどうか（シャープグラデーションに使用）。
     pub anti_alias: bool,
 }
 
@@ -1139,26 +1060,26 @@ impl Repr for ConicGradient {
     }
 }
 
-/// What is the gradient relative to.
+/// グラデーションが何に対して相対的か。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash, Cast)]
 pub enum RelativeTo {
-    /// Relative to itself (its own bounding box).
+    /// 自身に対して相対的（自身のバウンディングボックス）。
     Self_,
-    /// Relative to its parent (the parent's bounding box).
+    /// 親に対して相対的（親のバウンディングボックス）。
     Parent,
 }
 
-/// A color stop.
+/// 色のストップ。
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct GradientStop {
-    /// The color for this stop.
+    /// このストップの色。
     pub color: Color,
-    /// The offset of the stop along the gradient.
+    /// グラデーション上のストップのオフセット。
     pub offset: Option<Ratio>,
 }
 
 impl GradientStop {
-    /// Create a new stop from a `color` and an `offset`.
+    /// `color` と `offset` から新しいストップを作成します。
     pub fn new(color: Color, offset: Ratio) -> Self {
         Self { color, offset: Some(offset) }
     }
@@ -1184,7 +1105,7 @@ cast! {
     }
 }
 
-/// A ratio or an angle.
+/// 比率または角度。
 #[derive(Copy, Clone, Eq, PartialEq, Hash)]
 pub enum RatioOrAngle {
     Ratio(Ratio),
@@ -1211,13 +1132,11 @@ cast! {
     angle: Angle => Self::Angle(angle),
 }
 
-/// Pre-processes the stops, checking that they are valid and computing the
-/// offsets if necessary.
+/// ストップを前処理し、それらが有効であることを確認し、必要に応じてオフセットを計算します。
 ///
-/// Returns an error if the stops are invalid.
+/// ストップが無効な場合はエラーを返します。
 ///
-/// This is split into its own function because it is used by all of the
-/// different gradient types.
+/// これは別の関数に分離されています。なぜなら、全ての異なるグラデーションタイプで使用されるためです。
 #[comemo::memoize]
 fn process_stops(stops: &[Spanned<GradientStop>]) -> SourceResult<Vec<(Color, Ratio)>> {
     let has_offset = stops.iter().any(|stop| stop.v.offset.is_some());
@@ -1277,7 +1196,7 @@ fn process_stops(stops: &[Spanned<GradientStop>]) -> SourceResult<Vec<(Color, Ra
         .collect())
 }
 
-/// Sample the stops at a given position.
+/// 指定された位置でストップをサンプリングします。
 fn sample_stops(stops: &[(Color, Ratio)], mixing_space: ColorSpace, t: f64) -> Color {
     let t = t.clamp(0.0, 1.0);
     let mut j = stops.partition_point(|(_, ratio)| ratio.get() < t);
