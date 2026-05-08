@@ -11,24 +11,24 @@ use crate::engine::Engine;
 use crate::foundations::{Binding, Bytes, Func, Module, Scope, Value, cast, func, scope};
 use crate::loading::{DataSource, Load};
 
-/// Loads a WebAssembly module.
+/// WebAssemblyモジュールを読み込みます。
 ///
-/// The resulting [module] will contain one Typst [function] for each function
-/// export of the loaded WebAssembly module.
+/// 結果として得られる[モジュール]($module)には、読み込まれたWebAssemblyモジュールの
+/// 各関数エクスポートに対応する[関数]($function)がTypst関数として1つずつ含まれます。
 ///
-/// Typst WebAssembly plugins need to follow a specific
-/// [protocol]($plugin/#protocol). To run as a plugin, a program needs to be
-/// compiled to a 32-bit shared WebAssembly library. Plugin functions may accept
-/// multiple [byte buffers]($bytes) as arguments and return a single byte
-/// buffer. They should typically be wrapped in idiomatic Typst functions that
-/// perform the necessary conversions between native Typst types and bytes by
-/// leveraging [`str`]($str/#constructor), [`bytes`]($bytes/#constructor), and
-/// [data loading functions]($reference/data-loading).
+/// TypstのWebAssemblyプラグインは、特定の[プロトコル]($plugin/#protocol)に
+/// 従う必要があります。プラグインとして実行するには、プログラムは32ビットの共有
+/// WebAssemblyライブラリにコンパイルする必要があります。
+/// プラグイン関数は複数の[バイトバッファ]($bytes)を引数として受け取り、
+/// 単一のバイトバッファを返すことができます。
+/// プラグイン関数は通常、[`str`]($str/#constructor)、[`bytes`]($bytes/#constructor)、
+/// [データ読み込み関数]($reference/data-loading)を活用してネイティブのTypst型と
+/// バイト列との間で必要な変換を行うイディオマティックなTypst関数でラップされます。
 ///
-/// For security reasons, plugins run in isolation from your system. This means
-/// that printing, reading files, or similar things are not supported.
+/// セキュリティ上の理由から、プラグインはシステムから隔離して実行されます。
+/// つまり、出力、ファイル読み込みなどの動作はサポートされません。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #let myplugin = plugin("hello.wasm")
 /// #let concat(a, b) = str(
@@ -41,116 +41,106 @@ use crate::loading::{DataSource, Load};
 /// #concat("hello", "world")
 /// ```
 ///
-/// Since the plugin function returns a module, it can be used with import
-/// syntax:
+/// plugin関数はモジュールを返すため、import構文と組み合わせて使えます。
 /// ```typ
 /// #import plugin("hello.wasm"): concatenate
 /// ```
 ///
-/// # Purity
-/// Plugin functions **must be pure:** A plugin function call must not have any
-/// observable side effects on future plugin calls and given the same arguments,
-/// it must always return the same value.
+/// # 純粋性
+/// プラグイン関数は**純粋でなければなりません**。
+/// プラグイン関数の呼び出しは、以後のプラグイン呼び出しに観測可能な副作用を
+/// 一切持たず、同じ引数に対して常に同じ値を返さなければなりません。
 ///
-/// The reason for this is that Typst functions must be pure (which is quite
-/// fundamental to the language design) and, since Typst function can call
-/// plugin functions, this requirement is inherited. In particular, if a plugin
-/// function is called twice with the same arguments, Typst might cache the
-/// results and call your function only once. Moreover, Typst may run multiple
-/// instances of your plugin in multiple threads, with no state shared between
-/// them.
+/// これは、Typstの関数が純粋でなければならない（言語設計上きわめて基本的な要件）
+/// ためであり、Typst関数はプラグイン関数を呼び出せるため、この要件は引き継がれます。
+/// 特に、プラグイン関数が同じ引数で2回呼び出された場合、Typstは結果をキャッシュし、
+/// その関数を一度しか呼び出さないことがあります。
+/// さらに、Typstはプラグインの複数のインスタンスを複数のスレッドで実行する可能性があり、
+/// それらの間で状態は共有されません。
 ///
-/// Typst does not enforce plugin function purity (for efficiency reasons), but
-/// calling an impure function will lead to unpredictable and irreproducible
-/// results and must be avoided.
+/// Typstはプラグイン関数の純粋性を強制しません（効率上の理由で）が、
+/// 純粋でない関数を呼び出すと予測不可能で再現性のない結果につながるため、
+/// 避けなければなりません。
 ///
-/// That said, mutable operations _can be_ useful for plugins that require
-/// costly runtime initialization. Due to the purity requirement, such
-/// initialization cannot be performed through a normal function call. Instead,
-/// Typst exposes a [plugin transition API]($plugin.transition), which executes
-/// a function call and then creates a derived module with new functions which
-/// will observe the side effects produced by the transition call. The original
-/// plugin remains unaffected.
+/// とはいえ、コストの高いランタイム初期化を必要とするプラグインでは、
+/// 可変な操作が役立つ場合もあります。
+/// 純粋性の要件のため、そうした初期化は通常の関数呼び出しでは実行できません。
+/// 代わりに、Typstは[plugin transition API]($plugin.transition)を提供しています。
+/// これは関数呼び出しを実行し、transition呼び出しによって生じた副作用を観測する
+/// 新しい関数を持つ派生モジュールを生成します。元のプラグインは影響を受けません。
 ///
-/// # Plugins and Packages
-/// Any Typst code can make use of a plugin simply by including a WebAssembly
-/// file and loading it. However, because the byte-based plugin interface is
-/// quite low-level, plugins are typically exposed through a package containing
-/// the plugin and idiomatic wrapper functions.
+/// # プラグインとパッケージ
+/// 任意のTypstコードは、WebAssemblyファイルを含めて読み込むだけでプラグインを
+/// 利用できます。しかし、バイトベースのプラグインインターフェースはかなり低レベルなため、
+/// 通常プラグインはイディオマティックなラッパー関数を含むパッケージを通して提供されます。
 ///
 /// # WASI
-/// Many compilers will use the [WASI ABI](https://wasi.dev/) by default or as
-/// their only option (e.g. emscripten), which allows printing, reading files,
-/// etc. This ABI will not directly work with Typst. You will either need to
-/// compile to a different target or [stub all
-/// functions](https://github.com/astrale-sharp/wasm-minimal-protocol/tree/master/crates/wasi-stub).
+/// 多くのコンパイラは、デフォルトで、または唯一の選択肢として
+/// [WASI ABI](https://wasi.dev/)を使用します（例：emscripten）。
+/// これは出力やファイル読み込みなどを許可します。
+/// このABIはTypstでは直接動作しません。
+/// 別のターゲットにコンパイルするか、
+/// [全ての関数をスタブ化](https://github.com/astrale-sharp/wasm-minimal-protocol/tree/master/crates/wasi-stub)
+/// する必要があります。
 ///
-/// # Protocol
-/// To be used as a plugin, a WebAssembly module must conform to the following
-/// protocol:
+/// # プロトコル
+/// プラグインとして使うには、WebAssemblyモジュールが以下のプロトコルに
+/// 準拠している必要があります。
 ///
-/// ## Exports
-/// A plugin module can export functions to make them callable from Typst. To
-/// conform to the protocol, an exported function should:
+/// ## エクスポート
+/// プラグインモジュールは、Typstから呼び出せるように関数をエクスポートできます。
+/// プロトコルに準拠するために、エクスポート関数は次のようにすべきです。
 ///
-/// - Take `n` 32-bit integer arguments `a_1`, `a_2`, ..., `a_n` (interpreted as
-///   lengths, so `usize/size_t` may be preferable), and return one 32-bit
-///   integer.
+/// - `n`個の32ビット整数引数`a_1`、`a_2`、…、`a_n`（長さとして解釈されるため、
+///   `usize/size_t`が望ましい場合があります）を取り、1つの32ビット整数を返す。
 ///
-/// - The function should first allocate a buffer `buf` of length `a_1 + a_2 +
-///   ... + a_n`, and then call
-///   `wasm_minimal_protocol_write_args_to_buffer(buf.ptr)`.
+/// - 関数はまず長さ`a_1 + a_2 + ... + a_n`のバッファ`buf`を確保し、
+///   次に`wasm_minimal_protocol_write_args_to_buffer(buf.ptr)`を呼び出す。
 ///
-/// - The `a_1` first bytes of the buffer now constitute the first argument, the
-///   `a_2` next bytes the second argument, and so on.
+/// - これでバッファの最初の`a_1`バイトが第1引数、次の`a_2`バイトが第2引数、
+///   というように構成される。
 ///
-/// - The function can now do its job with the arguments and produce an output
-///   buffer. Before returning, it should call
-///   `wasm_minimal_protocol_send_result_to_host` to send its result back to the
-///   host.
+/// - 関数は引数を用いて処理を行い、出力バッファを生成できる。
+///   返却前に`wasm_minimal_protocol_send_result_to_host`を呼び出して、
+///   結果をホストに送信すべきである。
 ///
-/// - To signal success, the function should return `0`.
+/// - 成功を通知するには、関数は`0`を返すべきである。
 ///
-/// - To signal an error, the function should return `1`. The written buffer is
-///   then interpreted as an UTF-8 encoded error message.
+/// - エラーを通知するには、関数は`1`を返すべきである。書き込まれたバッファは
+///   UTF-8エンコードされたエラーメッセージとして解釈される。
 ///
-/// ## Imports
-/// Plugin modules need to import two functions that are provided by the
-/// runtime. (Types and functions are described using WAT syntax.)
+/// ## インポート
+/// プラグインモジュールは、ランタイムが提供する2つの関数をインポートする必要があります。
+/// （型と関数はWAT構文で記述されています）
 ///
 /// - `(import "typst_env" "wasm_minimal_protocol_write_args_to_buffer" (func
 ///   (param i32)))`
 ///
-///   Writes the arguments for the current function into a plugin-allocated
-///   buffer. When a plugin function is called, it [receives the
-///   lengths](#exports) of its input buffers as arguments. It should then
-///   allocate a buffer whose capacity is at least the sum of these lengths. It
-///   should then call this function with a `ptr` to the buffer to fill it with
-///   the arguments, one after another.
+///   現在の関数の引数を、プラグインが確保したバッファに書き込みます。
+///   プラグイン関数が呼び出されると、入力バッファの[長さを引数として
+///   受け取ります](#exports)。
+///   その後、これらの長さの合計以上の容量を持つバッファを確保すべきです。
+///   そしてバッファへの`ptr`とともにこの関数を呼び出し、引数を順番に書き込ませます。
 ///
 /// - `(import "typst_env" "wasm_minimal_protocol_send_result_to_host" (func
 ///   (param i32 i32)))`
 ///
-///   Sends the output of the current function to the host (Typst). The first
-///   parameter shall be a pointer to a buffer (`ptr`), while the second is the
-///   length of that buffer (`len`). The memory pointed at by `ptr` can be freed
-///   immediately after this function returns. If the message should be
-///   interpreted as an error message, it should be encoded as UTF-8.
+///   現在の関数の出力をホスト（Typst）に送信します。
+///   第1引数はバッファへのポインタ（`ptr`）、第2引数はそのバッファの長さ（`len`）です。
+///   `ptr`が指すメモリは、この関数の戻り直後に解放可能です。
+///   メッセージをエラーメッセージとして解釈する場合、UTF-8でエンコードされている必要があります。
 ///
-/// # Resources
-/// For more resources, check out the [wasm-minimal-protocol
-/// repository](https://github.com/astrale-sharp/wasm-minimal-protocol). It
-/// contains:
+/// # リソース
+/// より多くのリソースについては、[wasm-minimal-protocolリポジトリ](https://github.com/astrale-sharp/wasm-minimal-protocol)
+/// を参照してください。これには次のものが含まれています。
 ///
-/// - A list of example plugin implementations and a test runner for these
-///   examples
-/// - Wrappers to help you write your plugin in Rust (Zig wrapper in
-///   development)
-/// - A stubber for WASI
+/// - プラグイン実装の例の一覧と、これらの例のテストランナー
+/// - Rustでプラグインを書くためのラッパー（Zigラッパーは開発中）
+/// - WASIのスタバー
 #[func(scope)]
 pub fn plugin(
     engine: &mut Engine,
-    /// A [path]($syntax/#paths) to a WebAssembly file or raw WebAssembly bytes.
+    /// WebAssemblyファイルへの[パス]($syntax/#paths)、または生のWebAssemblyバイト列。
     source: Spanned<DataSource>,
 ) -> SourceResult<Module> {
     let loaded = source.load(engine.world)?;
@@ -159,29 +149,26 @@ pub fn plugin(
 
 #[scope]
 impl plugin {
-    /// Calls a plugin function that has side effects and returns a new module
-    /// with plugin functions that are guaranteed to have observed the results
-    /// of the mutable call.
+    /// 副作用を持つプラグイン関数を呼び出し、可変呼び出しの結果を観測することが
+    /// 保証されたプラグイン関数を持つ新しいモジュールを返します。
     ///
-    /// Note that calling an impure function through a normal function call
-    /// (without use of the transition API) is forbidden and leads to
-    /// unpredictable behaviour. Read the [section on purity]($plugin/#purity)
-    /// for more details.
+    /// 通常の関数呼び出しを通じて（transition APIを使わずに）純粋でない関数を呼び出すことは
+    /// 禁止されており、予測不可能な挙動につながる点に注意してください。
+    /// 詳細は[純粋性に関する節]($plugin/#purity)を参照してください。
     ///
-    /// In the example below, we load the plugin `hello-mut.wasm` which exports
-    /// two functions: The `get()` function retrieves a global array as a
-    /// string. The `add(value)` function adds a value to the global array.
+    /// 以下の例では、2つの関数をエクスポートするプラグイン`hello-mut.wasm`を読み込みます。
+    /// `get()`関数はグローバル配列を文字列として取得します。
+    /// `add(value)`関数はグローバル配列に値を追加します。
     ///
-    /// We call `add` via the transition API. The call `mutated.get()` on the
-    /// derived module will observe the addition. Meanwhile the original module
-    /// remains untouched as demonstrated by the `base.get()` call.
+    /// transition APIを通して`add`を呼び出します。
+    /// 派生モジュールに対する`mutated.get()`の呼び出しは、追加を観測します。
+    /// 一方、元のモジュールは`base.get()`の呼び出しが示すように、変更されません。
     ///
-    /// _Note:_ Due to limitations in the internal WebAssembly implementation,
-    /// the transition API can only guarantee to reflect changes in the plugin's
-    /// memory, not in WebAssembly globals. If your plugin relies on changes to
-    /// globals being visible after transition, you might want to avoid use of
-    /// the transition API for now. We hope to lift this limitation in the
-    /// future.
+    /// _注:_ 内部のWebAssembly実装の制限により、transition APIはプラグインのメモリ内の
+    /// 変更を反映することのみを保証でき、WebAssemblyグローバル変数の変更は保証しません。
+    /// プラグインがtransition後にグローバル変数の変更が見えることに依存している場合、
+    /// 当面はtransition APIの使用を避けるとよいでしょう。
+    /// 将来的にはこの制限が解消されることを期待しています。
     ///
     /// ```typ
     /// #let base = plugin("hello-mut.wasm")
@@ -193,9 +180,9 @@ impl plugin {
     /// ```
     #[func]
     pub fn transition(
-        /// The plugin function to call.
+        /// 呼び出すプラグイン関数。
         func: PluginFunc,
-        /// The byte buffers to call the function with.
+        /// 関数を呼び出すバイトバッファ。
         #[variadic]
         arguments: Vec<Bytes>,
     ) -> StrResult<Module> {
@@ -203,7 +190,7 @@ impl plugin {
     }
 }
 
-/// A function loaded from a WebAssembly plugin.
+/// WebAssemblyプラグインから読み込まれた関数。
 #[derive(Debug, Clone, PartialEq, Hash)]
 pub struct PluginFunc {
     /// The underlying plugin, shared by this and the other functions.
