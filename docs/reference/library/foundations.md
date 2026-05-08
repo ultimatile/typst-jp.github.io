@@ -1,4 +1,3 @@
-Foundational types and functions.
+基礎的な型と関数。
 
-Here, you'll find documentation for basic data types like [integers]($int) and
-[strings]($str) as well as details about core computational functions.
+ここでは、[整数]($int)や[文字列]($str)などの基本的なデータ型に関するドキュメントや、中核となる計算関数の詳細を確認できます。
