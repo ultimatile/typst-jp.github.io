@@ -6,35 +6,30 @@ use crate::introspection::{Locatable, Tagged};
 use crate::layout::{Em, HElem, Length};
 use crate::model::{ListItemLike, ListLike};
 
-/// A list of terms and their descriptions.
+/// 用語とその説明のリスト。
 ///
-/// Displays a sequence of terms and their descriptions vertically. When the
-/// descriptions span over multiple lines, they use hanging indent to
-/// communicate the visual hierarchy.
+/// 用語とその説明を縦方向に並べて表示します。
+/// 説明が複数行にわたる場合、視覚的な階層を伝えるためにぶら下げインデントが使用されます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// / Ligature: A merged glyph.
 /// / Kerning: A spacing adjustment
 ///   between two adjacent letters.
 /// ```
 ///
-/// # Syntax
-/// This function also has dedicated syntax: Starting a line with a slash,
-/// followed by a term, a colon and a description creates a term list item.
+/// # 構文
+/// この関数には専用の構文もあります。スラッシュで始まる行に、用語、コロン、説明を続けて記述すると、用語リストの項目が作成されます。
 #[elem(scope, title = "Term List", Locatable, Tagged)]
 pub struct TermsElem {
-    /// Defines the default [spacing]($terms.spacing) of the term list. If it is
-    /// `{false}`, the items are spaced apart with
-    /// [paragraph spacing]($par.spacing). If it is `{true}`, they use
-    /// [paragraph leading]($par.leading) instead. This makes the list more
-    /// compact, which can look better if the items are short.
+    /// 用語リストの[spacing]($terms.spacing)のデフォルト値を定義します。
+    /// `{false}`の場合、項目は[段落間隔]($par.spacing)で離れて配置されます。
+    /// `{true}`の場合は、代わりに[段落の行送り]($par.leading)が使われます。
+    /// これによってリストがコンパクトになり、項目が短い場合により見栄えがよくなります。
     ///
-    /// In markup mode, the value of this parameter is determined based on
-    /// whether items are separated with a blank line. If items directly follow
-    /// each other, this is set to `{true}`; if items are separated by a blank
-    /// line, this is set to `{false}`. The markup-defined tightness cannot be
-    /// overridden with set rules.
+    /// マークアップモードでは、このパラメーターの値は項目間に空行があるかどうかに基づいて決定されます。
+    /// 項目が直接続いている場合は`{true}`に、項目が空行で区切られている場合は`{false}`に設定されます。
+    /// マークアップで定義された詰め具合は、setルールで上書きできません。
     ///
     /// ```example
     /// / Fact: If a term list has a lot
@@ -49,11 +44,10 @@ pub struct TermsElem {
     #[default(true)]
     pub tight: bool,
 
-    /// The separator between the item and the description.
+    /// 項目と説明の間のセパレーター。
     ///
-    /// If you want to just separate them with a certain amount of space, use
-    /// `{h(2cm, weak: true)}` as the separator and replace `{2cm}` with your
-    /// desired amount of space.
+    /// 項目と説明を一定の量の空白で区切りたいだけの場合は、
+    /// セパレーターとして`{h(2cm, weak: true)}`を使い、`{2cm}`を任意の空白の量に置き換えてください。
     ///
     /// ```example
     /// #set terms(separator: [: ])
@@ -63,12 +57,12 @@ pub struct TermsElem {
     #[default(HElem::new(Em::new(0.6).into()).with_weak(true).pack())]
     pub separator: Content,
 
-    /// The indentation of each item.
+    /// 各項目のインデント。
     pub indent: Length,
 
-    /// The hanging indent of the description.
+    /// 説明のぶら下げインデント。
     ///
-    /// This is in addition to the whole item's `indent`.
+    /// これは項目全体の`indent`に加えて適用されます。
     ///
     /// ```example
     /// #set terms(hanging-indent: 0pt)
@@ -78,17 +72,15 @@ pub struct TermsElem {
     #[default(Em::new(2.0).into())]
     pub hanging_indent: Length,
 
-    /// The spacing between the items of the term list.
+    /// 用語リストの項目間の間隔。
     ///
-    /// If set to `{auto}`, uses paragraph [`leading`]($par.leading) for tight
-    /// term lists and paragraph [`spacing`]($par.spacing) for wide
-    /// (non-tight) term lists.
+    /// `{auto}`が設定された場合、詰めた用語リストでは段落の[`leading`]($par.leading)、
+    /// 詰めていない（widerな）用語リストでは段落の[`spacing`]($par.spacing)が使用されます。
     pub spacing: Smart<Length>,
 
-    /// The term list's children.
+    /// 用語リストの子要素。
     ///
-    /// When using the term list syntax, adjacent items are automatically
-    /// collected into term lists, even through constructs like for loops.
+    /// 用語リスト構文を使用すると、forループのような構文を介しても、隣接する項目は自動的に用語リストにまとめられます。
     ///
     /// ```example
     /// #for (year, product) in (
@@ -100,7 +92,7 @@ pub struct TermsElem {
     #[variadic]
     pub children: Vec<Packed<TermItem>>,
 
-    /// Whether we are currently within a term list.
+    /// 現在用語リスト内にいるかどうか。
     #[internal]
     #[ghost]
     pub within: bool,
@@ -112,14 +104,14 @@ impl TermsElem {
     type TermItem;
 }
 
-/// A term list item.
+/// 用語リストの項目。
 #[elem(name = "item", title = "Term List Item", Tagged)]
 pub struct TermItem {
-    /// The term described by the list item.
+    /// リスト項目で説明される用語。
     #[required]
     pub term: Content,
 
-    /// The description of the term.
+    /// 用語の説明。
     #[required]
     pub description: Content,
 }
