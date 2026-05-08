@@ -4,19 +4,18 @@ use typst_utils::{PicoStr, ResolvedPicoStr};
 use crate::diag::StrResult;
 use crate::foundations::{Repr, Str, bail, func, scope, ty};
 
-/// A label for an element.
+/// 要素のラベル。
 ///
-/// Inserting a label into content attaches it to the closest preceding element
-/// that is not a space. The preceding element must be in the same scope as the
-/// label, which means that `[Hello #[<label>]]`, for instance, wouldn't work.
+/// コンテンツにラベルを挿入すると、空白ではない直前の要素に紐付けられます。
+/// 直前の要素はラベルと同じスコープ内になければなりません。
+/// 例えば、`[Hello #[<label>]]`は機能しません。
 ///
-/// A labelled element can be [referenced]($ref), [queried]($query) for, and
-/// [styled]($styling) through its label.
+/// ラベルを付けた要素は、そのラベルを通して[参照]($ref)、[クエリ]($query)、
+/// [スタイル設定]($styling)が可能です。
 ///
-/// Once constructed, you can get the name of a label using
-/// [`str`]($str/#constructor).
+/// ラベルを構築した後は、[`str`]($str/#constructor)を用いて名前を取得できます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #show <a>: set text(blue)
 /// #show label("b"): set text(red)
@@ -25,16 +24,15 @@ use crate::foundations::{Repr, Str, bail, func, scope, ty};
 /// *Strong* #label("b")
 /// ```
 ///
-/// # Syntax
-/// This function also has dedicated syntax: You can create a label by enclosing
-/// its name in angle brackets. This works both in markup and code. A label's
-/// name can contain letters, numbers, `_`, `-`, `:`, and `.`. A label cannot
-/// be empty.
+/// # 構文
+/// この関数には専用の構文もあります。山括弧で名前を囲むことでラベルを作成できます。
+/// マークアップとコードの両方で使えます。
+/// ラベル名には、英字、数字、`_`、`-`、`:`、`.`を含められます。
+/// ラベルは空にはできません。
 ///
-/// Note that there is a syntactical difference when using the dedicated syntax
-/// for this function. In the code below, the `[<a>]` terminates the heading and
-/// thus attaches to the heading itself, whereas the `[#label("b")]` is part of
-/// the heading and thus attaches to the heading's text.
+/// この関数で専用の構文を使う場合、構文上の差異がある点に注意してください。
+/// 以下のコードでは、`[<a>]`は見出しを終端させるため、見出し自体に紐付けられますが、
+/// `[#label("b")]`は見出しの一部となるため、見出しのテキストに紐付けられます。
 ///
 /// ```typ
 /// // Equivalent to `#heading[Introduction] <a>`.
@@ -44,8 +42,8 @@ use crate::foundations::{Repr, Str, bail, func, scope, ty};
 /// = Conclusion #label("b")
 /// ```
 ///
-/// Currently, labels can only be attached to elements in markup mode, not in
-/// code mode. This might change in the future.
+/// 現時点では、ラベルはマークアップモードの要素にのみ付けられ、コードモードでは付けられません。
+/// この仕様は将来変更されるかもしれません。
 #[ty(scope, cast)]
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Hash)]
 pub struct Label(PicoStr);
@@ -72,13 +70,13 @@ impl Label {
 
 #[scope]
 impl Label {
-    /// Creates a label from a string.
+    /// 文字列からラベルを生成します。
     #[func(constructor)]
     pub fn construct(
-        /// The name of the label.
+        /// ラベルの名前。
         ///
-        /// Unlike the [dedicated syntax](#syntax), this constructor accepts
-        /// any non-empty string, including names with special characters.
+        /// [専用構文](#syntax)とは異なり、このコンストラクターは
+        /// 特殊文字を含む名前も含めて、任意の空でない文字列を受け付けます。
         name: Str,
     ) -> StrResult<Label> {
         if name.is_empty() {
