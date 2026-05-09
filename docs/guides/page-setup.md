@@ -4,22 +4,9 @@ description: |
 ---
 
 # ページ設定ガイド
-Your page setup is a big part of the first impression your document gives. Line
-lengths, margins, and columns influence
-[appearance](https://practicaltypography.com/page-margins.html) and
-[legibility](https://designregression.com/article/line-length-revisited-following-the-research)
-while the right headers and footers will help your reader easily navigate your
-document. This guide will help you to customize pages, margins, headers,
-footers, and page numbers so that they are the right fit for your content and
-you can get started with writing.
+ページ設定は、文書が読み手に与える第一印象の大きな部分を占めます。行の長さ、余白、段組みは[見た目](https://practicaltypography.com/page-margins.html)や[可読性](https://designregression.com/article/line-length-revisited-following-the-research)に影響し、適切なヘッダーやフッターは読み手が文書を簡単にたどっていくのに役立ちます。本ガイドでは、ページ、余白、ヘッダー、フッター、ページ番号をコンテンツに合った形にカスタマイズし、執筆を始められるようになるための方法を紹介します。
 
-In Typst, each page has a width, a height, and margins on all four sides. The
-top and bottom margins may contain a header and footer. The set rule of the
-[`{page}`]($page) element is where you control all of the page setup. If you
-make changes with this set rule, Typst will ensure that there is a new and
-conforming empty page afterward, so it may insert a page break. Therefore, it is
-best to specify your [`{page}`]($page) set rule at the start of your document or
-in your template.
+Typstでは、各ページに幅、高さ、そして四辺の余白があります。上下の余白にはヘッダーとフッターを含められます。ページ設定は全て[`{page}`]($page)要素のsetルールで制御します。このsetルールで変更を加えると、Typstは新しい空ページがその後に確実に続くようにするため、ページ区切りを挿入する場合があります。したがって、[`{page}`]($page)のsetルールは文書の冒頭やテンプレート内で指定するのが最も望ましいです。
 
 ```example
 #set rect(
@@ -40,25 +27,12 @@ in your template.
 #rect(fill: aqua.lighten(40%))
 ```
 
-This example visualizes the dimensions for page content, headers, and footers.
-The page content is the page size (ISO B7) minus each side's default margin. In
-the top and the bottom margin, there are stroked rectangles visualizing the
-header and footer. They do not touch the main content, instead, they are offset
-by 30% of the respective margin. You can control this offset by specifying the
-[`header-ascent`]($page.header-ascent) and
-[`footer-descent`]($page.footer-descent) arguments.
+この例では、ページコンテンツ、ヘッダー、フッターの寸法を可視化しています。ページコンテンツの大きさは、ページサイズ（ISO B7）から各辺のデフォルト余白を差し引いたものです。上下の余白には、ヘッダーとフッターを表す枠線付きの矩形が描かれています。これらは本文に接することはなく、それぞれの余白の30%だけオフセットされています。このオフセットは、[`header-ascent`]($page.header-ascent)および[`footer-descent`]($page.footer-descent)引数で調整できます。
 
-Below, the guide will go more into detail on how to accomplish common page setup
-requirements with examples.
+以降では、よくあるページ設定の要件を例とともに詳しく説明します。
 
-## Customize page size and margins { #customize-margins }
-Typst's default page size is A4 paper. Depending on your region and your use
-case, you will want to change this. You can do this by using the
-[`{page}`]($page) set rule and passing it a string argument to use a common page
-size. Options include the complete ISO 216 series (e.g. `"a4"` and `"iso-c2"`),
-customary US formats like `"us-legal"` or `"us-letter"`, and more. Check out the
-reference for the [page's paper argument]($page.paper) to learn about all
-available options.
+## ページサイズと余白のカスタマイズ { #customize-margins }
+TypstのデフォルトのページサイズはA4です。地域や用途に応じて、これを変更したい場合があるでしょう。変更するには、[`{page}`]($page)のsetルールに文字列引数を渡して、よく使われるページサイズを指定します。指定できるオプションには、ISO 216シリーズ全般（例：`"a4"`や`"iso-c2"`）、`"us-legal"`や`"us-letter"`のような米国でよく使われるサイズなどがあります。利用可能な全てのオプションについては、[ページのpaper引数]($page.paper)のリファレンスをご覧ください。
 
 ```example
 >>> #set page(margin: auto)
@@ -67,8 +41,7 @@ available options.
 This page likes freedom.
 ```
 
-If you need to customize your page size to some dimensions, you can specify the
-named arguments [`width`]($page.width) and [`height`]($page.height) instead.
+任意の寸法でページサイズをカスタマイズしたい場合は、代わりに名前付き引数の[`width`]($page.width)と[`height`]($page.height)を指定できます。
 
 ```example
 >>> #set page(margin: auto)
@@ -77,18 +50,10 @@ named arguments [`width`]($page.width) and [`height`]($page.height) instead.
 This page is a square.
 ```
 
-### Change the page's margins { #change-margins }
-Margins are a vital ingredient for good typography:
-[Typographers consider lines that fit between 45 and 75 characters best length
-for legibility](http://webtypography.net/2.1.2) and your margins and
-[columns](#columns) help define line widths. By default, Typst will create
-margins proportional to the page size of your document. To set custom margins,
-you will use the [`margin`]($page.margin) argument in the [`{page}`]($page) set
-rule.
+### ページの余白を変更する { #change-margins }
+余白は良いタイポグラフィに欠かせない要素です。[タイポグラファーは、可読性のために最適な行長は45から75文字に収まる長さだとしています](http://webtypography.net/2.1.2)。余白と[段組み](#columns)は行幅を決める要素です。デフォルトでは、Typstは文書のページサイズに比例した余白を作ります。余白を独自に設定するには、[`{page}`]($page)のsetルールにある[`margin`]($page.margin)引数を使います。
 
-The `margin` argument will accept a length if you want to set all margins to the
-same width. However, you often want to set different margins on each side. To do
-this, you can pass a dictionary:
+`margin`引数は、全ての余白を同じ幅に設定したい場合は長さを受け取ります。しかし、各辺ごとに異なる余白を設定したい場合も多いでしょう。その場合は、辞書を渡せます。
 
 ```example
 #set page(margin: (
@@ -100,37 +65,18 @@ this, you can pass a dictionary:
 #lorem(100)
 ```
 
-The page margin dictionary can have keys for each side (`top`, `bottom`, `left`,
-`right`), but you can also control left and right together by setting the `x`
-key of the margin dictionary, like in the example. Likewise, the top and bottom
-margins can be adjusted together by setting the `y` key.
+ページ余白の辞書は、各辺（`top`、`bottom`、`left`、`right`）に対応するキーを持てますが、例のように余白辞書の`x`キーを設定することで左右の余白をまとめて制御することもできます。同様に、`y`キーを設定することで上下の余白をまとめて調整できます。
 
-If you do not specify margins for all sides in the margin dictionary, the old
-margins will remain in effect for the unset sides. To prevent this and set all
-remaining margins to a common size, you can use the `rest` key. For example,
-`[#set page(margin: (left: 1.5in, rest: 1in))]` will set the left margin to 1.5
-inches and the remaining margins to one inch.
+余白辞書で全ての辺の余白を指定しない場合、設定されていない辺については以前の余白がそのまま有効になります。これを防ぎ、残りの余白をまとめて共通のサイズに設定するには、`rest`キーを使えます。例えば、`[#set page(margin: (left: 1.5in, rest: 1in))]`は、左の余白を1.5インチに、残りの余白を1インチに設定します。
 
-### Different margins on alternating pages { #alternating-margins }
-Sometimes, you'll need to alternate horizontal margins for even and odd pages,
-for example, to have more room towards the spine of a book than on the outsides
-of its pages. Typst keeps track of whether a page is to the left or right of the
-binding. You can use this information and set the `inside` or `outside` keys of
-the margin dictionary. The `inside` margin points towards the spine, and the
-`outside` margin points towards the edge of the bound book.
+### 偶数・奇数ページで異なる余白 { #alternating-margins }
+偶数ページと奇数ページで左右の余白を切り替えたい場合があります。例えば、本の背側の余白を外側の余白より広く取りたい場合などです。Typstは、ページが綴じの左右どちら側にあるかを把握しています。この情報を利用して、余白辞書の`inside`キーや`outside`キーを設定できます。`inside`の余白は背の側を、`outside`の余白は綴じられた本の小口側を指します。
 
 ```typ
 #set page(margin: (inside: 2.5cm, outside: 2cm, y: 1.75cm))
 ```
 
-Typst will assume that documents written in Left-to-Right scripts are bound on
-the left while books written in Right-to-Left scripts are bound on the right.
-However, you will need to change this in some cases: If your first page is
-output by a different app, the binding is reversed from Typst's perspective.
-Also, some books, like English-language Mangas are customarily bound on the
-right, despite English using Left-to-Right script. To change the binding side
-and explicitly set where the `inside` and `outside` are, set the
-[`binding`]($page.binding) argument in the [`{page}`]($page) set rule.
+Typstは、左から右に書かれる文字（左横書き）の文書は左綴じ、右から左に書かれる文字（右横書き）の本は右綴じだと仮定します。ただし、状況によってはこれを変更する必要があります。最初のページが別のアプリで出力される場合、Typstから見ると綴じが反対になります。また、英語のマンガなど、英語が左から右に書かれるにもかかわらず慣例的に右綴じである本もあります。綴じる側を変更し、`inside`と`outside`の位置を明示的に指定するには、[`{page}`]($page)のsetルールで[`binding`]($page.binding)引数を設定します。
 
 ```typ
 // Produce a book bound on the right,
@@ -139,17 +85,12 @@ and explicitly set where the `inside` and `outside` are, set the
 #set page(binding: right)
 ```
 
-If `binding` is `left`, `inside` margins will be on the left on odd pages, and
-vice versa.
+`binding`が`left`の場合、奇数ページでは`inside`の余白は左側になり、偶数ページではその逆になります。
 
-## Add headers and footers { #headers-and-footers }
-Headers and footers are inserted in the top and bottom margins of every page.
-You can add custom headers and footers or just insert a page number.
+## ヘッダーとフッターを追加する { #headers-and-footers }
+ヘッダーとフッターは、全てのページの上下の余白に挿入されます。独自のヘッダーやフッターを追加することも、単にページ番号だけを挿入することもできます。
 
-In case you need more than just a page number, the best way to insert a header
-and a footer are the [`header`]($page.header) and [`footer`]($page.footer)
-arguments of the [`{page}`]($page) set rule. You can pass any content as their
-values:
+ページ番号以上のものが必要な場合、ヘッダーとフッターを挿入する最良の方法は、[`{page}`]($page)のsetルールにある[`header`]($page.header)引数と[`footer`]($page.footer)引数を使うことです。これらの値には任意のコンテンツを渡せます。
 
 ```example
 >>> #set page("a5", margin: (x: 2.5cm, y: 3cm))
@@ -162,14 +103,10 @@ values:
 #lorem(150)
 ```
 
-Headers are bottom-aligned by default so that they do not collide with the top
-edge of the page. You can change this by wrapping your header in the
-[`{align}`]($align) function.
+ヘッダーは、ページ上端と衝突しないようにデフォルトで下揃えになっています。これを変更するには、ヘッダーを[`{align}`]($align)関数で囲みます。
 
-### Different header and footer on specific pages { #specific-pages }
-You'll need different headers and footers on some pages. For example, you may
-not want a header and footer on the title page. The example below shows how to
-conditionally remove the header on the first page:
+### 特定のページで異なるヘッダーとフッター { #specific-pages }
+ページによってヘッダーやフッターを変えたい場合があります。例えば、表紙にはヘッダーとフッターを置きたくないかもしれません。次の例は、最初のページのヘッダーを条件付きで非表示にする方法を示しています。
 
 ```typ
 >>> #set page("a5", margin: (x: 2.5cm, y: 3cm))
@@ -184,23 +121,12 @@ conditionally remove the header on the first page:
 #lorem(150)
 ```
 
-This example may look intimidating, but let's break it down: By using the
-`{context}` keyword, we are telling Typst that the header depends on where we
-are in the document. We then ask Typst if the page [counter]($counter) is larger than one
-at our (context-dependent) current position. The page counter starts at one, so
-we are skipping the header on a single page. Counters may have multiple levels.
-This feature is used for items like headings, but the page counter will always
-have a single level, so we can just look at the first one.
+この例は一見難しそうに見えますが、順を追って説明しましょう。`{context}`キーワードを使うことで、ヘッダーが文書内のどこにいるかに依存することをTypstに伝えています。次に、（コンテキストに依存する）現在の位置でページ[カウンター]($counter)が1より大きいかどうかをTypstに尋ねています。ページカウンターは1から始まるため、これによって1ページ目のヘッダーをスキップしています。カウンターは複数のレベルを持てます。この機能は見出しなどで使われますが、ページカウンターは常に単一のレベルしか持たないため、最初のレベルだけを見れば十分です。
 
-You can, of course, add an `else` to this example to add a different header to
-the first page instead.
+もちろん、この例に`else`を追加すれば、最初のページに別のヘッダーを表示することもできます。
 
-### Adapt headers and footers on pages with specific elements { #specific-elements }
-The technique described in the previous section can be adapted to perform more
-advanced tasks using Typst's labels. For example, pages with big tables could
-omit their headers to help keep clutter down. We will mark our tables with a
-`<big-table>` [label]($label) and use the [query system]($query) to find out if such a
-label exists on the current page:
+### 特定の要素を含むページのヘッダーとフッターを調整する { #specific-elements }
+前節で説明した手法は、Typstのラベルを使ってより高度なタスクをこなすように応用できます。例えば、大きな表があるページではヘッダーを省略して雑然とした印象を抑えることができます。ここでは、表に`<big-table>`という[ラベル]($label)を付け、[クエリシステム]($query)を使って現在のページにそのラベルが存在するかを調べます。
 
 ```typ
 >>> #set page("a5", margin: (x: 2.5cm, y: 3cm))
@@ -228,17 +154,10 @@ label exists on the current page:
 ) <big-table>
 ```
 
-Here, we query for all instances of the `<big-table>` label. We then check that
-none of the tables are on the page at our current position. If so, we print the
-header. This example also uses variables to be more concise. Just as above, you
-could add an `else` to add another header instead of deleting it.
+ここでは、`<big-table>`ラベルの全ての出現箇所を検索しています。次に、それらの表のいずれも現在の位置のページに存在しないことを確認します。存在しなければ、ヘッダーを出力します。この例では、簡潔にするために変数も使っています。先ほどと同様に、`else`を追加してヘッダーを削除する代わりに別のヘッダーを表示することもできます。
 
-## Add and customize page numbers { #page-numbers }
-Page numbers help readers keep track of and reference your document more easily.
-The simplest way to insert page numbers is the [`numbering`]($page.numbering)
-argument of the [`{page}`]($page) set rule. You can pass a
-[_numbering pattern_]($numbering.numbering) string that shows how you want your
-pages to be numbered.
+## ページ番号を追加してカスタマイズする { #page-numbers }
+ページ番号は、読み手が文書を追ったり参照したりするのに役立ちます。ページ番号を挿入する最も簡単な方法は、[`{page}`]($page)のsetルールにある[`numbering`]($page.numbering)引数を使うことです。これに、ページの番号付け方法を示す[_番号付けパターン_]($numbering.numbering)の文字列を渡せます。
 
 ```example
 >>> #set page("iso-b6", margin: 1.75cm)
@@ -247,11 +166,7 @@ pages to be numbered.
 This is a numbered page.
 ```
 
-Above, you can check out the simplest conceivable example. It adds a single
-Arabic page number at the center of the footer. You can specify other characters
-than `"1"` to get other numerals. For example, `"i"` will yield lowercase Roman
-numerals. Any character that is not interpreted as a number will be output
-as-is. For example, put dashes around your page number by typing this:
+上記は、考えうる最も単純な例です。フッターの中央に、アラビア数字のページ番号を1つ追加しています。`"1"`以外の文字を指定すれば、別の数字表記を得られます。例えば、`"i"`は小文字のローマ数字を出力します。数字として解釈されない文字はそのまま出力されます。例えば、ページ番号をダッシュで囲むには次のように記述します。
 
 ```example
 >>> #set page("iso-b6", margin: 1.75cm)
@@ -260,8 +175,7 @@ as-is. For example, put dashes around your page number by typing this:
 This is a — numbered — page.
 ```
 
-You can add the total number of pages by entering a second number character in
-the string.
+文字列に2つ目の数字文字を入れることで、総ページ数を追加できます。
 
 ```example
 >>> #set page("iso-b6", margin: 1.75cm)
@@ -270,21 +184,12 @@ the string.
 This is one of many numbered pages.
 ```
 
-Go to the [`{numbering}` function reference]($numbering.numbering) to learn more
-about the arguments you can pass here.
+ここで渡せる引数についてさらに詳しく知りたい場合は、[`{numbering}`関数のリファレンス]($numbering.numbering)をご覧ください。
 
-In case you need to right- or left-align the page number, use the
-[`number-align`]($page.number-align) argument of the [`{page}`]($page) set rule.
-Alternating alignment between even and odd pages is not currently supported
-using this property. To do this, you'll need to specify a custom footer with
-your footnote and query the page counter as described in the section on
-conditionally omitting headers and footers.
+ページ番号を右寄せまたは左寄せにする必要がある場合は、[`{page}`]($page)のsetルールにある[`number-align`]($page.number-align)引数を使います。このプロパティでは、偶数ページと奇数ページで配置を切り替えることは現在サポートされていません。これを実現するには、独自のフッターを指定し、ヘッダーやフッターを条件付きで省略する節で説明した方法でページカウンターをクエリする必要があります。
 
-### Custom footer with page numbers
-Sometimes, you need to add other content than a page number to your footer.
-However, once a footer is specified, the [`numbering`]($page.numbering) argument
-of the [`{page}`]($page) set rule is ignored. This section shows you how to add
-a custom footer with page numbers and more.
+### ページ番号付きのカスタムフッター
+フッターに、ページ番号以外のコンテンツを追加したい場合があります。しかし、フッターを一度指定すると、[`{page}`]($page)のsetルールにある[`numbering`]($page.numbering)引数は無視されます。本節では、ページ番号などを含むカスタムフッターを追加する方法を説明します。
 
 ```example
 >>> #set page("iso-b6", margin: 1.75cm)
@@ -300,14 +205,9 @@ a custom footer with page numbers and more.
 This page has a custom footer.
 ```
 
-First, we add some strongly emphasized text on the left and add free space to
-fill the line. Then, we call `counter(page)` to retrieve the page counter and
-use its `display` function to show its current value. We also set `both` to
-`{true}` so that our numbering pattern applies to the current _and_ final page
-number.
+まず、左側に強調されたテキストを追加し、行を埋めるために自由なスペースを追加します。次に、`counter(page)`を呼び出してページカウンターを取得し、その`display`関数を使って現在の値を表示します。また、`both`を`{true}`に設定することで、番号付けパターンを現在のページ番号と最終ページ番号の_両方_に適用します。
 
-We can also get more creative with the page number. For example, let's insert a
-circle for each page.
+ページ番号をさらに工夫することもできます。例えば、各ページに円を挿入してみましょう。
 
 ```example
 >>> #set page("iso-b6", margin: 1.75cm)
@@ -330,47 +230,28 @@ circle for each page.
 This page has a custom footer.
 ```
 
-In this example, we use the number of pages to create an array of
-[circles]($circle). The circles are wrapped in a [box]($box) so they can all appear on
-the same line because they are blocks and would otherwise create paragraph
-breaks. The length of this [array]($array) depends on the current page number.
+この例では、ページ数を使って[円]($circle)の配列を作成しています。円はブロックなので、そのまま並べると段落区切りができてしまいますが、[ボックス]($box)で囲むことで同じ行に配置できるようにしています。この[配列]($array)の長さは、現在のページ番号によって変わります。
 
-We then insert the circles at the right side of the footer, with 1pt of space
-between them. The join method of an array will attempt to
-[_join_]($scripting/#blocks) the different values of an array into a single
-value, interspersed with its argument. In our case, we get a single content
-value with circles and spaces between them that we can use with the align
-function. Finally, we use another box to ensure that the text and the circles
-can share a line and use the [`inset` argument]($box.inset) to raise the circles
-a bit so they line up nicely with the text.
+そして、フッターの右側に1ptの間隔を空けて円を挿入します。配列のjoinメソッドは、配列の異なる値を1つの値に[_結合_]($scripting/#blocks)しようと試み、引数で指定した値をその間に挟み込みます。今回の場合、円とその間のスペースを含む単一のコンテンツ値が得られ、これをalign関数で使えます。最後に、もう1つボックスを使って、テキストと円が同じ行を共有できるようにし、[`inset`引数]($box.inset)で円を少し上に持ち上げ、テキストとうまく揃うようにしています。
 
-### Reset the page number and skip pages { #skip-pages }
-Do you, at some point in your document, need to reset the page number? Maybe you
-want to start with the first page only after the title page. Or maybe you need
-to skip a few page numbers because you will insert pages into the final printed
-product.
+### ページ番号をリセットしてページをスキップする { #skip-pages }
+文書のどこかでページ番号をリセットしたい場合はあるでしょうか。例えば、表紙の後で初めて1ページ目を始めたい、あるいは最終的な印刷物にページを差し込むため、いくつかページ番号をスキップしたい、といった場合です。
 
-The right way to modify the page number is to manipulate the page [counter]($counter). The
-simplest manipulation is to set the counter back to 1.
+ページ番号を変更する正しい方法は、ページ[カウンター]($counter)を操作することです。最も単純な操作は、カウンターを1に戻すことです。
 
 ```typ
 #counter(page).update(1)
 ```
 
-This line will reset the page counter back to one. It should be placed at the
-start of a page because it will otherwise create a page break. You can also
-update the counter given its previous value by passing a function:
+この行は、ページカウンターを1にリセットします。これはページの先頭に置く必要があります。そうでないとページ区切りが生じてしまうからです。関数を渡すことで、現在の値からカウンターを更新することもできます。
 
 ```typ
 #counter(page).update(n => n + 5)
 ```
 
-In this example, we skip five pages. `n` is the current value of the page
-counter and `n + 5` is the return value of our function.
+この例では、5ページをスキップしています。`n`はページカウンターの現在の値で、`n + 5`は関数の戻り値です。
 
-In case you need to retrieve the actual page number instead of the value of the
-page counter, you can use the [`page`]($location.page) method on the return
-value of the [`here`]($here) function:
+ページカウンターの値ではなく、実際のページ番号を取得する必要がある場合は、[`here`]($here)関数の戻り値に対して[`page`]($location.page)メソッドを使えます。
 
 ```example
 #counter(page).update(n => n + 5)
@@ -380,18 +261,12 @@ value of the [`here`]($here) function:
 #context here().page()
 ```
 
-You can also obtain the page numbering pattern from the location returned by
-`here` with the [`page-numbering`]($location.page-numbering) method.
+また、[`page-numbering`]($location.page-numbering)メソッドを使うと、`here`が返すロケーションからページ番号付けパターンを取得できます。
 
-## Add columns { #columns }
-Add columns to your document to fit more on a page while maintaining legible
-line lengths. Columns are vertical blocks of text which are separated by some
-whitespace. This space is called the gutter.
+## 段組みを追加する { #columns }
+段組みを文書に追加することで、可読性のある行長を保ちつつ、より多くの内容を1ページに収められます。段は、何らかの空白で区切られたテキストの縦のブロックです。この空白は罫間と呼ばれます。
 
-To lay out your content in columns, just specify the desired number of columns
-in a [`{page}`]($page.columns) set rule. To adjust the amount of space between
-the columns, add a set rule on the [`columns` function]($columns), specifying
-the `gutter` parameter.
+コンテンツを段組みでレイアウトするには、[`{page}`]($page.columns)のsetルールに望む段数を指定するだけです。段の間隔を調整するには、[`columns`関数]($columns)に対するsetルールで`gutter`パラメーターを指定します。
 
 ```example
 >>> #set page(height: 120pt)
@@ -401,10 +276,7 @@ the `gutter` parameter.
 #lorem(30)
 ```
 
-Very commonly, scientific papers have a single-column title and abstract, while
-the main body is set in two-columns. To achieve this effect, Typst's [`place`
-function]($place) can temporarily escape the two-column layout by specifying
-`{float: true}` and `{scope: "parent"}`:
+科学論文では、タイトルと要旨は1段で、本文は2段で組まれることがよくあります。この効果を実現するには、Typstの[`place`関数]($place)で`{float: true}`と`{scope: "parent"}`を指定することで、2段組みのレイアウトから一時的に抜け出せます。
 
 ```example:single
 >>> #set page(height: 180pt)
@@ -424,16 +296,10 @@ function]($place) can temporarily escape the two-column layout by specifying
 #lorem(80)
 ```
 
-_Floating placement_ refers to elements being pushed to the top or bottom of the
-column or page, with the remaining content flowing in between. It is also
-frequently used for [figures]($figure.placement).
+_フロート配置_とは、要素を段やページの上端または下端に押し出し、残りのコンテンツがその間に流し込まれる配置のことです。これは[図表]($figure.placement)にもよく使われます。
 
-### Use columns anywhere in your document { #columns-anywhere }
-To create columns within a nested layout, e.g. within a rectangle, you can use
-the [`columns` function]($columns) directly. However, it really should only be
-used within nested layouts. At the page-level, the page set rule is preferable
-because it has better interactions with things like page-level floats,
-footnotes, and line numbers.
+### 文書中のどこでも段組みを使う { #columns-anywhere }
+入れ子のレイアウト内、例えば矩形の中で段組みを作るには、[`columns`関数]($columns)を直接使えます。ただし、この関数は入れ子のレイアウト内でのみ使うのが本当に望ましいです。ページレベルでは、ページレベルのフロート、脚注、行番号などとの相互作用が良いため、ページのsetルールのほうが望ましいです。
 
 ```example
 #rect(
@@ -450,23 +316,12 @@ footnotes, and line numbers.
 )
 ```
 
-### Balanced columns
-If the columns on the last page of a document differ greatly in length, they may
-create a lopsided and unappealing layout. That's why typographers will often
-equalize the length of columns on the last page. This effect is called balancing
-columns. Typst cannot yet balance columns automatically. However, you can
-balance columns manually by placing [`[#colbreak()]`]($colbreak) at an
-appropriate spot in your markup, creating the desired column break manually.
+### 段の高さを揃える
+文書の最終ページの段の長さに大きな差があると、不揃いで見栄えの悪いレイアウトになりがちです。そのため、タイポグラファーは最終ページの段の長さを揃えることがよくあります。この効果は段の高さを揃える（balancing columns）と呼ばれます。Typstは段の高さの自動調整にはまだ対応していません。しかし、マークアップの適切な箇所に[`[#colbreak()]`]($colbreak)を置いて、所望の段区切りを手動で作ることで、手作業で段の高さを揃えられます。
 
 
-## One-off modifications
-You do not need to override your page settings if you need to insert a single
-page with a different setup. For example, you may want to insert a page that's
-flipped to landscape to insert a big table or change the margin and columns for
-your title page. In this case, you can call [`{page}`]($page) as a function with
-your content as an argument and the overrides as the other arguments. This will
-insert enough new pages with your overridden settings to place your content on
-them. Typst will revert to the page settings from the set rule after the call.
+## 一時的な変更
+別の設定のページを1ページだけ挿入したいだけであれば、ページ設定を上書きする必要はありません。例えば、大きな表を入れるために横向きに反転したページを挿入したり、表紙のために余白や段組みを変更したりしたい場合などです。このような場合は、[`{page}`]($page)を関数として呼び出し、コンテンツを引数として渡し、上書きしたい設定を他の引数として指定できます。これにより、上書きされた設定で必要な数だけ新しいページが挿入され、その上にコンテンツが配置されます。Typstは呼び出し後、setルールで指定されたページ設定に戻ります。
 
 ```example
 >>> #set page("a6")
