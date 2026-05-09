@@ -1,36 +1,22 @@
 ---
 description: |
-  表の罫線の変更方法がわからない？表を回転したい？このガイドでは、Typstで表を扱うために必要な知識をすべて解説します。
+  表の罫線の変更方法がわからない？表を回転したい？このガイドでは、Typstで表を扱うために必要な知識を全て解説します。
 ---
 
 # 表ガイド
-Tables are a great way to present data to your readers in an easily readable,
-compact, and organized manner. They are not only used for numerical values, but
-also survey responses, task planning, schedules, and more. Because of this wide
-set of possible applications, there is no single best way to lay out a table.
-Instead, think about the data you want to highlight, your document's overarching
-design, and ultimately how your table can best serve your readers.
+表は、データを読みやすく、コンパクトで、整理された形で読者に提示するためのすぐれた方法です。表は数値だけでなく、アンケートの回答、タスク計画、スケジュールなど、さまざまな用途で使われます。このように応用範囲が広いため、表のレイアウトに唯一最善の方法というものはありません。代わりに、強調したいデータ、文書全体のデザイン、そして最終的に読者にとってその表がどのように役立つかを考えましょう。
 
-Typst can help you with your tables by automating styling, importing data from
-other applications, and more! This guide takes you through a few of the most
-common questions you may have when adding a table to your document with Typst.
-Feel free to skip to the section most relevant to you – we designed this guide
-to be read out of order.
+Typstは、スタイル設定の自動化や他のアプリケーションからのデータの取り込みなど、さまざまな機能で表の作成を支援します。このガイドでは、Typstで文書に表を追加する際によくある質問のいくつかを取り上げます。順番通りに読まなくても理解できるよう設計しているので、自分に最も関連のあるセクションに飛んでお読みください。
 
-If you want to look up a detail of how tables work, you should also [check out
-their reference page]($table). And if you are looking for a table of contents
-rather than a normal table, the reference page of the [`outline`
-function]($outline) is the right place to learn more.
+表の動作の詳細を調べたい場合は、[リファレンスページ]($table)もご確認ください。また、通常の表ではなく目次を探している場合は、[`outline`関数]($outline)のリファレンスページが詳しく学ぶのに適した場所です。
 
-## How to create a basic table? { #basic-tables }
-In order to create a table in Typst, use the [`table` function]($table). For a
-basic table, you need to tell the table function two things:
+## 基本的な表の作り方 { #basic-tables }
+Typstで表を作成するには、[`table`関数]($table)を使用します。基本的な表を作るには、table関数に次の2つを伝える必要があります。
 
-- The number of columns
-- The content for each of the table cells
+- 列の数
+- 表の各セルのコンテンツ
 
-So, let's say you want to create a table with two columns describing the
-ingredients for a cookie recipe:
+例えば、クッキーのレシピの材料を説明する2列の表を作りたい場合を考えてみましょう。
 
 ```example
 #table(
@@ -48,25 +34,11 @@ ingredients for a cookie recipe:
 )
 ```
 
-This example shows how to call, configure, and populate a table. Both the column
-count and cell contents are passed to the table as arguments. The [argument
-list]($function) is surrounded by round parentheses. In it, we first pass the
-column count as a named argument. Then, we pass multiple [content
-blocks]($content) as positional arguments. Each content block contains the
-contents for a single cell.
+この例は、表の呼び出し、設定、内容の埋め込み方を示しています。列数とセルの内容はどちらも引数として表に渡されます。[引数リスト]($function)は丸括弧で囲まれます。その中で、まず列数を名前付き引数として渡します。次に、複数の[コンテンツブロック]($content)を位置引数として渡します。各コンテンツブロックには、1つのセルの内容が含まれます。
 
-To make the example more legible, we have placed two content block arguments on
-each line, mimicking how they would appear in the table. You could also write
-each cell on its own line. Typst does not care on which line you place the
-arguments. Instead, Typst will place the content cells from left to right (or
-right to left, if that is the writing direction of your language) and then from
-top to bottom. It will automatically add enough rows to your table so that it
-fits all of your content.
+この例を読みやすくするため、各行に2つのコンテンツブロック引数を配置し、表上での見た目を模倣しました。各セルを独立した行に書くこともできます。Typstは引数をどの行に配置するかは気にしません。代わりに、Typstはコンテンツセルを左から右（言語の書字方向によっては右から左）に、そして上から下へと配置していきます。全てのコンテンツが収まるよう、行を自動的に追加します。
 
-It is best to wrap the header row of your table in the [`table.header`
-function]($table.header). This clarifies your intent and will also allow Typst
-to make the output more [accessible]($guides/accessibility) to users with a
-screen reader:
+表のヘッダー行は、[`table.header`関数]($table.header)で囲むのが最善です。これにより意図が明確になり、Typstがスクリーンリーダーを使用するユーザーにとってより[アクセシブル]($guides/accessibility)な出力を生成できるようになります。
 
 ```example
 #table(
@@ -85,9 +57,7 @@ screen reader:
 )
 ```
 
-You could also write a show rule that automatically [strongly
-emphasizes]($strong) the contents of the first cells for all tables. This
-quickly becomes useful if your document contains multiple tables!
+全ての表で先頭セルの内容を自動的に[強調表示]($strong)するshowルールを書くこともできます。文書に複数の表が含まれる場合、これはすぐに役立ちます。
 
 ```example
 #show table.cell.where(y: 0): strong
@@ -108,49 +78,19 @@ quickly becomes useful if your document contains multiple tables!
 )
 ```
 
-We are using a show rule with a selector for cell coordinates here instead of
-applying our styles directly to `table.header`. This is due to a current
-limitation of Typst that will be fixed in a future release.
+ここでは、`table.header`に直接スタイルを適用するのではなく、セル座標のセレクターを使ったshowルールを使っています。これは、将来のリリースで修正される予定のTypstの現在の制限によるものです。
 
-Congratulations, you have created your first table! Now you can proceed to
-[change column sizes](#column-sizes), [adjust the strokes](#strokes), [add
-striped rows](#fills), and more!
+おめでとうございます、最初の表を作成できました。次は、[列のサイズ変更](#column-sizes)、[罫線の調整](#strokes)、[行の縞模様の追加](#fills)などに進めます。
 
-## How to change the column sizes? { #column-sizes }
-If you create a table and specify the number of columns, Typst will make each
-column large enough to fit its largest cell. Often, you want something
-different, for example, to make a table span the whole width of the page. You
-can provide a list, specifying how wide you want each column to be, through the
-`columns` argument. There are a few different ways to specify column widths:
+## 列のサイズの変更方法 { #column-sizes }
+表を作成して列数を指定すると、Typstは各列を最大のセルが収まるサイズに調整します。多くの場合、それとは別の挙動、例えば表をページの全幅にわたって広げたいでしょう。`columns`引数を通じて、各列の幅を指定するリストを渡すことができます。列幅を指定する方法はいくつかあります。
 
-- First, there is `{auto}`. This is the default behavior and tells Typst to grow
-  the column to fit its contents. If there is not enough space, Typst will try
-  its best to distribute the space among the `{auto}`-sized columns.
-- [Lengths]($length) like `{6cm}`, `{0.7in}`, or `{120pt}`. As usual, you can
-  also use the font-dependent `em` unit. This is a multiple of your current font
-  size. It's useful if you want to size your table so that it always fits
-  about the same amount of text, independent of font size.
-- A [ratio in percent]($ratio) such as `{40%}`. This will make the column take
-  up 40% of the total horizontal space available to the table, so either the
-  inner width of the page or the table's container. You can also mix ratios and
-  lengths into [relative lengths]($relative). Be mindful that even if you
-  specify a list of column widths that sum up to 100%, your table could still
-  become larger than its container. This is because there can be
-  [gutter]($table.gutter) between columns that is not included in the column
-  widths. If you want to make a table fill the page, the next option is often
-  very useful.
-- A [fractional part of the free space]($fraction) using the `fr` unit, such as
-  `1fr`. This unit allows you to distribute the available space to columns. It
-  works as follows: First, Typst sums up the lengths of all columns that do not
-  use `fr`s. Then, it determines how much horizontal space is left. This
-  horizontal space then gets distributed to all columns denominated in `fr`s.
-  During this process, a `2fr` column will become twice as wide as a `1fr`
-  column. This is where the name comes from: The width of the column is its
-  fraction of the total fractionally sized columns.
+- まず、`{auto}`があります。これはデフォルトの動作で、Typstに対し、内容にあわせて列を伸ばすよう指示します。十分なスペースがない場合、Typstは可能な限り`{auto}`サイズの列の間でスペースを分配しようとします。
+- `{6cm}`、`{0.7in}`、`{120pt}`のような[長さ]($length)。通常通り、フォント依存の`em`単位も使えます。これは現在のフォントサイズの倍数です。フォントサイズに関係なく、常に同じ程度のテキストが収まるようにサイズ調整したい場合に便利です。
+- `{40%}`のような[パーセント比率]($ratio)。これにより、列は表に対して使用可能な水平方向のスペース全体（つまりページ内の幅、または表のコンテナ）の40%を占めます。比率と長さを組み合わせて[相対長]($relative)にすることもできます。合計が100%になる列幅のリストを指定しても、表がコンテナよりも大きくなる場合があることに注意してください。これは列幅に含まれない[罫間]($table.gutter)が列の間に存在し得るためです。表をページに合わせたい場合は、次の選択肢が役立つことが多いです。
+- `1fr`のような`fr`単位を使った[空きスペースの分数部分]($fraction)。この単位を使うことで、利用可能なスペースを列に分配できます。動作は次の通りです。まず、Typstは`fr`を使用しない全ての列の長さを合計します。次に、残りの水平方向のスペースを決定します。この水平方向のスペースは、`fr`で表現された全ての列に分配されます。この処理の中で、`2fr`の列は`1fr`の列の2倍の幅になります。この単位の名前はここから来ています。列の幅は、分数指定された列全体に対するその列の分数です。
 
-Let's put this to use with a table that contains the dates, numbers, and
-descriptions of some routine checks. The first two columns are `auto`-sized and
-the last column is `1fr` wide as to fill the whole page.
+これを実際に使ってみましょう。日付、番号、いくつかの定期点検の説明を含む表を例にします。最初の2列は`auto`サイズで、最後の列はページ全体に広がるよう`1fr`の幅です。
 
 ```example
 #table(
@@ -162,26 +102,14 @@ the last column is `1fr` wide as to fill the whole page.
 )
 ```
 
-Here, we have passed our list of column lengths as an [array]($array), enclosed in round
-parentheses, with its elements separated by commas. The first two columns are
-automatically sized, so that they take on the size of their content and the
-third column is sized as `{1fr}` so that it fills up the remainder of the space
-on the page. If you wanted to instead change the second column to be a bit more
-spacious, you could replace its entry in the `columns` array with a value like
-`{6em}`.
+ここでは、列の長さのリストを丸括弧で囲み、要素をカンマで区切った[配列]($array)として渡しました。最初の2列は自動サイズなので、内容のサイズにあわせて調整され、3列目は`{1fr}`サイズで指定され、ページの残りのスペースを埋めます。代わりに、2列目をもう少しゆとりのあるサイズにしたい場合は、`columns`配列内のその列のエントリを`{6em}`のような値に置き換えればよいでしょう。
 
-## How to caption and reference my table? { #captions-and-references }
-A table is just as valuable as the information your readers draw from it. You
-can enhance the effectiveness of both your prose and your table by making a
-clear connection between the two with a cross-reference. Typst can help you with
-automatic [references]($ref) and the [`figure` function]($figure).
+## 表にキャプションと参照を付ける方法 { #captions-and-references }
+表は、読者がそこから読み取る情報と同じくらい価値があります。本文と表との間に明確な関連を相互参照によって持たせることで、両者の効果を高めることができます。Typstは自動的な[参照]($ref)と[`figure`関数]($figure)で支援します。
 
-Just like with images, wrapping a table in the `figure` function allows you to
-add a caption and a label, so you can reference the figure elsewhere. Wrapping
-your table in a figure also lets you use the figure's `placement` parameter to
-float it to the top or bottom of a page.
+画像と同様に、表を`figure`関数で囲むことで、キャプションとラベルを追加でき、後で図表を参照できます。表をfigureで囲むと、`placement`パラメーターを使って図表をページの上下に浮動配置できるようにもなります。
 
-Let's take a look at a captioned table and how to reference it in prose:
+キャプション付きの表と本文中での参照方法を見てみましょう。
 
 ```example
 >>> #set page(width: 14cm)
@@ -203,38 +131,20 @@ The results from @probe-a show that the design is not yet optimal.
 We will show how its performance can be improved in this section.
 ```
 
-The example shows how to wrap a table in a figure, set a caption and a label,
-and how to reference that label. We start by using the `figure` function. It
-expects the contents of the figure as a positional argument. We just put the
-table function call in its argument list, omitting the `#` character because it
-is only needed when calling a function in markup mode. We also add the caption
-as a named argument (above or below) the table.
+この例では、表をfigureで囲み、キャプションとラベルを設定し、そのラベルを参照する方法を示しています。まず`figure`関数を使います。この関数は、図表の内容を位置引数として受け取ります。table関数の呼び出しをその引数リストに入れ、`#`文字は省略します。`#`はマークアップモードで関数を呼び出すときにのみ必要だからです。また、キャプションを名前付き引数として（表の上または下に）追加します。
 
-After the figure call, we put a label in angle brackets (`[<probe-a>]`). This
-tells Typst to remember this element and make it referenceable under this name
-throughout your document. We can then reference it in prose by using the at sign
-and the label name `[@probe-a]`. Typst will print a nicely formatted reference
-and automatically update the label if the table's number changes.
+figureの呼び出しの後、山括弧で囲まれたラベル（`[<probe-a>]`）を置きます。これにより、Typstはこの要素を記憶し、文書全体でこの名前で参照できるようにします。本文中では、アットマークとラベル名（`[@probe-a]`）を使って参照できます。Typstはきれいに整形された参照を表示し、表の番号が変わった場合にも自動的にラベルを更新します。
 
-## How to get a striped table? { #fills }
-Many tables use striped rows or columns instead of strokes to differentiate
-between rows and columns. This effect is often called _zebra stripes._ Tables
-with zebra stripes are popular in Business and commercial Data Analytics
-applications, while academic applications tend to use strokes instead.
+## 縞模様の表を作る方法 { #fills }
+多くの表では、行や列を区別するために罫線ではなく縞模様の行や列を使います。この効果はしばしば _ゼブラストライプ_ と呼ばれます。ゼブラストライプの表はビジネスや商用のデータ分析の場で人気がある一方、学術用途では罫線が好まれる傾向があります。
 
-To add zebra stripes to a table, we use the `table` function's `fill` argument.
-It can take three kinds of arguments:
+表にゼブラストライプを追加するには、`table`関数の`fill`引数を使います。この引数は3種類の値を受け取ります。
 
-- A single color (this can also be a gradient or a tiling) to fill all cells
-  with. Because we want some cells to have another color, this is not useful if
-  we want to build zebra tables.
-- An array with colors which Typst cycles through for each column. We can use an
-  array with two elements to get striped columns.
-- A function that takes the horizontal coordinate `x` and the vertical
-  coordinate `y` of a cell and returns its fill. We can use this to create
-  horizontal stripes or [checkerboard patterns]($grid.cell).
+- 全てのセルを塗りつぶす単一の色（グラデーションやタイリングも使えます）。一部のセルに別の色を付けたいので、ゼブラストライプの表を作るのには役立ちません。
+- 各列ごとにTypstが順に使用する色の配列。2要素の配列を使うことで、縞模様の列を作ることができます。
+- セルの水平座標`x`と垂直座標`y`を受け取り、その塗りつぶしを返す関数。これを使うことで、横縞や[市松模様]($grid.cell)を作成できます。
 
-Let's start with an example of a horizontally striped table:
+横方向の縞模様の表の例から始めましょう。
 
 ```example
 >>> #set page(width: 16cm)
@@ -270,22 +180,11 @@ Let's start with an example of a horizontally striped table:
 )
 ```
 
-This example shows a book club reading list. The line `{fill: (rgb("EAF2F5"),
- none)}` in `table`'s set rule is all that is needed to add striped columns. It
-tells Typst to alternate between coloring columns with a light blue (in the
-[`rgb`]($color.rgb) function call) and nothing (`{none}`). Note that we
-extracted all of our styling from the `table` function call itself into set and
-show rules, so that we can automatically reuse it for multiple tables.
+この例は読書クラブの読書リストを示しています。`table`のsetルール内の`{fill: (rgb("EAF2F5"), none)}`という行が、縞模様の列を追加するために必要な全てです。これは、明るい青（[`rgb`]($color.rgb)関数の呼び出し内）と何もない（`{none}`）状態を交互に切り替えて列を塗るようTypstに指示します。スタイルを全て`table`関数の呼び出し自体からsetルールとshowルールに抽出したことに注意してください。これにより、複数の表で自動的に再利用できます。
 
-Because setting the stripes itself is easy we also added some other styles to
-make it look nice. The other code in the example provides a dark blue
-[stroke](#stroke-functions) around the table and below the first line and
-emboldens the first row and the column with the book title. See the
-[strokes](#strokes) section for details on how we achieved this stroke
-configuration.
+縞模様自体の設定は簡単なので、見栄えをよくするためにいくつか別のスタイルも追加しました。例の他のコードでは、表の周囲と最初の行の下に濃い青の[ストローク](#stroke-functions)を引き、最初の行と本のタイトルの列を太字にしています。このストロークの設定方法の詳細は、[ストローク](#strokes)のセクションを参照してください。
 
-Let's next take a look at how we can change only the set rule to achieve
-horizontal stripes instead:
+次に、setルールだけを変えて、代わりに横方向の縞模様を作る方法を見てみましょう。
 
 ```example
 >>> #set page(width: 16cm)
@@ -320,15 +219,9 @@ horizontal stripes instead:
 >>> )
 ```
 
-We just need to replace the set rule from the previous example with this one and
-get horizontal stripes instead. Here, we are passing a function to `fill`. It
-discards the horizontal coordinate with an underscore and then checks if the
-vertical coordinate `y` of the cell is odd. If so, the cell gets a light blue
-fill, otherwise, no fill is returned.
+前の例のsetルールをこれに置き換えるだけで、代わりに横方向の縞模様が得られます。ここでは、`fill`に関数を渡しています。アンダースコアで水平座標を破棄し、セルの垂直座標`y`が奇数かどうかをチェックします。奇数であれば、セルに明るい青の塗りつぶしが適用され、そうでなければ何も塗りつぶされません。
 
-Of course, you can make this function arbitrarily complex. For example, if you
-want to stripe the rows with a light and darker shade of blue, you could do
-something like this:
+もちろん、この関数は任意の複雑さで作ることができます。例えば、明るい青と濃い青の濃淡で行を縞模様にしたい場合は、次のようにできます。
 
 ```example
 >>> #set page(width: 16cm)
@@ -363,11 +256,9 @@ something like this:
 >>> )
 ```
 
-This example shows an alternative approach to write our fill function. The
-function uses an array with three colors and then cycles between its values for
-each row by indexing the array with the remainder of `y` divided by 3.
+この例は、塗りつぶし関数を書くもう1つのアプローチを示しています。この関数は3色の配列を使い、`y`を3で割った余りで配列にインデックスすることで、各行ごとに値を切り替えます。
 
-Finally, here is a bonus example that uses the _stroke_ to achieve striped rows:
+最後に、_ストローク_ を使って縞模様の行を実現するボーナス例を示します。
 
 ```example
 >>> #set page(width: 16cm)
@@ -405,14 +296,10 @@ Finally, here is a bonus example that uses the _stroke_ to achieve striped rows:
 >>> )
 ```
 
-### Manually overriding a cell's fill color { #fill-override }
-Sometimes, the fill of a cell needs not to vary based on its position in the
-table, but rather based on its contents. We can use the [`table.cell`
-element]($table.cell) in the `table`'s parameter list to wrap a cell's content
-and override its fill.
+### 個別のセルの塗りつぶしの色を手動で上書きする { #fill-override }
+セルの塗りつぶしを表内の位置ではなく内容に応じて変えたい場合があります。`table`のパラメーターリストで[`table.cell`要素]($table.cell)を使うことで、セルの内容を囲み、その塗りつぶしを上書きできます。
 
-For example, here is a list of all German presidents, with the cell borders
-colored in the color of their party.
+例えば、ドイツの歴代大統領のリストを示し、各セルの枠を所属政党の色で塗ったものを示します。
 
 ```example
 >>> #set page(width: 10cm)
@@ -442,54 +329,21 @@ colored in the color of their party.
 )
 ```
 
-In this example, we make use of variables because there only have been a total
-of three parties whose members have become president (and one unaffiliated
-president). Their colors will repeat multiple times, so we store a function that
-produces an array with their party's name and a table cell with that party's
-color and the president's name (`cdu`, `spd`, and `fdp`). We then use these
-functions in the `table` argument list instead of directly adding the name. We
-use the [spread operator]($arguments/#spreading) `..` to turn the items of the
-arrays into single cells. We could also write something like
-`{[FDP], table.cell(fill: yellow)[Theodor Heuss]}` for each cell directly in the
-`table`'s argument list, but that becomes unreadable, especially for the parties
-whose colors are dark so that they require white text. We also delete vertical
-strokes and set the font to Roboto.
+この例では、メンバーが大統領になった政党は3つしかなく（さらに無所属の大統領が1人）、その色が複数回繰り返されるため変数を使っています。政党名と、その政党の色および大統領名を持つ表セルを含む配列を生成する関数（`cdu`、`spd`、`fdp`）を保存します。これらの関数を、`table`の引数リストの中で名前を直接追加する代わりに使います。[展開演算子]($arguments/#spreading)`..`を使って、配列の項目を個々のセルに変換します。`table`の引数リストの各セルに対して`{[FDP], table.cell(fill: yellow)[Theodor Heuss]}`のように直接書くこともできますが、これは特に色が暗くて白いテキストが必要な政党では読みにくくなります。また、垂直の罫線を消し、フォントをRobotoに設定しています。
 
-The party column and the cell color in this example communicate redundant
-information on purpose: Communicating important data using color only is a bad
-accessibility practice. It disadvantages users with vision impairment and is in
-violation of universal access standards, such as the
-[WCAG 2.1 Success Criterion 1.4.1](https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html).
-To improve this table, we added a column printing the party name. Alternatively,
-you could have made sure to choose a color-blindness friendly palette and mark
-up your cells with an additional label that screen readers can read out loud.
-The latter feature is not currently supported by Typst, but will be added in a
-future release. You can check how colors look for color-blind readers with
-[this Chrome extension](https://chromewebstore.google.com/detail/colorblindly/floniaahmccleoclneebhhmnjgdfijgg),
-[Photoshop](https://helpx.adobe.com/photoshop/using/proofing-colors.html), or
-[GIMP](https://docs.gimp.org/2.10/en/gimp-display-filter-dialog.html).
+この例では、政党列とセルの色は意図的に冗長な情報を伝えています。重要なデータを色のみで伝えることはアクセシビリティに反する悪い習慣です。視覚障害のあるユーザーにとって不利となり、[WCAG 2.1 達成基準1.4.1](https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html)などのユニバーサルアクセス基準に違反します。この表を改善するために、政党名を表示する列を追加しました。あるいは、色覚多様性に配慮したパレットを選び、スクリーンリーダーが読み上げられる追加のラベルでセルをマークアップすることもできます。後者の機能は現在Typstではサポートされていませんが、将来のリリースで追加される予定です。色がどのように色覚多様性のある読者に見えるかは、[このChrome拡張機能](https://chromewebstore.google.com/detail/colorblindly/floniaahmccleoclneebhhmnjgdfijgg)、[Photoshop](https://helpx.adobe.com/photoshop/using/proofing-colors.html)、[GIMP](https://docs.gimp.org/2.10/en/gimp-display-filter-dialog.html)で確認できます。
 
-## How to adjust the lines in a table? { #strokes }
-By default, Typst adds strokes between each row and column of a table. You can
-adjust these strokes in a variety of ways. Which one is the most practical,
-depends on the modification you want to make and your intent:
+## 表の罫線を調整する方法 { #strokes }
+デフォルトでは、Typstは表の各行と各列の間に罫線を引きます。これらの罫線はさまざまな方法で調整できます。どれが最も実用的かは、行いたい変更と意図によって異なります。
 
-- Do you want to style all tables in your document, irrespective of their size
-  and content? Use the `table` function's [stroke]($table.stroke) argument in a
-  set rule.
-- Do you want to customize all lines in a single table? Use the `table`
-  function's [stroke]($table.stroke) argument when calling the table function.
-- Do you want to change, add, or remove the stroke around a single cell? Use the
-  `table.cell` element in the argument list of your table call.
-- Do you want to change, add, or remove a single horizontal or vertical stroke
-  in a single table? Use the [`table.hline`]($table.hline) and [`table.vline`]($table.vline) elements in the
-  argument list of your table call.
+- サイズや内容に関係なく、文書内の全ての表のスタイルを変更したいですか？setルールで`table`関数の[stroke]($table.stroke)引数を使います。
+- 単一の表内の全ての罫線をカスタマイズしたいですか？table関数を呼び出すときに`table`関数の[stroke]($table.stroke)引数を使います。
+- 単一のセル周囲の罫線を変更、追加、または削除したいですか？table呼び出しの引数リストで`table.cell`要素を使います。
+- 単一の表の中の単一の水平または垂直の罫線を変更、追加、または削除したいですか？table呼び出しの引数リストで[`table.hline`]($table.hline)および[`table.vline`]($table.vline)要素を使います。
 
-We will go over all of these options with examples next! First, we will tackle
-the `table` function's [stroke]($table.stroke) argument. Here, you can adjust
-both how the table's lines get drawn and configure which lines are drawn at all.
+これらの選択肢を、次の例で全て見ていきます。まず、`table`関数の[stroke]($table.stroke)引数について見てみましょう。ここでは、表の罫線の描画方法と、どの罫線を描くかの両方を調整できます。
 
-Let's start by modifying the color and thickness of the stroke:
+罫線の色と太さを変更することから始めましょう。
 
 ```example
 #table(
@@ -501,17 +355,9 @@ Let's start by modifying the color and thickness of the stroke:
 )
 ```
 
-This makes the table lines a bit less wide and uses a bluish gray. You can see
-that we added a width in point to a color to achieve our customized stroke. This
-addition yields a value of the [stroke type]($stroke). Alternatively, you can
-use the dictionary representation for strokes which allows you to access
-advanced features such as dashed lines.
+これにより、表の罫線が少し細くなり、青みがかった灰色になります。カスタマイズした罫線を実現するため、ポイント単位の幅と色を加算したことがわかるでしょう。この加算により[ストローク型]($stroke)の値が得られます。あるいは、破線などの高度な機能にアクセスできるストロークの辞書表現を使うこともできます。
 
-The previous example showed how to use the stroke argument in the table
-function's invocation. Alternatively, you can specify the stroke argument in the
-`table`'s set rule. This will have exactly the same effect on all subsequent
-`table` calls as if the stroke argument was specified in the argument list. This
-is useful if you are writing a template or want to style your whole document.
+前の例は、table関数の呼び出しで`stroke`引数を使う方法を示しました。代わりに、`table`のsetルールで`stroke`引数を指定することもできます。これは、引数リストに`stroke`引数を指定した場合と全く同じ効果を、その後の全ての`table`呼び出しに対して持ちます。これは、テンプレートを書く場合や、文書全体のスタイルを設定したい場合に役立ちます。
 
 ```typ
 // Renders the exact same as the last example
@@ -525,8 +371,7 @@ is useful if you are writing a template or want to style your whole document.
 )
 ```
 
-For small tables, you sometimes want to suppress all strokes because they add
-too much visual noise. To do this, just set the stroke argument to `{none}`:
+小さな表では、視覚的なノイズが多すぎるため、全ての罫線を抑制したいことがあります。これを実現するには、`stroke`引数を`{none}`に設定するだけです。
 
 ```example
 #table(
@@ -538,13 +383,7 @@ too much visual noise. To do this, just set the stroke argument to `{none}`:
 )
 ```
 
-If you want more fine-grained control of where lines get placed in your table,
-you can also pass a dictionary with the keys `top`, `left`, `right`, `bottom`
-(controlling the respective cell sides), `x`, `y` (controlling vertical and
-horizontal strokes), and `rest` (covers all strokes not styled by other
-dictionary entries). All keys are optional; omitted keys will use their
-previously set value, or the default value if never set. For example, to get a
-table with only horizontal lines, you can do this:
+表内の罫線の配置をより細かく制御したい場合は、`top`、`left`、`right`、`bottom`（それぞれセルの該当する側を制御）、`x`、`y`（垂直および水平の罫線を制御）、`rest`（他の辞書エントリでスタイル設定されない全ての罫線をカバー）というキーを持つ辞書を渡すこともできます。全てのキーは省略可能です。省略されたキーは、以前に設定された値、または一度も設定されていない場合はデフォルト値を使用します。例えば、水平方向の罫線のみの表を得るには、次のようにします。
 
 ```example
 #table(
@@ -558,22 +397,14 @@ table with only horizontal lines, you can do this:
 )
 ```
 
-This turns off all vertical strokes and leaves the horizontal strokes in place.
-To achieve the reverse effect (only horizontal strokes), set the stroke argument
-to `{(y: none)}` instead.
+これは全ての垂直の罫線を消し、水平の罫線をそのまま残します。逆の効果（垂直の罫線のみ）を得るには、`stroke`引数を`{(y: none)}`に設定します。
 
-[Further down in the guide](#stroke-functions), we cover how to use a function
-in the stroke argument to customize all strokes individually. This is how you
-achieve more complex stroking patterns.
+[ガイドの後半](#stroke-functions)で、`stroke`引数に関数を使って全ての罫線を個別にカスタマイズする方法を扱います。これがより複雑な罫線パターンを実現する方法です。
 
-### Adding individual lines in the table { #individual-lines }
-If you want to add a single horizontal or vertical line in your table, for
-example to separate a group of rows, you can use the [`table.hline`]($table.hline) and
-[`table.vline`]($table.vline) elements for horizontal and vertical lines, respectively. Add
-them to the argument list of the `table` function just like you would add
-individual cells and a header.
+### 表に個別の罫線を追加する { #individual-lines }
+例えば行のグループを区切るために、表に1本の水平または垂直の罫線を追加したい場合は、それぞれ水平および垂直の罫線用の[`table.hline`]($table.hline)および[`table.vline`]($table.vline)要素を使えます。個別のセルやヘッダーを追加するときと同様に、`table`関数の引数リストに追加します。
 
-Let's take a look at the following example from the reference:
+リファレンスから次の例を見てみましょう。
 
 ```example
 #set table.hline(stroke: 0.6pt)
@@ -590,15 +421,9 @@ Let's take a look at the following example from the reference:
 )
 ```
 
-In this example, you can see that we have placed a call to `table.hline` between
-the cells, producing a horizontal line at that spot. We also used a set rule on
-the element to reduce its stroke width to make it fit better with the weight of
-the font.
+この例では、セルの間に`table.hline`の呼び出しを置き、その位置に水平の罫線を生成しています。また、要素にsetルールを使って、フォントの太さに合うようにストローク幅を縮小しました。
 
-By default, Typst places horizontal and vertical lines after the current row or
-column, depending on their position in the argument list. You can also manually
-move them to a different position by adding the `y` (for `hline`) or `x` (for
-`vline`) argument. For example, the code below would produce the same result:
+デフォルトでは、Typstは引数リストでの位置に応じて、現在の行または列の後に水平および垂直の罫線を配置します。`y`引数（`hline`の場合）または`x`引数（`vline`の場合）を追加することで、別の位置に手動で移動させることもできます。例えば、次のコードは同じ結果を生成します。
 
 ```typ
 #set table.hline(stroke: 0.6pt)
@@ -615,11 +440,7 @@ move them to a different position by adding the `y` (for `hline`) or `x` (for
 )
 ```
 
-Let's imagine you are working with a template that shows none of the table
-strokes except for one between the first and second row. Now, since you have one
-table that also has labels in the first column, you want to add an extra
-vertical line to it. However, you do not want this vertical line to cross into
-the top row. You can achieve this with the `start` argument:
+最初の行と2行目の間以外には罫線を表示しないテンプレートを使っているとします。一方で、最初の列にラベルがある表があり、それに垂直の罫線を追加で入れたいとします。ただし、この垂直の罫線が一番上の行を横切ってほしくありません。これは`start`引数で実現できます。
 
 ```example
 >>> #set page(width: 12cm)
@@ -641,28 +462,14 @@ the top row. You can achieve this with the `start` argument:
 }
 ```
 
-In this example, we have added `table.vline` at the start of our positional
-argument list. But because the line is not supposed to go to the left of the
-first column, we specified the `x` argument as `{1}`. We also set the `start`
-argument to `{1}` so that the line does only start after the first row.
+この例では、位置引数リストの先頭に`table.vline`を追加しました。しかし、この罫線は最初の列の左には引かないため、`x`引数を`{1}`に指定しました。また、`start`引数を`{1}`に設定し、罫線が最初の行の後からのみ始まるようにしました。
 
-The example also contains two more things: We use the align argument with a
-function to right-align the data in all but the first column and use a show rule
-to make the first column of table cells appear in small capitals. Because these
-styles are specific to this one table, we put everything into a [code
-block]($scripting/#blocks), so that the styling does not affect any further
-tables.
+この例にはさらに2つの要素があります。`align`引数に関数を使って、最初の列以外の全ての列のデータを右揃えにし、showルールで最初の列の表セルをスモールキャピタルで表示しています。これらのスタイルはこの表だけに固有なので、全てを[コードブロック]($scripting/#blocks)に入れて、後続の表にスタイルが影響しないようにしています。
 
-### Overriding the strokes of a single cell { #stroke-override }
-Imagine you want to change the stroke around a single cell. Maybe your cell is
-very important and needs highlighting! For this scenario, there is the
-[`table.cell` function]($table.cell). Instead of adding your content directly in
-the argument list of the table, you wrap it in a `table.cell` call. Now, you can
-use `table.cell`'s argument list to override the table properties, such as the
-stroke, for this cell only.
+### 単一のセルの罫線を上書きする { #stroke-override }
+1つのセル周りの罫線を変更したいとします。例えば、そのセルが非常に重要で強調が必要な場合などです。このようなシナリオには、[`table.cell`関数]($table.cell)があります。コンテンツを直接tableの引数リストに追加するのではなく、`table.cell`の呼び出しで囲みます。これで、`table.cell`の引数リストを使って、そのセルだけに対して罫線などの表のプロパティを上書きできます。
 
-Here's an example with a matrix of two of the Big Five personality factors, with
-one intersection highlighted.
+ビッグファイブ性格因子のうち2つの行列を示し、1つの交点を強調表示する例を示します。
 
 ```example
 >>> #set page(width: 16cm)
@@ -684,24 +491,12 @@ one intersection highlighted.
 )
 ```
 
-Above, you can see that we used the `table.cell` element in the table's argument
-list and passed the cell content to it. We have used its `stroke` argument to
-set a wider orange stroke. Despite the fact that we disabled vertical strokes on
-the table, the orange stroke appeared on all sides of the modified cell, showing
-that the table's stroke configuration is overwritten.
+上の例では、tableの引数リストで`table.cell`要素を使い、セルの内容を渡しています。その`stroke`引数を使って、より太いオレンジ色の罫線を設定しました。表で垂直の罫線を無効にしたにもかかわらず、変更したセルの全ての側にオレンジの罫線が現れていることから、表のストローク設定が上書きされていることが分かります。
 
-### Complex document-wide stroke customization { #stroke-functions }
-This section explains how to customize all lines at once in one or multiple
-tables. This allows you to draw only the first horizontal line or omit the outer
-lines, without knowing how many cells the table has. This is achieved by
-providing a function to the table's `stroke` parameter. The function should
-return a stroke given the zero-indexed x and y position of the current cell. You
-should only need these functions if you are a template author, do not use a
-template, or need to heavily customize your tables. Otherwise, your template
-should set appropriate default table strokes.
+### 文書全体での複雑な罫線のカスタマイズ { #stroke-functions }
+このセクションでは、1つまたは複数の表で全ての罫線を一度にカスタマイズする方法を説明します。これにより、表のセル数を知らなくても、最初の水平の罫線だけを引いたり、外側の罫線を省略したりできます。これは、tableの`stroke`パラメーターに関数を渡すことで実現します。関数は、現在のセルの0始まりのxとyの位置を受け取り、ストロークを返します。これらの関数は、テンプレートの作者である場合、テンプレートを使わない場合、または表を大幅にカスタマイズする必要がある場合にのみ必要です。それ以外の場合、テンプレートが適切なデフォルトの表の罫線を設定するはずです。
 
-For example, this is a set rule that draws all horizontal lines except for the
-very first and last line.
+例えば、これは最初と最後の水平の罫線を除く全ての水平の罫線を引くsetルールです。
 
 ```example
 #show table.cell.where(x: 0): set text(style: "italic")
@@ -718,15 +513,9 @@ very first and last line.
 )
 ```
 
-In the set rule, we pass a function that receives two arguments, assigning the
-vertical coordinate to `y` and discarding the horizontal coordinate. It then
-returns a stroke dictionary with a `{0.8pt}` top stroke for all but the first
-line. The cells in the first line instead implicitly receive `{none}` as the
-return value. You can easily modify this function to just draw the inner
-vertical lines instead as `{(x, _) => if x > 0 { (left: 0.8pt) }}`.
+このsetルールでは、2つの引数を受け取る関数を渡しています。垂直座標を`y`に割り当て、水平座標は破棄します。次に、最初の行を除く全ての行に対して`{0.8pt}`のtopストロークを持つストローク辞書を返します。最初の行のセルには、代わりに暗黙的に`{none}`が返されます。代わりに内側の垂直の罫線だけを引くには、関数を`{(x, _) => if x > 0 { (left: 0.8pt) }}`のように簡単に変更できます。
 
-Let's try a few more stroking functions. The next function will only draw a line
-below the first row:
+さらにいくつかのストローク関数を試してみましょう。次の関数は、最初の行の下にのみ罫線を引きます。
 
 ```example
 >>> #show table.cell: it => if it.x == 0 and it.y > 0 {
@@ -750,11 +539,9 @@ below the first row:
 >>> )
 ```
 
-If you understood the first example, it becomes obvious what happens here. We
-check if we are in the first row. If so, we return a bottom stroke. Otherwise,
-we'll return `{none}` implicitly.
+最初の例を理解していれば、ここで何が起こっているかは明らかでしょう。最初の行にいるかどうかをチェックします。そうであれば、bottomストロークを返します。そうでなければ、暗黙的に`{none}`を返します。
 
-The next example shows how to draw all but the outer lines:
+次の例では、外側の罫線を除く全ての罫線を引く方法を示します。
 
 ```example
 >>> #show table.cell: it => if it.x == 0 and it.y > 0 {
@@ -781,13 +568,9 @@ The next example shows how to draw all but the outer lines:
 >>> )
 ```
 
-This example uses both the `x` and `y` coordinates. It omits the left stroke in
-the first column and the top stroke in the first row. The right and bottom lines
-are not drawn.
+この例では、`x`座標と`y`座標の両方を使います。最初の列ではleftストロークを省略し、最初の行ではtopストロークを省略します。右と下の罫線は引かれません。
 
-Finally, here is a table that draws all lines except for the vertical lines in
-the first row and horizontal lines in the table body. It looks a bit like a
-calendar.
+最後に、最初の行の垂直の罫線と本体の水平の罫線を除く全ての罫線を引く表を示します。これは少しカレンダーのような見た目になります。
 
 ```example
 >>> #show table.cell: it => if it.x == 0 and it.y > 0 {
@@ -799,9 +582,9 @@ calendar.
 >>>
 >>> #show table.cell.where(y: 0): strong
 #set table(stroke: (x, y) => (
-  left: if x == 0 or y > 0 { 1pt } else { 0pt },
+  left: if x == 0 or y > 0 { 1pt } else { 0pt },
   right: 1pt,
-  top: if y <= 1 { 1pt } else { 0pt },
+  top: if y <= 1 { 1pt } else { 0pt },
   bottom: 1pt,
 ))
 
@@ -816,25 +599,12 @@ calendar.
 >>> )
 ```
 
-This example is a bit more complex. We start by drawing all the strokes on the
-right of the cells. But this means that we have drawn strokes in the top row,
-too, and we don't need those! We use the fact that `left` will override `right`
-and only draw the left line if we are not in the first row or if we are in the
-first column. In all other cases, we explicitly remove the left line. Finally,
-we draw the horizontal lines by first setting the bottom line and then for the
-first two rows with the `top` key, suppressing all other top lines. The last
-line appears because there is no `top` line that could suppress it.
+この例は少し複雑です。まず、セルの右側に全ての罫線を引きます。しかしこれは最上行にも罫線を引いてしまうことになり、それは不要です。ここで、`left`が`right`を上書きするという事実を利用し、最初の行にいない、または最初の列にいる場合にのみleftの罫線を引きます。それ以外の場合は、明示的にleftの罫線を消します。最後に、`bottom`の罫線を設定し、最初の2行については`top`キーで水平の罫線を引いて、それ以外の全てのtop罫線を抑制することで、水平の罫線を引きます。最後の罫線は、それを抑制できる`top`の罫線がないため表示されます。
 
-### How to achieve a double line? { #double-stroke }
-Typst does not yet have a native way to draw double strokes, but there are
-multiple ways to emulate them, for example with [tilings]($tiling). We will
-show a different workaround in this section: Table gutters.
+### 二重線を実現する方法 { #double-stroke }
+Typstはまだ二重線を引くネイティブな方法を持っていませんが、それを模倣する方法は複数あります。例えば[タイリング]($tiling)を使う方法もあります。このセクションでは、別の回避策として、表の罫間を使う方法を示します。
 
-Tables can space their cells apart using the `gutter` argument. When a gutter is
-applied, a stroke is drawn on each of the now separated cells. We can
-selectively add gutter between the rows or columns for which we want to draw a
-double line. The `row-gutter` and `column-gutter` arguments allow us to do this.
-They accept arrays of gutter values. Let's take a look at an example:
+表は`gutter`引数を使ってセル同士を離すことができます。罫間が適用されると、新たに分離された各セルにストロークが描かれます。二重線を引きたい行または列の間に、選択的に罫間を追加できます。`row-gutter`および`column-gutter`引数を使ってこれを行えます。これらは罫間の値の配列を受け取ります。例を見てみましょう。
 
 ```example
 #table(
@@ -848,30 +618,18 @@ They accept arrays of gutter values. Let's take a look at an example:
 )
 ```
 
-We can see that we used an array for `row-gutter` that specifies a `{2.2pt}` gap
-between the first and second row. It then continues with `auto` (which is the
-default, in this case `{0pt}` gutter) which will be the gutter between all other
-rows, since it is the last entry in the array.
+`row-gutter`に対して、最初の行と2行目の間に`{2.2pt}`の隙間を指定する配列を使ったことが分かります。次に`auto`が続きます（この場合のデフォルトは`{0pt}`の罫間）。これは配列の最後のエントリなので、他の全ての行の間の罫間になります。
 
-## How to align the contents of the cells in my table? { #alignment }
-You can use multiple mechanisms to align the content in your table. You can
-either use the `table` function's `align` argument to set the alignment for your
-whole table (or use it in a set rule to set the alignment for tables throughout
-your document) or the [`align`]($align) function (or `table.cell`'s `align` argument) to
-override the alignment of a single cell.
+## 表のセル内のコンテンツの揃え方 { #alignment }
+表のコンテンツを揃えるには、複数の仕組みを使えます。`table`関数の`align`引数を使って表全体の整列を設定する（あるいはsetルールで使って文書全体の表の整列を設定する）か、[`align`]($align)関数（または`table.cell`の`align`引数）を使って単一のセルの整列を上書きできます。
 
-When using the `table` function's align argument, you can choose between three
-methods to specify an [alignment]($alignment):
+`table`関数の`align`引数を使う際、[整列]($alignment)を指定する3つの方法から選べます。
 
-- Just specify a single alignment like `right` (aligns in the top-right corner)
-  or `center + horizon` (centers all cell content). This changes the alignment
-  of all cells.
-- Provide an array. Typst will cycle through this array for each column.
-- Provide a function that is passed the horizontal `x` and vertical `y`
-  coordinate of a cell and returns an alignment.
+- `right`（右上隅に整列）や`center + horizon`（全てのセルのコンテンツを中央に整列）のような単一の整列を指定するだけです。これは全てのセルの整列を変更します。
+- 配列を渡します。Typstは各列に対してこの配列を順に使います。
+- セルの水平座標`x`と垂直座標`y`を受け取り、整列を返す関数を渡します。
 
-For example, this travel itinerary right-aligns the day column and left-aligns
-everything else by providing an array in the `align` argument:
+例えば、次の旅行の行程表は、`align`引数に配列を渡すことで、日付の列を右揃え、それ以外の全てを左揃えにしています。
 
 ```example
 >>> #set page(width: 12cm)
@@ -893,8 +651,7 @@ everything else by providing an array in the `align` argument:
 )
 ```
 
-However, this example does not yet look perfect — the header cells should be
-bottom-aligned. Let's use a function instead to do so:
+しかし、この例はまだ完璧ではありません。ヘッダーセルは下揃えにすべきです。代わりに関数を使ってこれを実現しましょう。
 
 ```example
 >>> #set page(width: 12cm)
@@ -919,28 +676,16 @@ bottom-aligned. Let's use a function instead to do so:
 )
 ```
 
-In the function, we calculate a horizontal and vertical alignment based on
-whether we are in the first column (`{x == 0}`) or the first row (`{y == 0}`).
-We then make use of the fact that we can add horizontal and vertical alignments
-with `+` to receive a single, two-dimensional alignment.
+この関数では、最初の列にいるか（`{x == 0}`）、最初の行にいるか（`{y == 0}`）に基づいて、水平方向と垂直方向の整列を計算します。次に、水平方向の整列と垂直方向の整列を`+`で加算して、単一の2次元の整列を得るという事実を利用しています。
 
-You can find an example of using `table.cell` to change a single cell's
-alignment on [its reference page]($table.cell).
+`table.cell`を使って単一のセルの整列を変更する例は、[そのリファレンスページ]($table.cell)で見つけられます。
 
-## How to merge cells? { #merge-cells }
-When a table contains logical groupings or the same data in multiple adjacent
-cells, merging multiple cells into a single, larger cell can be advantageous.
-Another use case for cell groups are table headers with multiple rows: That way,
-you can group for example a sales data table by quarter in the first row and by
-months in the second row.
+## セルを結合する方法 { #merge-cells }
+表に論理的なグループ分けや、隣接する複数のセルに同じデータが含まれている場合、複数のセルを1つの大きなセルに結合すると有利です。セルグループのもう1つの使い方は、複数行のヘッダーを持つ表です。これにより、例えば売上データの表を最初の行で四半期ごとに、2行目で月ごとにグループ化できます。
 
-A merged cell spans multiple rows and/or columns. You can achieve it with the
-[`table.cell`]($table.cell) function's `rowspan` and `colspan` arguments: Just specify how
-many rows or columns you want your cell to span.
+結合されたセルは、複数の行や列にまたがります。これは[`table.cell`]($table.cell)関数の`rowspan`と`colspan`引数で実現できます。セルにまたがらせたい行数または列数を指定するだけです。
 
-The example below contains an attendance calendar for an office with in-person
-and remote days for each team member. To make the table more glanceable, we
-merge adjacent cells with the same value:
+下の例は、各チームメンバーの出社日とリモート勤務日を含むオフィスの出勤カレンダーです。表を一目でわかるようにするため、同じ値を持つ隣接するセルを結合しています。
 
 ```example
 >>> #set page(width: 22cm)
@@ -985,42 +730,21 @@ merge adjacent cells with the same value:
 )
 ```
 
-In the example, we first define variables with "Office", "Remote", and "On
-leave" so we don't have to write these labels out every time. We can then use
-these variables in the table body either directly or in a `table.cell` call if
-the team member spends multiple consecutive days in office, remote, or on leave.
+この例では、まず「Office」、「Remote」、「On leave」の変数を定義し、繰り返しこれらのラベルを書き出さなくて済むようにしています。これらの変数は表本体で直接使うか、あるいはチームメンバーが連続する複数日を出社、リモート、休暇で過ごす場合は`table.cell`の呼び出し内で使えます。
 
-The example also contains a black header (created with `table`'s `fill`
-argument) with white strokes (`table`'s `stroke` argument) and white text (set
-by the `table.cell` set rule). Finally, we align all the content of all table
-cells in the body in the center. If you want to know more about the functions
-passed to `align`, `stroke`, and `fill`, you can check out the sections on
-[alignment], [strokes](#stroke-functions), and [striped
-tables](#fills).
+この例には、さらに黒いヘッダー（`table`の`fill`引数で作成）、白いストローク（`table`の`stroke`引数）、白いテキスト（`table.cell`のsetルールで設定）も含まれています。最後に、本体の全ての表セルのコンテンツを中央に整列させています。`align`、`stroke`、`fill`に渡される関数についてもっと知りたい場合は、[整列](#alignment)、[ストローク](#stroke-functions)、[縞模様の表](#fills)のセクションを参照してください。
 
-This table would be a great candidate for fully automated generation from an
-external data source! Check out the [section about importing
-data](#importing-data) to learn more about that.
+この表は、外部のデータソースから完全に自動生成するのに適した候補でしょう。これについて詳しくは、[データの取り込みについてのセクション](#importing-data)をご覧ください。
 
-## How to rotate a table? { #rotate-table }
-When tables have many columns, a portrait paper orientation can quickly get
-cramped. Hence, you'll sometimes want to switch your tables to landscape
-orientation. There are two ways to accomplish this in Typst:
+## 表を回転する方法 { #rotate-table }
+表に多くの列がある場合、縦長の用紙では窮屈になりがちです。そのため、表を横向きに切り替えたいことがあります。Typstでこれを実現する方法は2つあります。
 
-- If you want to rotate only the table but not the other content of the page and
-  the page itself, use the [`rotate` function]($rotate) with the `reflow`
-  argument set to `{true}`.
-- If you want to rotate the whole page the table is on, you can use the [`page`
-  function]($page) with its `flipped` argument set to `{true}`. The header,
-  footer, and page number will now also appear on the long edge of the page.
-  This has the advantage that the table will appear right side up when read on a
-  computer, but it also means that a page in your document has different
-  dimensions than all the others, which can be jarring to your readers.
+- 表だけを回転させ、ページの他のコンテンツやページ自体は回転させたくない場合は、`reflow`引数を`{true}`に設定して[`rotate`関数]($rotate)を使います。
+- 表が含まれるページ全体を回転させたい場合は、`flipped`引数を`{true}`に設定して[`page`関数]($page)を使えます。ヘッダー、フッター、ページ番号も用紙の長辺に表示されるようになります。これにはコンピューターで読むときに表が正しい向きで表示される利点がありますが、文書内のあるページが他のページと寸法が異なることになり、読者にとって違和感を与えることがあります。
 
-Below, we will demonstrate both techniques with a student grade book table.
+下では、両方の手法を学生の成績表で示します。
 
-First, we will rotate the table on the page. The example also places some text
-on the right of the table.
+まず、ページ上で表を回転させます。この例では、表の右側にテキストも配置しています。
 
 ```example
 #set page("a5", columns: 2, numbering: "— 1 —")
@@ -1036,7 +760,7 @@ on the right of the table.
     inset: (x: 0.6em,),
     stroke: (_, y) => (
       x: 1pt,
-      top: if y <= 1 { 1pt } else { 0pt },
+      top: if y <= 1 { 1pt } else { 0pt },
       bottom: 1pt,
     ),
     align: (left, right, right, right, right, left),
@@ -1060,23 +784,11 @@ on the right of the table.
 ```
 
 
-What we have here is a two-column document on ISO A5 paper with page numbers on
-the bottom. The table has six columns and contains a few customizations to
-[stroke](#strokes), alignment and spacing. But the most important part is that
-the table is wrapped in a call to the `rotate` function with the `reflow`
-argument being `{true}`. This will make the table rotate 90 degrees
-counterclockwise. The reflow argument is needed so that the table's rotation
-affects the layout. If it was omitted, Typst would lay out the page as if the
-table was not rotated (`{true}` might become the default in the future).
+ここでは、ISO A5用紙のページ番号付きの2段組み文書を作成しています。表は6列を持ち、[ストローク](#strokes)、整列、間隔のいくつかのカスタマイズが含まれています。しかし最も重要な点は、表が`reflow`引数を`{true}`にした`rotate`関数の呼び出しで囲まれていることです。これにより、表は反時計回りに90度回転します。reflow引数は、表の回転がレイアウトに影響するように必要です。これが省略された場合、Typstは表が回転していないかのようにページをレイアウトします（`{true}`は将来的にデフォルトになる可能性があります）。
 
-The example also shows how to produce many columns of the same size: To the
-initial `{1fr}` column, we add an array with five `{auto}` items that we
-create by multiplying an array with one `{auto}` item by five. Note that arrays
-with just one item need a trailing comma to distinguish them from merely
-parenthesized expressions.
+この例では、同じサイズの多数の列を作る方法も示しています。最初の`{1fr}`の列に、5つの`{auto}`項目を持つ配列を加えます。この配列は、1つの`{auto}`項目を持つ配列に5を掛けて作成します。1つの項目しかない配列には、単なる括弧で囲まれた式と区別するために末尾のカンマが必要であることに注意してください。
 
-The second example shows how to rotate the whole page, so that the table stays
-upright:
+2つ目の例では、ページ全体を回転させ、表が正しい向きのままになる方法を示します。
 
 ```example
 #set page("a5", numbering: "— 1 —")
@@ -1089,7 +801,7 @@ upright:
     inset: (x: 0.6em,),
     stroke: (_, y) => (
       x: 1pt,
-      top: if y <= 1 { 1pt } else { 0pt },
+      top: if y <= 1 { 1pt } else { 0pt },
       bottom: 1pt,
     ),
     align: (left, right, right, right, right, left),
@@ -1115,25 +827,12 @@ upright:
 ]
 ```
 
-Here, we take the same table and the other content we want to set with it and
-put it into a call to the [`page`]($page) function while supplying `{true}` to the
-`flipped` argument. This will instruct Typst to create new pages with width and
-height swapped and place the contents of the function call onto a new page.
-Notice how the page number is also on the long edge of the paper now. At the
-bottom of the page, we use the [`pad`]($pad) function to constrain the width of the
-paragraph to achieve a nice and legible line length.
+ここでは、同じ表とそれと一緒に組みたいその他のコンテンツを取り、`flipped`引数に`{true}`を渡して[`page`]($page)関数の呼び出しに入れています。これにより、Typstは幅と高さを入れ替えた新しいページを作成し、関数呼び出しの内容を新しいページに配置するよう指示されます。ページ番号も用紙の長辺にあることに注目してください。ページの下部では、[`pad`]($pad)関数を使って段落の幅を制限し、きれいで読みやすい行長を実現しています。
 
-## How to break a table across pages? { #table-across-pages }
-It is best to contain a table on a single page. However, some tables just have
-many rows, so breaking them across pages becomes unavoidable. Fortunately, Typst
-supports breaking tables across pages out of the box. If you are using the
-[`table.header`]($table.header) and [`table.footer`]($table.footer) functions, their contents will be repeated
-on each page as the first and last rows, respectively. If you want to disable
-this behavior, you can set `repeat` to `{false}` on either of them.
+## 表をページ間で改ページする方法 { #table-across-pages }
+表は1ページに収めるのが最善です。しかし、行数が多い表もあり、ページ間で改ページするのは避けられないことがあります。幸いなことに、Typstはすぐに使えるページ間での表の改ページに対応しています。[`table.header`]($table.header)関数および[`table.footer`]($table.footer)関数を使っていれば、その内容は各ページの最初の行と最後の行としてそれぞれ繰り返されます。この動作を無効にしたい場合は、いずれかの関数で`repeat`を`{false}`に設定できます。
 
-If you have placed your table inside of a [figure]($figure), it becomes unable to break
-across pages by default. However, you can change this behavior. Let's take a
-look:
+表を[figure]($figure)の中に配置している場合、デフォルトではページ間で改ページできなくなります。しかし、この動作は変更できます。見てみましょう。
 
 ```example
 #set page(width: 9cm, height: 6cm)
@@ -1161,32 +860,16 @@ look:
 )
 ```
 
-A figure automatically produces a [block]($block) which cannot break by default.
-However, we can reconfigure the block of the figure using a show rule to make it
-`breakable`. Now, the figure spans multiple pages with the headers and footers
-repeating.
+figureは、デフォルトでは改ページできない[ブロック]($block)を自動的に生成します。しかし、figureのブロックをshowルールで再設定して`breakable`にできます。これで、figureは複数ページにわたり、ヘッダーとフッターが繰り返されます。
 
-## How to import data into a table? { #importing-data }
-Often, you need to put data that you obtained elsewhere into a table. Sometimes,
-this is from Microsoft Excel or Google Sheets, sometimes it is from a dataset
-on the web or from your experiment. Fortunately, Typst can load many [common
-file formats]($category/data-loading), so you can use scripting to include their
-data in a table.
+## 表にデータを取り込む方法 { #importing-data }
+他で取得したデータを表に入れる必要がよくあります。Microsoft ExcelやGoogle Sheetsから、Web上のデータセットから、あるいは実験から得たものなどです。幸いなことに、Typstは多くの[一般的なファイル形式]($category/data-loading)を読み込めるため、スクリプトでそのデータを表に取り込めます。
 
-The most common file format for tabular data is CSV. You can obtain a CSV file
-from Excel by choosing "Save as" in the _File_ menu and choosing the file format
-"CSV UTF-8 (Comma-delimited) (.csv)". Save the file and, if you are using the
-web app, upload it to your project.
+表形式データの最も一般的なファイル形式はCSVです。Excelで _ファイル_ メニューから「名前を付けて保存」を選び、ファイル形式「CSV UTF-8 (Comma-delimited) (.csv)」を選択することでCSVファイルを取得できます。ファイルを保存し、Webアプリを使っている場合は、プロジェクトにアップロードします。
 
-In our case, we will be building a table about Moore's Law. For this purpose, we
-are using a statistic with [how many transistors the average microprocessor
-consists of per year from Our World in
-Data](https://ourworldindata.org/grapher/transistors-per-microprocessor). Let's
-start by pressing the "Download" button to get a CSV file with the raw data.
+ここでは、ムーアの法則についての表を作成します。この目的のために、[Our World in Dataの「マイクロプロセッサーあたりのトランジスタ数」の年別統計](https://ourworldindata.org/grapher/transistors-per-microprocessor)を使います。「Download」ボタンを押して、生のデータが入ったCSVファイルを取得することから始めましょう。
 
-Be sure to move the file to your project or somewhere Typst can see it, if you
-are using the CLI. Once you did that, we can open the file to see how it is
-structured:
+CLIを使っている場合は、ファイルをプロジェクトまたはTypstが見える場所に必ず移動させてください。それが終わったら、ファイルを開いて構造を確認できます。
 
 ```csv
 Entity,Code,Year,Transistors per microprocessor
@@ -1195,23 +878,15 @@ World,OWID_WRL,1972,3554.5222
 World,OWID_WRL,1974,6097.5625
 ```
 
-The file starts with a header and contains four columns: Entity (which is to
-whom the metric applies), Code, the year, and the number of transistors per
-microprocessor. Only the last two columns change between each row, so we can
-disregard "Entity" and "Code".
+ファイルはヘッダーで始まり、4つの列が含まれています。Entity（指標が誰に該当するか）、Code、年、マイクロプロセッサーあたりのトランジスタ数です。各行で変わるのは最後の2つの列だけなので、「Entity」と「Code」は無視できます。
 
-First, let's start by loading this file with the [`csv`]($csv) function. It accepts
-the file name of the file we want to load as a string argument:
+まず、[`csv`]($csv)関数でこのファイルを読み込むことから始めましょう。読み込みたいファイルのファイル名を文字列引数として受け取ります。
 
 ```typ
 #let moore = csv("moore.csv")
 ```
 
-We have loaded our file (assuming we named it `moore.csv`) and [bound
-it]($scripting/#bindings) to the new variable `moore`. This will not produce any
-output, so there's nothing to see yet. If we want to examine what Typst loaded,
-we can either hover the name of the variable in the web app or print some items
-from the array:
+ファイル（`moore.csv`という名前と仮定）を読み込み、新しい変数`moore`に[束縛]($scripting/#bindings)しました。これは出力を生成しないので、まだ何も見えません。Typstが何を読み込んだかを確認したい場合は、Webアプリで変数名にカーソルを合わせるか、配列からいくつか項目を出力できます。
 
 ```example
 #let moore = csv("moore.csv")
@@ -1219,12 +894,9 @@ from the array:
 #moore.slice(0, 3)
 ```
 
-With the arguments `{(0, 3)}`, the [`slice`]($array.slice) method returns the
-first three items in the array (with the indices 0, 1, and 2). We can see that
-each row is its own array with one item per cell.
+`{(0, 3)}`という引数を使うことで、[`slice`]($array.slice)メソッドは配列の最初の3つの項目（インデックス0、1、2）を返します。各行が、1セルあたり1項目の独自の配列になっていることが分かります。
 
-Now, let's write a loop that will transform this data into an array of cells
-that we can use with the table function.
+次に、このデータをtable関数で使えるセルの配列に変換するループを書きましょう。
 
 ```example
 #let moore = csv("moore.csv")
@@ -1237,20 +909,9 @@ that we can use with the table function.
 )
 ```
 
-The example above uses a for loop that iterates over the rows in our CSV file
-and returns an array for each iteration. We use the for loop's
-[destructuring]($scripting/#bindings) capability to discard all but the last two
-items of each row. We then create a new array with just these two. Because Typst
-will concatenate the array results of all the loop iterations, we get a
-one-dimensional array in which the year column and the number of transistors
-alternate. We can then insert the array as cells. For this we use the [spread
-operator]($arguments/#spreading) (`..`). By prefixing an array, or, in our case
-an expression that yields an array, with two dots, we tell Typst that the
-array's items should be used as positional arguments.
+上の例では、CSVファイルの行を反復処理し、各反復で配列を返すforループを使っています。forループの[分配]($scripting/#bindings)機能を使って、各行の最後の2項目以外を破棄します。次に、これらの2項目だけを持つ新しい配列を作成します。Typstは全てのループ反復の配列の結果を連結するため、年の列とトランジスタ数が交互に並ぶ1次元の配列が得られます。次に、この配列をセルとして挿入できます。これには[展開演算子]($arguments/#spreading)（`..`）を使います。配列、または私たちの場合は配列を生成する式の前に2つのドットを付けることで、Typstに配列の項目を位置引数として使うよう指示します。
 
-Alternatively, we can also use the [`map`]($array.map), [`slice`]($array.slice),
-and [`flatten`]($array.flatten) array methods to write this in a more functional
-style:
+代わりに、[`map`]($array.map)、[`slice`]($array.slice)、[`flatten`]($array.flatten)の配列メソッドを使って、より関数型のスタイルで書くこともできます。
 
 ```typ
 #let moore = csv("moore.csv")
@@ -1261,20 +922,9 @@ style:
 )
 ```
 
-This example renders the same as the previous one, but first uses the `map`
-function to change each row of the data. We pass a function to map that gets run
-on each row of the CSV and returns a new value to replace that row with. We use
-it to discard the first two columns with `slice`. Then, we spread the data into
-the `table` function. However, we need to pass a one-dimensional array and
-`moore`'s value is two-dimensional (that means that each of its row values
-contains an array with the cell data). That's why we call `flatten` which
-converts it to a one-dimensional array. We also extract the number of columns
-from the data itself.
+この例は前の例と同じ結果になりますが、まず`map`関数を使ってデータの各行を変更します。CSVの各行に対して実行され、その行を置き換える新しい値を返す関数を`map`に渡します。これを使って、`slice`で最初の2列を破棄します。次に、データを`table`関数に展開します。しかし、1次元の配列を渡す必要がある一方で、`moore`の値は2次元です（つまり、各行の値はセルデータの配列を含みます）。そのため、`flatten`を呼び出して1次元の配列に変換します。また、列数もデータ自体から取り出しています。
 
-Now that we have nice code for our table, we should try to also make the table
-itself nice! The transistor counts go from millions in 1995 to trillions in 2021
-and changes are difficult to see with so many digits. We could try to present
-our data logarithmically to make it more digestible:
+表のためのきれいなコードができたので、表自体もきれいに作ってみましょう。トランジスタ数は1995年の数百万から2021年の数兆までで、桁数が多すぎて変化が見にくくなっています。データを対数で表示してみることで、より理解しやすくなるかもしれません。
 
 ```example
 #let moore = csv("moore.csv")
@@ -1299,44 +949,20 @@ our data logarithmically to make it more digestible:
 )
 ```
 
-In this example, we first drop the header row from the data since we are adding
-our own. Then, we discard all but the last two columns as above. We do this by
-[destructuring]($scripting/#bindings) the array `m`, discarding all but the two
-last items. We then convert the string in `count` to a floating point number,
-calculate its logarithm and store it in the variable `log`. Finally, we round it
-to two digits, convert it to a string, and store it in the variable `rounded`.
-Then, we return an array with `year` and `rounded` that replaces the original
-row. In our table, we have added our custom header that tells the reader that
-we've applied a logarithm to the values. Then, we spread the flattened data as
-above.
+この例では、まず独自のヘッダーを追加するため、データからヘッダー行を削除します。次に、上記と同じく最後の2列以外を破棄します。これは、配列`m`を[分配]($scripting/#bindings)し、最後の2項目以外を破棄することで行います。続いて、`count`の文字列を浮動小数点数に変換し、その対数を計算して変数`log`に保存します。最後に、それを2桁に丸め、文字列に変換し、変数`rounded`に保存します。そして、`year`と`rounded`を持つ配列を返し、元の行を置き換えます。表には、対数を値に適用したことを読者に伝える独自のヘッダーを追加しています。次に、上記と同じく平坦化したデータを展開します。
 
-We also styled the table with [stripes](#fills), a
-[horizontal line](#individual-lines) below the first row, [aligned](#alignment)
-everything to the right, and emboldened the first column. Click on the links to
-go to the relevant guide sections and see how it's done!
+また、表を[縞模様](#fills)、最初の行の下の[水平の罫線](#individual-lines)、全てを右に[整列](#alignment)させ、最初の列を太字にしてスタイル設定しました。リンクをクリックすると、関連するガイドのセクションに移動して方法を確認できます。
 
-## What if I need the table function for something that isn't a table? { #table-and-grid }
-Tabular layouts of content can be useful not only for matrices of closely
-related data, like shown in the examples throughout this guide, but also for
-presentational purposes. Typst differentiates between grids that are for layout
-and presentational purposes only and tables, in which the arrangement of the
-cells itself conveys information.
+## table関数を表ではないものに使う場合 { #table-and-grid }
+コンテンツの表形式のレイアウトは、このガイド全体の例で示してきたような密接に関連したデータの行列だけでなく、見せ方の目的にも役立ちます。Typstは、レイアウトと見せ方の目的のためのグリッドと、セルの配置自体が情報を伝える表とを区別しています。
 
-To make this difference clear to other software and allow templates to heavily
-style tables, Typst has two functions for grid and table layout:
+この違いを他のソフトウェアに明確にし、テンプレートで表を大幅にスタイル設定できるようにするため、Typstはグリッドと表のレイアウトに対して2つの関数を持っています。
 
-- The [`table`]($table) function explained throughout this guide which is intended for
-  tabular data.
-- The [`grid`]($grid) function which is intended for presentational purposes and page
-  layout.
+- このガイド全体で説明されてきた[`table`]($table)関数は、表形式データのためのものです。
+- [`grid`]($grid)関数は、見せ方の目的とページレイアウトのためのものです。
 
-Both elements work the same way and have the same arguments. You can apply
-everything you have learned about tables in this guide to grids. There are only
-three differences:
+両方の要素は同じ動作をし、同じ引数を持ちます。このガイドで表について学んだ全ての内容をグリッドにも適用できます。違いはたった3つです。
 
-- You'll need to use the [`grid.cell`]($grid.cell), [`grid.vline`]($grid.vline), and [`grid.hline`]($grid.hline)
-  elements instead of [`table.cell`]($table.cell), [`table.vline`]($table.vline), and [`table.hline`]($table.hline).
-- The grid has different defaults: It draws no strokes by default and has no
-  spacing (`inset`) inside of its cells.
-- Elements like `figure` do not react to grids since they are supposed to have
-  no semantical bearing on the document structure.
+- [`table.cell`]($table.cell)、[`table.vline`]($table.vline)、[`table.hline`]($table.hline)の代わりに、[`grid.cell`]($grid.cell)、[`grid.vline`]($grid.vline)、[`grid.hline`]($grid.hline)要素を使う必要があります。
+- gridのデフォルトは異なります。デフォルトでは罫線を引かず、セル内の間隔（`inset`）も持ちません。
+- `figure`のような要素はgridに反応しません。これは、文書構造に意味的な影響を持たないことが想定されているためです。
