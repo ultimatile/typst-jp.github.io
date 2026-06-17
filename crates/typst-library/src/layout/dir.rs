@@ -49,7 +49,7 @@ impl Dir {
     pub const TTB: Self = Self::TTB;
     pub const BTT: Self = Self::BTT;
 
-    /// Returns a direction from a starting point.
+    /// 指定した引数を始点とする向きを返します。
     ///
     /// ```example
     /// #direction.from(left) \
@@ -67,7 +67,7 @@ impl Dir {
         }
     }
 
-    /// Returns a direction from an end point.
+    /// 指定した引数を終点とする向きを返します。
     ///
     /// ```example
     /// #direction.to(left) \
@@ -99,7 +99,7 @@ impl Dir {
         }
     }
 
-    /// The corresponding sign, for use in calculations.
+    /// 計算に用いる、対応する符号。
     ///
     /// ```example
     /// #ltr.sign() \
