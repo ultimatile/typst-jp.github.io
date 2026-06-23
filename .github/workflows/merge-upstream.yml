@@ -45,6 +45,13 @@ jobs:
           git checkout HEAD -- .github/
           git reset HEAD .github/
 
+          # Resolve files deleted upstream in delete/modify conflicts
+          git status --porcelain=v1 -z | while IFS= read -r -d '' entry; do
+            case "$entry" in
+              "UD "*) git rm -- "${entry#UD }" ;;
+            esac
+          done
+
           # Commit the merge with conflict markers
           git commit -a -m "Merge upstream changes from ${{ github.event.inputs.upstream_ref }}"
 
