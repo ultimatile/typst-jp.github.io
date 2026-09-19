@@ -12,15 +12,13 @@ use crate::introspection::Tagged;
 /// #hide[Hello] Joe
 /// ```
 ///
-/// # Redaction
-/// This function may also be useful for redacting content as its arguments are
-/// neither present visually nor accessible to Assistive Technology. That said,
-/// there can be _some_ traces of the hidden content (such as a bookmarked
-/// heading in the PDF's Document Outline).
+/// # 墨消し { #redaction }
+/// この関数に渡した引数は視覚的に現れず、支援技術（AT）からも認識されません。
+/// そのため、コンテンツの墨消しにも利用できます。
+/// ただし、隠したコンテンツの痕跡が*いくらか*残ることもあります（PDFの文書アウトラインにブックマークとして残る見出しなど）。
 ///
-/// Note that, depending on the circumstances, it may be possible for content to
-/// be reverse engineered based on its size in the layout. We thus do not
-/// recommend using this function to hide highly sensitive information.
+/// また、状況によってはレイアウト上の大きさからコンテンツを推測されてしまう可能性があります。
+/// そのため、機密性の非常に高い情報を隠す用途にこの関数を使用することは推奨しません。
 #[elem(Tagged)]
 pub struct HideElem {
     /// 隠したいコンテンツ。
