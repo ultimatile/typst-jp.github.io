@@ -338,35 +338,25 @@ impl State {
 
     /// 状態値を更新。
     ///
-    /// Returns an invisible piece of [content] that must be inserted into the
-    /// document to take effect. This invisible content tells Typst that the
-    /// specified update should take place wherever the content is inserted into
-    /// the document.
+    /// 効果を発揮させるために文書へ挿入しなければならない、不可視の[コンテンツ]($content)を返します。
+    /// この不可視のコンテンツは、そのコンテンツを文書へ挿入した位置で指定の更新を適用するよう、Typstに伝えます。
     ///
-    /// State is a part of your document and runs like a thread embedded in the
-    /// document content. The value of a state is the result of all state
-    /// updates that happened in the document up until that point.
+    /// 状態は文書の一部であり、文書のコンテンツに埋め込まれた1本の糸のように流れています。
+    /// ある状態の値は、その時点までに文書中で発生した全ての状態更新の結果です。
     ///
-    /// That's why `state.update` returns an invisible sliver of content that
-    /// you need to return and include in the document — a state update that is
-    /// not "placed" in the document does not happen, and "when" it happens is
-    /// determined by where you place it. That's also why you need [context] to
-    /// read state: You need to use the current document position to know where
-    /// on the state's "thread" you are.
+    /// `state.update`がごくわずかな不可視のコンテンツを返し、それを文書へ含める必要があるのはこのためです。
+    /// 文書に「配置」されなかった状態更新は発生せず、それが「いつ」発生するかは配置する位置で決まります。
+    /// 状態の読み取りに[コンテキスト]($context)が必要なのも同じ理由です。
+    /// 状態という「糸」のどこにいるのかを知るには、文書中の現在位置を使う必要があるのです。
     ///
-    /// Storing a state update in a variable (e.g.
-    /// `{let my-update = state("key").update(c => c * 2)}`) will have no effect
-    /// by itself. Only once you insert the variable `[#my-update]` somewhere
-    /// into the document content, the update will take effect — at the position
-    /// where it was inserted. You can also use `[#my-update]` multiple times at
-    /// different positions. Then, the update will take effect multiple times as
-    /// well.
+    /// 状態の更新を変数に保存しても（例えば`{let my-update = state("key").update(c => c * 2)}`）、それだけでは何の効果もありません。
+    /// 変数`[#my-update]`を文書のコンテンツのどこかに挿入して初めて、挿入した位置で更新が効果を発揮します。
+    /// `[#my-update]`は異なる位置で複数回使用でき、その場合は更新も複数回実行されます。
     ///
-    /// In contrast to [`get`]($state.get), [`at`]($state.at), and
-    /// [`final`]($state.final), this function does not require [context]. This
-    /// is because, to create the state update, we do not need to know where in
-    /// the document we are. We only need this information to resolve the
-    /// state's value.
+    /// [`get`]($state.get)、[`at`]($state.at)、[`final`]($state.final)とは異なり、
+    /// この関数は[コンテキスト]($context)を必要としません。
+    /// 状態の更新を作成するだけであれば、文書中のどこにいるかを知る必要がないためです。
+    /// この情報が必要になるのは、状態の値を解決するときだけです。
     #[func]
     pub fn update(
         self,
