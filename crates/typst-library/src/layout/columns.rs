@@ -10,10 +10,9 @@ use crate::layout::{Length, Ratio, Rel};
 /// その代わり、段はコンテナの高さかページの残りの高さを占めます。
 /// バランスを取った段組は将来的にサポートされる予定です。
 ///
-/// When arranging content across multiple columns, use [`colbreak`]($colbreak)
-/// to explicitly continue in the next column.
+/// 複数の段にまたがってコンテンツを配置する際、[`colbreak`]($colbreak)を使うことで、明示的に次の段へ続けられます。
 ///
-/// # Example
+/// # 例
 /// ```example
 /// #columns(2, gutter: 8pt)[
 ///   This text is in the
